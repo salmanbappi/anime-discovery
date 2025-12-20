@@ -11,9 +11,9 @@ const CustomNavbar = () => {
 
   useEffect(() => {
     if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
+        document.body.classList.add('dark-theme');
     } else {
-        document.body.classList.remove('dark-mode');
+        document.body.classList.remove('dark-theme');
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
