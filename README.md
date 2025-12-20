@@ -1,16 +1,85 @@
-# React + Vite
+# Anime Discovery
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive anime discovery application inspired by [Anilist](https://anilist.co). This app allows users to browse trending and popular anime, as well as search for their favorite series, using real-time data from the Anilist GraphQL API.
 
-Currently, two official plugins are available:
+**Live Demo:** [https://salmanbappi.github.io/anime-discovery/](https://salmanbappi.github.io/anime-discovery/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+*   **Trending Now:** View the top anime currently trending.
+*   **All Time Popular:** Explore the most popular anime of all time.
+*   **Search Functionality:** Search for specific anime titles.
+*   **Responsive Design:** Fully responsive UI built with Bootstrap, optimized for mobile and desktop.
+*   **Dark Mode:** Sleek dark aesthetic similar to Anilist.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+*   **Frontend:** React (v19), Vite
+*   **Styling:** Bootstrap 5, React Bootstrap, Custom CSS
+*   **Routing:** React Router DOM (v7)
+*   **Data Source:** [Anilist GraphQL API](https://github.com/AniList/ApiV2-GraphQL-Docs)
+*   **Deployment:** GitHub Pages
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Local Development
+
+To run this project locally on your machine:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/salmanbappi/anime-discovery.git
+    cd anime-discovery
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open in browser:**
+    Visit `http://localhost:5173`
+
+## Deployment to GitHub Pages
+
+This project is configured for automated deployment to GitHub Pages.
+
+### Configuration Steps (Reference)
+
+If you need to replicate this setup, ensure the following configurations are met:
+
+1.  **`package.json`**:
+    *   Add `"homepage": "https://<username>.github.io/<repo-name>/"`
+    *   Add scripts:
+        ```json
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
+        ```
+
+2.  **`vite.config.js`**:
+    *   Set the base path to match your repository name:
+        ```javascript
+        export default defineConfig({
+          base: '/anime-discovery/',
+          plugins: [react()],
+        })
+        ```
+
+3.  **`src/App.jsx`**:
+    *   Pass the base URL to the Router to handle sub-directory hosting:
+        ```jsx
+        <Router basename={import.meta.env.BASE_URL}>
+        ```
+
+### How to Deploy
+
+To publish changes to the live site:
+
+```bash
+npm run deploy
+```
+
+This command builds the project and pushes the `dist` folder to the `gh-pages` branch on GitHub.
