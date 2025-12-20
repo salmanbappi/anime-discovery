@@ -41,6 +41,17 @@ body.dark-theme .section-title {
   color: #ffffff !important;
 }
 
+body.dark-theme .anime-title,
+body.dark-theme p, 
+body.dark-theme .text-muted {
+  color: #e0e0e0 !important;
+}
+
+body.dark-theme .btn-pagination {
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
 /* Navbar (Always Dark Blue) */
 .navbar-custom {
   background-color: var(--nav-bg) !important;
@@ -135,25 +146,47 @@ body.dark-theme .section-title {
     cursor: not-allowed;
 }
 
-/* Character Card Styles */
+/* Character Card Styles - Redesigned */
 .character-card {
-    background-color: var(--nav-bg);
-    border-radius: 4px;
+    background-color: var(--nav-bg); /* Matches sidebar/navbar */
+    border-radius: 8px;
     overflow: hidden;
     height: 100%;
     display: flex;
     align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.character-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.character-img {
+    width: 70px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.character-info {
+    padding: 12px;
+    font-size: 0.9rem;
+    flex: 1;
 }
 
 .character-name {
-    color: var(--heading-color);
-    font-weight: 600;
+    color: #ffffff; /* Always white text on dark card */
+    font-weight: 700;
     display: block;
+    margin-bottom: 4px;
 }
 
 .character-role {
-    font-size: 0.75rem;
-    color: var(--text-color);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7); /* Lighter white for role */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* --- GLOBAL STYLE RESET --- */
