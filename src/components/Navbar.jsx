@@ -5,8 +5,18 @@ import { Link, useNavigate } from 'react-router-dom';
 const CustomNavbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   const inputRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   const toggleSearch = () => {
       setIsSearchOpen(!isSearchOpen);
@@ -19,7 +29,7 @@ const CustomNavbar = () => {
       e.preventDefault();
       if (searchQuery.trim()) {
           navigate(`/?q=${encodeURIComponent(searchQuery)}`);
-          // Optional: close search on submit?
+          // Optional: close search on submit? 
           // setIsSearchOpen(false); 
       }
   };
@@ -31,7 +41,7 @@ const CustomNavbar = () => {
   };
 
   return (
-    <Navbar variant="dark" className="navbar-custom" expand="lg">
+    <Navbar className="navbar-custom" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/" className="fw-bold text-primary">
           <img
@@ -44,7 +54,21 @@ const CustomNavbar = () => {
           AniDiscovery
         </Navbar.Brand>
         
-        <div className="d-flex align-items-center order-lg-last ms-3">
+        <div className="d-flex align-items-center order-lg-last ms-3 gap-2">
+             {/* Theme Toggle */}
+             <button 
+                className="btn btn-link p-1" 
+                onClick={toggleTheme}
+                style={{ color: 'var(--color-nav-text)' }}
+             >
+                 {theme === 'dark' ? (
+                     <i className="bi bi-sun-fill fs-5"></i>
+                 ) : (
+                     <i className="bi bi-moon-fill fs-5"></i>
+                 )}
+             </button>
+
+             {/* Search Toggle */}
              <div className={`nav-search-container ${isSearchOpen ? 'active' : ''}`}>
                  {isSearchOpen ? (
                      <Form onSubmit={handleSearchSubmit} className="d-flex">
@@ -59,7 +83,11 @@ const CustomNavbar = () => {
                          />
                      </Form>
                  ) : (
-                     <button className="btn btn-link text-light p-1" onClick={toggleSearch}>
+                     <button 
+                        className="btn btn-link p-1" 
+                        onClick={toggleSearch}
+                        style={{ color: 'var(--color-nav-text)' }}
+                    >
                          <i className="bi bi-search fs-5"></i>
                      </button>
                  )}
@@ -81,5 +109,4 @@ const CustomNavbar = () => {
     </Navbar>
   );
 };
-
 export default CustomNavbar;
