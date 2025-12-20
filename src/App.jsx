@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomNavbar from './components/Navbar';
 import Home from './pages/Home';
+import AnimeDetails from './pages/AnimeDetails';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <CustomNavbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/anime/:id" element={<AnimeDetails />} />
         </Routes>
       </div>
     </Router>

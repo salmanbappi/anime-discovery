@@ -101,3 +101,75 @@ export const searchAnime = async (search) => {
         return [];
       }
 }
+
+export const fetchAnimeDetails = async (id) => {
+  const query = `
+    query ($id: Int) {
+      Media (id: $id, type: ANIME) {
+        id
+        title {
+          english
+          romaji
+          native
+        }
+        coverImage {
+          extraLarge
+          large
+        }
+        bannerImage
+        description(asHtml: false)
+        format
+        episodes
+        duration
+        status
+        startDate {
+          year
+          month
+          day
+        }
+        season
+        seasonYear
+        averageScore
+        genres
+        studios(isMain: true) {
+          nodes {
+            name
+          }
+        }
+        characters(sort: ROLE, perPage: 6) {
+          edges {
+            role
+            node {
+              id
+              name {
+                full
+              }
+              image {
+                medium
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = { id };
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ query, variables })
+  };
+
+  try {
+    const response = await fetch(ANILIST_API_URL, options);
+    const data = await response.json();
+    return data.data.Media;
+  } catch (error) {
+    console.error("Error fetching anime details:", error);
+    return null;
+  }
+};
