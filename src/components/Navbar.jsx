@@ -8,8 +8,8 @@ const CustomNavbar = () => {
       <Container>
         <Navbar.Brand as={Link} to="/" className="fw-bold text-primary">
           <img
-            alt=""
-            src="https://anilist.co/img/icons/icon.svg"
+            alt="AD Logo"
+            src={import.meta.env.BASE_URL + "AD-logo.svg"}
             width="30"
             height="30"
             className="d-inline-block align-top me-2"

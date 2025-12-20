@@ -56,14 +56,18 @@ const Home = () => {
         <Container>
           <h2 className="mb-4">Find your next favorite anime</h2>
           <div className="d-flex justify-content-center">
-             <Form onSubmit={handleSearch} style={{ width: '100%', maxWidth: '500px' }}>
+             <Form onSubmit={handleSearch} className="w-100 position-relative">
                 <Form.Control 
                     type="text" 
                     placeholder="Search for an anime..." 
-                    className="search-input"
+                    className="search-input-home form-control-lg pe-5"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                <button type="submit" className="btn btn-primary position-absolute top-0 end-0 h-100 px-4 rounded-end">
+                    <i className="bi bi-search"></i> {/* Assuming Bootstrap Icons are available or will be */}
+                    Search
+                </button>
              </Form>
           </div>
           {isSearching && (

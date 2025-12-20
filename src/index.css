@@ -99,26 +99,33 @@ a:hover {
   margin-bottom: 2rem;
 }
 
-.search-input {
-  background-color: #fbfbfb;
+.search-input-home {
+  background-color: #ffffff;
   border: none;
   border-radius: 6px;
   padding: 14px 20px;
   width: 100%;
-  max-width: 500px;
+  max-width: 500px; /* Adjusted to allow button */
   box-shadow: 0 2px 15px rgba(0,0,0,0.1);
   font-size: 1rem;
   color: #5c728a;
   outline: none;
   font-weight: 600;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
-.search-input::placeholder {
+.search-input-home::placeholder {
     color: #8ba0b2;
 }
 
-.search-input:focus {
+.search-input-home:focus {
   box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+}
+
+.hero-section .position-relative {
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 /* Details Page */
