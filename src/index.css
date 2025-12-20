@@ -1,11 +1,11 @@
 :root {
-  /* Default (Light) Variables */
-  --bg-color: #edf1f5;
-  --text-color: #647380;
-  --heading-color: #2b2d42;
-  --nav-bg: #2b2d42; /* Navbar always dark blue */
-  --nav-text: #ffffff;
-  --primary-color: #3db4f2;
+  /* --- LIGHT MODE (Default) --- */
+  --bg-color: #edf1f5;            /* Main background */
+  --text-color: #647380;          /* Body text */
+  --heading-color: #2b2d42;       /* Headings & Strong text */
+  --nav-bg: #2b2d42;              /* Navbar background */
+  --nav-text: #ffffff;            /* Navbar links */
+  --primary-color: #3db4f2;       /* Action color */
 }
 
 /* Base Styles (Light Mode) */
@@ -24,9 +24,21 @@ h1, h2, h3, h4, h5, h6, strong, .section-title {
   transition: color 0.3s;
 }
 
-a {
-  text-decoration: none !important;
-  color: inherit;
+/* --- DARK THEME OVERRIDES --- */
+body.dark-theme {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5,
+body.dark-theme h6,
+body.dark-theme strong,
+body.dark-theme .section-title {
+  color: #ffffff !important;
 }
 
 /* Navbar (Always Dark Blue) */
@@ -40,30 +52,7 @@ a {
     color: var(--nav-text) !important;
 }
 
-/* --- DARK THEME OVERRIDES --- */
-body.dark-theme {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
-}
-
-body.dark-theme h1, 
-body.dark-theme h2, 
-body.dark-theme h3, 
-body.dark-theme h4, 
-body.dark-theme h5, 
-body.dark-theme h6, 
-body.dark-theme strong, 
-body.dark-theme .section-title,
-body.dark-theme .anime-title {
-  color: #ffffff !important;
-}
-
-body.dark-theme .btn-pagination {
-    border-color: #ffffff !important;
-    color: #ffffff !important;
-}
-
-/* Other Component Styles */
+/* Search Input Styles */
 .nav-search-input {
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -74,6 +63,7 @@ body.dark-theme .btn-pagination {
     outline: none;
 }
 
+/* Anime Card & Title Styles */
 .anime-card {
   position: relative;
   border-radius: 4px;
@@ -99,7 +89,7 @@ body.dark-theme .btn-pagination {
   margin-top: 10px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--heading-color); /* Default light mode color */
+  color: inherit !important; /* Inherit color from parent (body) */
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -107,6 +97,7 @@ body.dark-theme .btn-pagination {
   overflow: hidden;
 }
 
+/* Genre Badge Styles */
 .genre-badge {
     background-color: var(--primary-color);
     color: white;
@@ -119,7 +110,7 @@ body.dark-theme .btn-pagination {
     font-weight: 600;
 }
 
-/* Pagination Buttons (Light Mode Default) */
+/* Pagination Buttons */
 .btn-pagination {
     width: 32px;
     height: 32px;
@@ -131,4 +122,47 @@ body.dark-theme .btn-pagination {
     justify-content: center;
     background: transparent;
     transition: all 0.2s;
+}
+
+.btn-pagination:hover:not(:disabled) {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: rgba(61, 180, 242, 0.1);
+}
+
+.btn-pagination:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Character Card Styles */
+.character-card {
+    background-color: var(--nav-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.character-name {
+    color: var(--heading-color);
+    font-weight: 600;
+    display: block;
+}
+
+.character-role {
+    font-size: 0.75rem;
+    color: var(--text-color);
+}
+
+/* --- GLOBAL STYLE RESET --- */
+/* This will disable underlines on all anchor tags */
+a {
+  text-decoration: none !important;
+}
+
+/* Ensure anime titles inherit color */
+.anime-title {
+  color: inherit !important;
 }
