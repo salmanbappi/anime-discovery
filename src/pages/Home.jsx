@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Spinner, Form } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
 import { fetchHomeData, searchAnime } from '../services/anilist';
 import AnimeCard from '../components/AnimeCard';
 
 const Home = () => {
   const [data, setData] = useState({ trending: [], popular: [] });
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const query = searchParams.get('q');
+  const isSearching = !!query;
 
+  // Load Initial Data (Trending/Popular)
   useEffect(() => {
     const loadData = async () => {
       const result = await fetchHomeData();
@@ -22,24 +26,29 @@ const Home = () => {
       setLoading(false);
     };
 
-    loadData();
+    if (!data.trending.length) {
+        loadData();
+    }
   }, []);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+  // Handle Search when URL query changes
+  useEffect(() => {
+      const performSearch = async () => {
+          if (!query) {
+              setSearchResults([]);
+              return;
+          }
+          setLoading(true);
+          const results = await searchAnime(query);
+          setSearchResults(results);
+          setLoading(false);
+      };
 
-    setIsSearching(true);
-    setLoading(true);
-    const results = await searchAnime(searchQuery);
-    setSearchResults(results);
-    setLoading(false);
-  };
+      performSearch();
+  }, [query]);
 
   const clearSearch = () => {
-      setIsSearching(false);
-      setSearchQuery('');
-      setSearchResults([]);
+      setSearchParams({});
   }
 
   if (loading && !data.trending.length && !isSearching) {
@@ -52,34 +61,22 @@ const Home = () => {
 
   return (
     <>
-      <div className="hero-section">
-        <Container>
-          <h2 className="mb-4">Find your next favorite anime</h2>
-          <div className="d-flex justify-content-center">
-             <Form onSubmit={handleSearch} className="w-100 position-relative">
-                <Form.Control 
-                    type="text" 
-                    placeholder="Search for an anime..." 
-                    className="search-input-home form-control-lg pe-5"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button type="submit" className="btn btn-primary position-absolute top-0 end-0 h-100 px-4 rounded-end">
-                    <i className="bi bi-search"></i> {/* Assuming Bootstrap Icons are available or will be */}
-                    Search
-                </button>
-             </Form>
+      {!isSearching && (
+          <div className="hero-section">
+            <Container>
+              <h2 className="mb-0">Find your next favorite anime</h2>
+            </Container>
           </div>
-          {isSearching && (
-              <button className="btn btn-link text-white mt-2" onClick={clearSearch}>Back to Home</button>
-          )}
-        </Container>
-      </div>
+      )}
 
-      <Container className="pb-5">
+      <Container className="pb-5 pt-4">
         {isSearching ? (
              <>
-             <h3 className="section-title">Search Results</h3>
+             <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3 className="section-title mb-0">Search Results for "{query}"</h3>
+                <button className="btn btn-outline-light btn-sm" onClick={clearSearch}>Clear Search</button>
+             </div>
+             
              {loading ? (
                 <div className="d-flex justify-content-center py-5">
                     <Spinner animation="border" variant="primary" />
