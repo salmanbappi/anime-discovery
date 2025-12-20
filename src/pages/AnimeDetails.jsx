@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Badge } from 'react-bootstrap';
 import { fetchAnimeDetails } from '../services/anilist';
+import AnimeCard from '../components/AnimeCard';
 
 const AnimeDetails = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const AnimeDetails = () => {
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
+      window.scrollTo(0, 0); // Reset scroll to top
       const data = await fetchAnimeDetails(id);
       setAnime(data);
       setLoading(false);
@@ -109,9 +111,24 @@ const AnimeDetails = () => {
                 ))}
             </div>
 
+            {/* Trailer Section */}
+            {anime.trailer?.site === 'youtube' && (
+                <div className="mb-5">
+                    <h4 className="mb-3">Trailer</h4>
+                    <div className="trailer-container">
+                        <iframe
+                            className="trailer-iframe"
+                            src={`https://www.youtube.com/embed/${anime.trailer.id}`}
+                            title="Trailer"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                </div>
+            )}
+
             {/* Characters Section */}
             {anime.characters?.edges?.length > 0 && (
-                <div className="mt-5">
+                <div className="mb-5">
                     <h4 className="mb-3">Characters</h4>
                     <Row className="g-3">
                         {anime.characters.edges.map(edge => (
@@ -132,6 +149,24 @@ const AnimeDetails = () => {
                     </Row>
                 </div>
             )}
+
+            {/* Recommendations Section */}
+            {anime.recommendations?.nodes?.length > 0 && (
+                <div>
+                    <h4 className="mb-3">Recommendations</h4>
+                    <Row className="g-3">
+                        {anime.recommendations.nodes.map(rec => {
+                            if (!rec.mediaRecommendation) return null;
+                            return (
+                                <Col xs={6} sm={4} md={3} lg={3} key={rec.mediaRecommendation.id}>
+                                    <AnimeCard anime={rec.mediaRecommendation} />
+                                </Col>
+                            );
+                        })}
+                    </Row>
+                </div>
+            )}
+
           </Col>
         </Row>
       </Container>

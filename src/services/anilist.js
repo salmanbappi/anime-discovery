@@ -136,6 +136,24 @@ export const fetchAnimeDetails = async (id) => {
             name
           }
         }
+        trailer {
+          id
+          site
+        }
+        recommendations(sort: RATING_DESC, perPage: 6) {
+          nodes {
+            mediaRecommendation {
+              id
+              title {
+                english
+                romaji
+              }
+              coverImage {
+                large
+              }
+            }
+          }
+        }
         characters(sort: ROLE, perPage: 6) {
           edges {
             role
