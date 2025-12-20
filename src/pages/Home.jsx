@@ -10,26 +10,36 @@ const Home = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   
+  // Pagination State
+  const [trendingPage, setTrendingPage] = useState(1);
+  const [popularPage, setPopularPage] = useState(1);
+  const [trendingHasNext, setTrendingHasNext] = useState(false);
+  const [popularHasNext, setPopularHasNext] = useState(false);
+
   const query = searchParams.get('q');
   const isSearching = !!query;
 
-  // Load Initial Data (Trending/Popular)
+  // Load Data (Trending/Popular) with Pagination
   useEffect(() => {
     const loadData = async () => {
-      const result = await fetchHomeData();
+      // Don't reload home data if we are searching
+      if (isSearching) return;
+
+      setLoading(true);
+      const result = await fetchHomeData(trendingPage, popularPage);
       if (result) {
         setData({
           trending: result.trending.media,
           popular: result.popular.media
         });
+        setTrendingHasNext(result.trending.pageInfo.hasNextPage);
+        setPopularHasNext(result.popular.pageInfo.hasNextPage);
       }
       setLoading(false);
     };
 
-    if (!data.trending.length) {
-        loadData();
-    }
-  }, []);
+    loadData();
+  }, [trendingPage, popularPage, isSearching]);
 
   // Handle Search when URL query changes
   useEffect(() => {
@@ -51,6 +61,16 @@ const Home = () => {
       setSearchParams({});
   }
 
+  const changeTrendingPage = (direction) => {
+      const newPage = trendingPage + direction;
+      if (newPage >= 1) setTrendingPage(newPage);
+  };
+
+  const changePopularPage = (direction) => {
+      const newPage = popularPage + direction;
+      if (newPage >= 1) setPopularPage(newPage);
+  };
+
   if (loading && !data.trending.length && !isSearching) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
@@ -58,6 +78,29 @@ const Home = () => {
       </div>
     );
   }
+
+  // Pagination Control Component
+  const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
+      <div className="d-flex align-items-center gap-3">
+          <button 
+            className="btn btn-outline-light btn-sm rounded-circle" 
+            onClick={onPrev} 
+            disabled={page === 1}
+            style={{ width: '32px', height: '32px', padding: 0 }}
+          >
+            &lt;
+          </button>
+          <span className="text-light small">Page {page}</span>
+          <button 
+            className="btn btn-outline-light btn-sm rounded-circle" 
+            onClick={onNext} 
+            disabled={!hasNext}
+            style={{ width: '32px', height: '32px', padding: 0 }}
+          >
+            &gt;
+          </button>
+      </div>
+  );
 
   return (
     <>
@@ -87,26 +130,52 @@ const Home = () => {
            </>
         ) : (
             <>
+                {/* Trending Section */}
                 <div className="mb-5">
-                <h3 className="section-title">Trending Now</h3>
-                <Row className="g-4">
-                    {data.trending.map(anime => (
-                    <Col key={anime.id} xs={6} sm={4} md={3} lg={2}>
-                        <AnimeCard anime={anime} />
-                    </Col>
-                    ))}
-                </Row>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h3 className="section-title mb-0">Trending Now</h3>
+                        <PaginationControls 
+                            page={trendingPage} 
+                            hasNext={trendingHasNext}
+                            onPrev={() => changeTrendingPage(-1)}
+                            onNext={() => changeTrendingPage(1)}
+                        />
+                    </div>
+                    {loading && trendingPage !== 1 ? (
+                         <div className="d-flex justify-content-center py-5"><Spinner animation="border" variant="primary" /></div>
+                    ) : (
+                        <Row className="g-4">
+                            {data.trending.map(anime => (
+                            <Col key={anime.id} xs={6} sm={4} md={3} lg={2}>
+                                <AnimeCard anime={anime} />
+                            </Col>
+                            ))}
+                        </Row>
+                    )}
                 </div>
 
+                {/* Popular Section */}
                 <div>
-                <h3 className="section-title">All Time Popular</h3>
-                <Row className="g-4">
-                    {data.popular.map(anime => (
-                    <Col key={anime.id} xs={6} sm={4} md={3} lg={2}>
-                        <AnimeCard anime={anime} />
-                    </Col>
-                    ))}
-                </Row>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h3 className="section-title mb-0">All Time Popular</h3>
+                        <PaginationControls 
+                            page={popularPage} 
+                            hasNext={popularHasNext}
+                            onPrev={() => changePopularPage(-1)}
+                            onNext={() => changePopularPage(1)}
+                        />
+                    </div>
+                    {loading && popularPage !== 1 ? (
+                        <div className="d-flex justify-content-center py-5"><Spinner animation="border" variant="primary" /></div>
+                    ) : (
+                        <Row className="g-4">
+                            {data.popular.map(anime => (
+                            <Col key={anime.id} xs={6} sm={4} md={3} lg={2}>
+                                <AnimeCard anime={anime} />
+                            </Col>
+                            ))}
+                        </Row>
+                    )}
                 </div>
             </>
         )}

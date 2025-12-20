@@ -1,9 +1,12 @@
 const ANILIST_API_URL = 'https://graphql.anilist.co';
 
-export const fetchHomeData = async () => {
+export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
   const query = `
-    query {
-      trending: Page(page: 1, perPage: 10) {
+    query ($trendingPage: Int, $popularPage: Int) {
+      trending: Page(page: $trendingPage, perPage: 12) {
+        pageInfo {
+          hasNextPage
+        }
         media(sort: TRENDING_DESC, type: ANIME) {
           id
           title {
@@ -20,7 +23,10 @@ export const fetchHomeData = async () => {
           format
         }
       }
-      popular: Page(page: 1, perPage: 10) {
+      popular: Page(page: $popularPage, perPage: 12) {
+        pageInfo {
+          hasNextPage
+        }
         media(sort: POPULARITY_DESC, type: ANIME) {
           id
           title {
@@ -40,13 +46,15 @@ export const fetchHomeData = async () => {
     }
   `;
 
+  const variables = { trendingPage, popularPage };
+
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: JSON.stringify({ query })
+    body: JSON.stringify({ query, variables })
   };
 
   try {
