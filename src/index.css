@@ -35,6 +35,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+a, a:hover, a:focus, a:active {
+  text-decoration: none !important;
+  color: inherit;
+}
+
 /* Navbar */
 .navbar-custom {
   background-color: var(--color-nav) !important;
@@ -75,10 +80,12 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   background-color: transparent;
   border: none;
+  display: block; /* Ensure it behaves like a block for the link */
 }
 
 .anime-card:hover {
   transform: translateY(-5px);
+  text-decoration: none !important; /* Double ensure no underline on hover */
 }
 
 .anime-cover {
@@ -98,12 +105,38 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 10px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-text-light);
+  color: var(--color-text-light) !important; /* Force color based on theme */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.4;
+  text-decoration: none !important;
+}
+
+/* Pagination Buttons */
+.btn-pagination {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--color-text);
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.btn-pagination:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: rgba(61, 180, 242, 0.1);
+}
+
+.btn-pagination:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
 .section-title {

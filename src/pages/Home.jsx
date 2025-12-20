@@ -83,19 +83,17 @@ const Home = () => {
   const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
       <div className="d-flex align-items-center gap-3">
           <button 
-            className="btn btn-sm rounded-circle" 
+            className="btn btn-sm rounded-circle btn-pagination" 
             onClick={onPrev} 
             disabled={page === 1}
-            style={{ width: '32px', height: '32px', padding: 0, border: '1px solid var(--color-text)', color: 'var(--color-text)' }}
           >
             &lt;
           </button>
-          <span className="small" style={{ color: 'var(--color-text)' }}>Page {page}</span>
+          <span className="small" style={{ color: 'var(--color-text)', minWidth: '50px', textAlign: 'center' }}>Page {page}</span>
           <button 
-            className="btn btn-sm rounded-circle" 
+            className="btn btn-sm rounded-circle btn-pagination" 
             onClick={onNext} 
             disabled={!hasNext}
-            style={{ width: '32px', height: '32px', padding: 0, border: '1px solid var(--color-text)', color: 'var(--color-text)' }}
           >
             &gt;
           </button>
