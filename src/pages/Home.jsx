@@ -61,14 +61,6 @@ const Home = () => {
 
   return (
     <>
-      {!isSearching && (
-          <div className="hero-section">
-            <Container>
-              <h2 className="mb-0">Find your next favorite anime</h2>
-            </Container>
-          </div>
-      )}
-
       <Container className="pb-5 pt-4">
         {isSearching ? (
              <>
