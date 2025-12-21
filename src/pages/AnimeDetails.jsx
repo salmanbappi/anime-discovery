@@ -91,7 +91,7 @@ const AnimeDetails = () => {
                     </div>
                     <div className="stat-row border-0">
                         <span className="stat-label"><i className="bi bi-building me-2"></i>Studio</span>
-                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '150px' }}>
+                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '180px' }}>
                             {anime.studios?.nodes[0]?.name || '-'}
                         </span>
                     </div>
@@ -100,7 +100,7 @@ const AnimeDetails = () => {
           </Col>
 
           {/* Right Content: Title, Description, etc. */}
-          <Col lg={8} md={7} className="details-content-col ps-md-5">
+          <Col lg={8} md={7} className="details-content-col ps-md-4">
             <motion.div 
                 initial={{ y: 20, opacity: 0 }} 
                 animate={{ y: 0, opacity: 1 }} 
