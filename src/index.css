@@ -201,7 +201,6 @@ body.dark-theme .anime-card {
 .filter-toolbar {
     background-color: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
-    padding: 1.5rem !important;
 }
 
 .form-select {
@@ -222,6 +221,132 @@ body.dark-theme .anime-card {
     background: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     color: #fff !important;
+}
+
+/* Anime Details Overhaul */
+.details-banner-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.details-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.details-banner-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--card-bg);
+}
+
+.details-banner-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to top, var(--bg-color) 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.details-content-wrapper {
+    margin-top: -150px;
+    position: relative;
+    z-index: 10;
+}
+
+.details-poster {
+    width: 100%;
+    border-radius: 12px;
+    border: 4px solid var(--bg-color);
+}
+
+.sidebar-info-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.info-label { color: var(--text-muted); }
+.info-value { color: var(--text-color); font-weight: 600; }
+
+.details-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-top: 160px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    color: #fff !important;
+}
+
+.genre-pill {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.details-description {
+    line-height: 1.8;
+    color: var(--text-muted);
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 12px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.trailer-aspect-ratio {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+
+.trailer-aspect-ratio iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.char-card-mini {
+    background: var(--card-bg);
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    height: 70px;
+    border: 1px solid var(--border-color);
+}
+
+.char-img-mini { width: 55px; object-fit: cover; }
+.char-info-mini { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
+.char-name-mini { font-weight: 700; font-size: 0.9rem; }
+.char-role-mini { font-size: 0.75rem; }
+
+@media (max-width: 768px) {
+    .details-title { margin-top: 20px; font-size: 1.8rem; text-align: center; }
+    .details-content-wrapper { margin-top: -50px; }
+    .details-sidebar { display: flex; flex-direction: column; align-items: center; }
+    .details-poster { width: 180px; }
+    .sidebar-info-card { width: 100%; }
 }
 
 /* Global Transitions */
