@@ -116,6 +116,53 @@ export const searchAnime = async (search) => {
       }
 }
 
+export const fetchAdvancedData = async ({ page = 1, genre, year, season, sort = "POPULARITY_DESC" }) => {
+  const query = `
+    query ($page: Int, $genre: String, $year: Int, $season: MediaSeason, $sort: [MediaSort]) {
+      Page(page: $page, perPage: 24) {
+        pageInfo {
+          hasNextPage
+        }
+        media(genre: $genre, seasonYear: $year, season: $season, sort: $sort, type: ANIME) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            extraLarge
+            large
+          }
+          averageScore
+          genres
+          episodes
+          format
+        }
+      }
+    }
+  `;
+
+  const variables = { page, genre, year, season, sort: [sort] };
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ query, variables })
+  };
+
+  try {
+    const response = await fetch(ANILIST_API_URL, options);
+    const data = await response.json();
+    return data.data.Page;
+  } catch (error) {
+    console.error("Error fetching filtered data:", error);
+    return null;
+  }
+};
+
 export const fetchAnimeDetails = async (id) => {
   const query = `
     query ($id: Int) {

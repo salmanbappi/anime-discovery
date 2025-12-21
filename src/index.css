@@ -52,11 +52,16 @@ body.dark-theme .btn-pagination {
     color: #ffffff !important;
 }
 
-/* Navbar (Always Dark Blue) */
+/* Navbar (Matches Dark Theme) */
 .navbar-custom {
-  background-color: var(--nav-bg) !important;
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.8rem 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .navbar-custom {
+    background-color: #0f0f0f !important;
 }
 
 .navbar-brand, .nav-link, .btn-link {
