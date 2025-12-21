@@ -1,22 +1,21 @@
 :root {
-  /* --- LIGHT THEME (Default) --- */
-  --bg-color: #edf1f5;            /* Soft light background */
-  --card-bg: #ffffff;             /* White cards */
-  --text-color: #2b2d42;          /* Dark gray text */
-  --text-muted: #647380;          /* Gray text */
-  --primary-color: #3db4f2;       /* AniList blue */
-  --nav-bg: #2b2d42;              /* Dark blue navbar (standard) */
-  --nav-text: #ffffff;
+  /* --- LIGHT THEME --- */
+  --bg-color: #edf1f5;
+  --card-bg: #ffffff;
+  --text-color: #2b2d42;
+  --text-muted: #647380;
+  --primary-color: #3db4f2;
+  --nav-bg: #2b2d42;
   --border-color: rgba(0, 0, 0, 0.05);
 }
 
-/* --- DARK THEME OVERRIDES --- */
 body.dark-theme {
-  --bg-color: #0b0b0b;            /* Deep black background */
-  --card-bg: #1a1a1a;             /* Subtle card background */
-  --text-color: #ffffff;          /* White text */
-  --text-muted: #a0a0a0;          /* Gray text */
-  --nav-bg: #0f0f0f;              /* Darker navbar */
+  /* --- DARK THEME --- */
+  --bg-color: #0b0b0b;
+  --card-bg: #151515;
+  --text-color: #ffffff;
+  --text-muted: #a0a0a0;
+  --nav-bg: #0f0f0f;
   --border-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -30,30 +29,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6, strong, .section-title {
-  color: var(--text-color);
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  transition: color 0.3s ease;
-}
-
-.section-title {
-    font-size: 1.5rem;
-    position: relative;
-    padding-left: 15px;
-}
-
-.section-title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 70%;
-    background-color: var(--primary-color);
-    border-radius: 2px;
-}
+h1, h2, h3, h4, h5, h6, strong { color: var(--text-color); font-weight: 800; }
 
 /* Navbar */
 .navbar-custom {
@@ -64,310 +40,201 @@ h1, h2, h3, h4, h5, h6, strong, .section-title {
   position: sticky;
   top: 0;
   z-index: 1100;
-  transition: background-color 0.3s ease;
 }
 
-.navbar-brand {
-    color: var(--primary-color) !important;
-}
-
-.nav-search-input {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #fff !important;
-    border-radius: 20px;
-    padding: 8px 20px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-/* Hero Section */
-.hero-container {
-    width: 100%;
-    height: 600px;
-    overflow: hidden;
-    position: relative;
-    margin-top: -1.5rem;
-}
-
-.hero-slide {
-    width: 100%;
-    height: 600px;
-    background-size: cover;
-    background-position: center 20%;
-    position: relative;
-}
-
+/* Hero & General */
+.hero-container { width: 100%; height: 600px; overflow: hidden; position: relative; margin-top: -1.5rem; }
+.hero-slide { width: 100%; height: 600px; background-size: cover; background-position: center 20%; position: relative; }
 .hero-overlay {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     background: linear-gradient(to right, var(--bg-color) 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%),
                 linear-gradient(to top, var(--bg-color) 0%, transparent 50%);
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
 }
-
-.hero-title {
-    font-size: 4rem;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    color: #fff; /* Always white on hero overlay */
-    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-
-.hero-desc {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
-    margin-bottom: 2rem;
-    max-width: 600px;
-}
+.hero-title { font-size: 4rem; font-weight: 900; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 
 /* Anime Card */
-.anime-card-link {
-    text-decoration: none !important;
-}
-
+.anime-card-link { text-decoration: none !important; }
 .anime-card {
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
+    position: relative; border-radius: 10px; overflow: hidden;
     background-color: var(--card-bg);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     aspect-ratio: 2/3;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
-
-body.dark-theme .anime-card {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+.anime-card:hover { transform: scale(1.05) translateY(-5px); }
+.card-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 80%);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; color: #fff;
 }
+.card-title { font-size: 0.85rem; font-weight: 700; }
+.card-badges { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px; }
+.badge-item { font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; color: #fff; }
+.badge-item.score { background: var(--primary-color); }
+.badge-item.format { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); }
 
-.anime-cover {
+/* --- Anime Details Overhaul --- */
+.details-banner-wrapper {
+    position: relative;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
+    height: 450px;
+    overflow: hidden;
+    background-color: #000;
 }
 
-.anime-card:hover .anime-cover {
+.details-banner-blur {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(25px) brightness(0.6);
     transform: scale(1.1);
 }
 
-.card-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 80%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 15px;
-    color: #fff;
-}
-
-.card-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-    line-height: 1.2;
-}
-
-.card-badges {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.badge-item {
-    font-size: 0.65rem;
-    font-weight: 900;
-    padding: 3px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    backdrop-filter: blur(5px);
-    color: #fff;
-}
-
-.badge-item.score { background: rgba(61, 180, 242, 0.9); }
-.badge-item.format { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); }
-
-/* Filter UI */
-.filter-toolbar {
-    background-color: var(--card-bg) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
-.form-select {
-    background-color: var(--bg-color) !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--text-color) !important;
-    border-radius: 10px !important;
-}
-
-/* Pagination */
-.btn-pagination {
-    background: var(--card-bg) !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--text-color) !important;
-}
-
-.btn-pagination:hover:not(:disabled) {
-    background: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
-    color: #fff !important;
-}
-
-/* Anime Details Overhaul */
-.details-banner-container {
+.details-banner-main {
     position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-}
-
-.details-banner-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.details-banner-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: var(--card-bg);
+    display: block;
 }
 
 .details-banner-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(to top, var(--bg-color) 0%, rgba(0,0,0,0.4) 100%);
+    bottom: 0; left: 0; right: 0; height: 100%;
+    background: linear-gradient(to top, var(--bg-color) 0%, transparent 100%);
 }
 
-.details-content-wrapper {
-    margin-top: -150px;
+.details-main-container {
+    margin-top: -200px;
     position: relative;
-    z-index: 10;
+    z-index: 20;
 }
 
-.details-poster {
+.details-main-poster {
     width: 100%;
     border-radius: 12px;
     border: 4px solid var(--bg-color);
+    background-color: var(--card-bg);
 }
 
-.sidebar-info-card {
+.sidebar-stats-card {
     background-color: var(--card-bg);
     border-radius: 12px;
     padding: 20px;
     border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.info-row {
+.stats-header {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.stat-row {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    align-items: center;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border-color);
-    font-size: 0.9rem;
 }
 
-.info-label { color: var(--text-muted); }
-.info-value { color: var(--text-color); font-weight: 600; }
+.stat-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+}
 
-.details-title {
-    font-size: 2.8rem;
+.stat-value {
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.main-title {
+    font-size: 3.5rem;
     font-weight: 900;
-    margin-top: 160px;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    color: #fff !important;
+    line-height: 1.1;
+    margin-top: 120px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
-.genre-pill {
+.genre-tag {
     background-color: var(--primary-color);
     color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
+    padding: 6px 18px;
+    border-radius: 30px;
     font-size: 0.8rem;
-    font-weight: 700;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(61, 180, 242, 0.3);
 }
 
-.details-description {
-    line-height: 1.8;
-    color: var(--text-muted);
-}
-
-.section-subtitle {
-    font-size: 1.2rem;
+.section-header {
+    font-size: 1.3rem;
+    font-weight: 800;
     margin-bottom: 1.5rem;
     position: relative;
-    padding-left: 12px;
-    border-left: 4px solid var(--primary-color);
+    padding-left: 15px;
 }
 
-.trailer-aspect-ratio {
+.section-header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%; transform: translateY(-50%);
+    width: 4px; height: 80%; background: var(--primary-color);
+    border-radius: 2px;
+}
+
+.description-box {
+    line-height: 1.8;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+.video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+    padding-bottom: 56.25%;
     height: 0;
 }
 
-.trailer-aspect-ratio iframe {
+.video-container iframe {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     border: none;
 }
 
-.char-card-mini {
+.char-item {
     background: var(--card-bg);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     overflow: hidden;
-    height: 70px;
+    height: 80px;
     border: 1px solid var(--border-color);
+    transition: transform 0.2s ease;
 }
 
-.char-img-mini { width: 55px; object-fit: cover; }
-.char-info-mini { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
-.char-name-mini { font-weight: 700; font-size: 0.9rem; }
-.char-role-mini { font-size: 0.75rem; }
+.char-item:hover { transform: translateX(5px); border-color: var(--primary-color); }
+.char-avatar { width: 65px; object-fit: cover; }
+.char-details { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
+.char-name { font-weight: 800; font-size: 0.95rem; }
+.char-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; }
 
 @media (max-width: 768px) {
-    .details-title { margin-top: 20px; font-size: 1.8rem; text-align: center; }
-    .details-content-wrapper { margin-top: -50px; }
-    .details-sidebar { display: flex; flex-direction: column; align-items: center; }
-    .details-poster { width: 180px; }
-    .sidebar-info-card { width: 100%; }
+    .main-title { margin-top: 20px; font-size: 2.2rem; text-align: center; }
+    .details-main-container { margin-top: -80px; }
+    .details-sidebar-col { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; }
+    .details-main-poster { width: 200px; }
+    .sidebar-stats-card { width: 100%; }
 }
 
-/* Global Transitions */
-a { transition: all 0.2s ease; }
-
-@media (max-width: 768px) {
-    .hero-container, .hero-slide { height: 450px; }
-    .hero-title { font-size: 2.2rem; }
-    .hero-overlay {
-        background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%);
-        align-items: flex-end;
-        padding-bottom: 3rem;
-    }
-}
-
-/* Ensure anime titles inherit color */
-.anime-title {
-  color: inherit !important;
-}
-
-/* Reset underlies */
-a {
-  text-decoration: none !important;
-}
+/* Global Fixes */
+a { text-decoration: none !important; }
+.section-title { font-size: 1.5rem; font-weight: 800; position: relative; padding-left: 15px; }
+.section-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 70%; background-color: var(--primary-color); border-radius: 2px; }
+.btn-pagination { background: var(--card-bg) !important; border: 1px solid var(--border-color) !important; color: var(--text-color) !important; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+.btn-pagination:hover:not(:disabled) { background: var(--primary-color) !important; border-color: var(--primary-color) !important; color: #fff !important; }
