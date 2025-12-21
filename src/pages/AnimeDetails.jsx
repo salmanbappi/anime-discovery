@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { fetchAnimeDetails } from '../services/anilist';
 import AnimeCard from '../components/AnimeCard';
 
@@ -39,14 +39,14 @@ const AnimeDetails = () => {
   }
 
   return (
-    <motion.div 
+    <Motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
       className="details-page-v2"
     >
       <Container className="py-3">
         {/* 1. Cinematic Banner (Top) */}
-        <motion.div 
+        <Motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="top-banner-container mb-4"
@@ -56,7 +56,7 @@ const AnimeDetails = () => {
                 alt="Banner" 
                 className="top-banner-img rounded-xl shadow-lg" 
             />
-        </motion.div>
+        </Motion.div>
 
         {/* 2. Information Card (Full Width) */}
         <div className="info-card-v2 mb-4">
@@ -155,7 +155,7 @@ const AnimeDetails = () => {
             </div>
         )}
       </Container>
-    </motion.div>
+    </Motion.div>
   );
 };
 

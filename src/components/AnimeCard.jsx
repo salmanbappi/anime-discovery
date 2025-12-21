@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 const AnimeCard = ({ anime }) => {
   const title = anime.title.english || anime.title.romaji;
   
   return (
     <Link to={`/anime/${anime.id}`} className="anime-card-link">
-      <motion.div 
+      <Motion.div 
         className="anime-card"
         whileHover={{ scale: 1.05, y: -5 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -39,7 +39,7 @@ const AnimeCard = ({ anime }) => {
             </h3>
           </div>
         </div>
-      </motion.div>
+      </Motion.div>
     </Link>
   );
 };

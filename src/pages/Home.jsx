@@ -8,6 +8,13 @@ import AnimeCard from '../components/AnimeCard';
 const genres = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
 const years = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i);
 const seasons = ["WINTER", "SPRING", "SUMMER", "FALL"];
+const sortOptions = [
+    { label: "Popularity", value: "POPULARITY_DESC" },
+    { label: "Trending", value: "TRENDING_DESC" },
+    { label: "Average Score", value: "SCORE_DESC" },
+    { label: "Favorites", value: "FAVOURITES_DESC" },
+    { label: "Newest", value: "START_DATE_DESC" },
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -24,6 +31,14 @@ const itemVariants = {
   show: { opacity: 1, scale: 1, y: 0 }
 };
 
+const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
+    <div className="d-flex align-items-center gap-3">
+        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onPrev} disabled={page === 1}>&lt;</Button>
+        <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {page}</span>
+        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onNext} disabled={!hasNext}>&gt;</Button>
+    </div>
+);
+
 const Home = () => {
   const [data, setData] = useState({ trending: [], popular: [] });
   const [filteredData, setFilteredData] = useState([]);
@@ -35,6 +50,7 @@ const Home = () => {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeason, setSelectedSeason] = useState('');
+  const [selectedSort, setSelectedSort] = useState('POPULARITY_DESC');
   const [isFiltering, setIsFiltering] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
@@ -80,7 +96,7 @@ const Home = () => {
   // Handle Filters
   useEffect(() => {
       const applyFilters = async () => {
-          if (!selectedGenre && !selectedYear && !selectedSeason) {
+          if (!selectedGenre && !selectedYear && !selectedSeason && selectedSort === 'POPULARITY_DESC') {
               setIsFiltering(false);
               return;
           }
@@ -90,7 +106,8 @@ const Home = () => {
               page: filterPage,
               genre: selectedGenre || undefined,
               year: selectedYear ? parseInt(selectedYear) : undefined,
-              season: selectedSeason || undefined
+              season: selectedSeason || undefined,
+              sort: selectedSort
           });
           if (result) {
               setFilteredData(result.media);
@@ -99,25 +116,18 @@ const Home = () => {
           setLoading(false);
       };
       applyFilters();
-  }, [selectedGenre, selectedYear, selectedSeason, filterPage]);
+  }, [selectedGenre, selectedYear, selectedSeason, selectedSort, filterPage]);
 
   const clearFilters = () => {
       setSelectedGenre('');
       setSelectedYear('');
       setSelectedSeason('');
+      setSelectedSort('POPULARITY_DESC');
       setFilterPage(1);
       setIsFiltering(false);
   };
 
   const clearSearch = () => setSearchParams({});
-
-  const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
-      <div className="d-flex align-items-center gap-3">
-          <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onPrev} disabled={page === 1}>&lt;</Button>
-          <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {page}</span>
-          <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onNext} disabled={!hasNext}>&gt;</Button>
-      </div>
-  );
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -132,11 +142,16 @@ const Home = () => {
                     <Container>
                       <Row>
                         <Col md={8} lg={6}>
-                          <motion.div initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
-                            <span className="badge bg-primary mb-3">Trending Now</span>
-                            <h1 className="hero-title mb-3" style={{ fontSize: '3rem', fontWeight: 900 }}>{anime.title.english || anime.title.romaji}</h1>
-                            <p className="hero-desc mb-4 d-none d-md-block" style={{ fontSize: '1rem', opacity: 0.8 }} dangerouslySetInnerHTML={{ __html: anime.description?.substring(0, 160) + '...' }} />
-                            <div className="d-flex gap-3">
+                          <motion.div 
+                            initial={{ x: -30, opacity: 0 }} 
+                            animate={{ x: 0, opacity: 1 }} 
+                            transition={{ duration: 0.8, delay: 0.3 }}
+                            className="text-center text-md-start"
+                          >
+                            <span className="badge bg-transparent border border-white text-white mb-3">Trending Now</span>
+                            <h1 className="hero-title mb-3">{anime.title.english || anime.title.romaji}</h1>
+                            <p className="hero-desc mb-4 d-none d-md-block mx-auto mx-md-0" style={{ fontSize: '1rem', opacity: 0.8 }} dangerouslySetInnerHTML={{ __html: anime.description?.substring(0, 160) + '...' }} />
+                            <div className="d-flex gap-3 justify-content-center justify-content-md-start">
                               <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-4 fw-bold">Watch Now</Link>
                               <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 fw-bold">Details</Link>
                             </div>
@@ -198,8 +213,14 @@ const Home = () => {
                                     {seasons.map(s => <option key={s} value={s}>{s}</option>)}
                                 </Form.Select>
                             </Col>
+                            <Col xs={6} md={3}>
+                                <Form.Label className="small text-muted">Sort By</Form.Label>
+                                <Form.Select className="border-secondary" value={selectedSort} onChange={(e) => {setSelectedSort(e.target.value); setFilterPage(1);}}>
+                                    {sortOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                                </Form.Select>
+                            </Col>
                             <Col xs={12} md={2} className="ms-auto d-flex gap-2">
-                                {(selectedGenre || selectedYear || selectedSeason) && (
+                                {(selectedGenre || selectedYear || selectedSeason || selectedSort !== 'POPULARITY_DESC') && (
                                     <Button variant="outline-danger" className="w-100 rounded-pill" onClick={clearFilters}>Clear</Button>
                                 )}
                             </Col>

@@ -61,6 +61,12 @@ body {
     margin-bottom: 20px;
 }
 
+.info-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0 30px;
+}
+
 .info-item-v2 {
     display: flex;
     justify-content: space-between;
@@ -132,6 +138,13 @@ body {
 @media (max-width: 768px) {
     .display-title-v2 { font-size: 2rem; }
     .top-banner-container { padding: 0 10px; }
+    .hero-container, .hero-slide { height: 70vh; }
+    .hero-title { font-size: 2rem; }
+    .hero-overlay {
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%);
+        text-align: center;
+        justify-content: center;
+    }
 }
 
 /* Anime Card Styles */
@@ -220,4 +233,109 @@ body {
     overflow: hidden;
 }
 
-/* ... existing code ... */
+/* Hero Carousel */
+.hero-container {
+    position: relative;
+    height: 85vh;
+    margin-top: -20px;
+}
+
+.hero-slide {
+    height: 85vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 80%);
+    display: flex;
+    align-items: center;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.8);
+    line-height: 1.1;
+}
+
+.hero-desc {
+    max-width: 500px;
+    color: #eee;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+}
+
+/* Filter Toolbar */
+.filter-toolbar {
+    background-color: #111;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 15px;
+    color: #ffffff !important;
+}
+
+/* Pagination */
+.btn-pagination {
+    width: 35px;
+    height: 35px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+.btn-pagination:hover:not(:disabled) {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Navbar Search */
+.nav-search-container {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-search-input {
+    background-color: #111 !important;
+    border: 1px solid var(--border-color) !important;
+    color: #fff !important;
+    border-radius: 20px !important;
+    padding-left: 1.5rem !important;
+}
+
+.nav-search-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(61, 180, 242, 0.25) !important;
+}
+
+/* Utils */
+.rounded-xl { border-radius: 20px !important; }
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+

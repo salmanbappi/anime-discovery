@@ -22,7 +22,7 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
           genres
           episodes
           format
-          description
+          description(asHtml: false)
         }
       }
       popular: Page(page: $popularPage, perPage: 12) {
@@ -178,7 +178,7 @@ export const fetchAnimeDetails = async (id) => {
           large
         }
         bannerImage
-        description(asHtml: false)
+        description(asHtml: true)
         format
         episodes
         duration
