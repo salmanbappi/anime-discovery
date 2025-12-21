@@ -1,20 +1,10 @@
 :root {
-  /* --- LIGHT THEME --- */
-  --bg-color: #edf1f5;
-  --card-bg: #ffffff;
-  --text-color: #2b2d42;
-  --text-muted: #647380;
-  --primary-color: #3db4f2;
-  --nav-bg: #2b2d42;
-  --border-color: rgba(0, 0, 0, 0.05);
-}
-
-body.dark-theme {
-  /* --- DARK THEME --- */
+  /* --- DARK THEME ONLY --- */
   --bg-color: #0b0b0b;
   --card-bg: #151515;
   --text-color: #ffffff;
-  --text-muted: #cccccc; /* Brighter gray for better visibility */
+  --text-muted: #cccccc;
+  --primary-color: #3db4f2;
   --nav-bg: #0f0f0f;
   --border-color: rgba(255, 255, 255, 0.1);
 }
@@ -26,13 +16,9 @@ body {
   font-family: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header { 
-    color: var(--text-color) !important; 
-    font-weight: 800; 
-}
+h1, h2, h3, h4, h5, h6, strong { color: var(--text-color); font-weight: 800; }
 
 /* Navbar */
 .navbar-custom {
@@ -65,6 +51,7 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     display: flex; align-items: center;
 }
 .hero-title { font-size: 4rem; font-weight: 900; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.hero-desc { font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 2rem; max-width: 600px; }
 
 /* Anime Card */
 .anime-card-link { text-decoration: none !important; }
@@ -73,7 +60,7 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     background-color: var(--card-bg);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     aspect-ratio: 2/3;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 .anime-card:hover { transform: scale(1.05) translateY(-5px); }
 .card-overlay {
@@ -144,7 +131,7 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     font-size: 0.85rem;
     font-weight: 900;
     text-transform: uppercase;
-    color: var(--text-color) !important; /* Force high contrast */
+    color: var(--text-color) !important;
     letter-spacing: 1.5px;
     opacity: 0.9;
 }
@@ -164,11 +151,7 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     align-items: center;
 }
 
-.stat-value {
-    color: var(--text-color);
-    font-weight: 700;
-    font-size: 0.9rem;
-}
+.stat-value { color: var(--text-color); font-weight: 700; font-size: 0.9rem; }
 
 .main-title {
     font-size: 3.5rem;
@@ -196,7 +179,6 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     position: relative;
     padding-left: 15px;
     color: var(--text-color) !important;
-    text-transform: capitalize;
 }
 
 .section-header::before {
@@ -211,12 +193,6 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     line-height: 1.8;
     color: var(--text-color) !important;
     font-size: 1.05rem;
-    opacity: 0.95;
-}
-
-/* Fix for dangerouslySetInnerHTML nested tags */
-.description-box p, .description-box span, .description-box div {
-    color: var(--text-color) !important;
 }
 
 .video-container {
@@ -238,14 +214,26 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header {
     overflow: hidden;
     height: 80px;
     border: 1px solid var(--border-color);
-    transition: transform 0.2s ease;
 }
 
-.char-item:hover { transform: translateX(5px); border-color: var(--primary-color); }
 .char-avatar { width: 65px; object-fit: cover; }
 .char-details { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
 .char-name { font-weight: 800; font-size: 0.95rem; color: var(--text-color) !important; }
 .char-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted) !important; }
+
+/* Filter UI */
+.filter-toolbar {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 1.5rem !important;
+}
+
+.form-select {
+    background-color: var(--bg-color) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 10px !important;
+}
 
 @media (min-width: 992px) {
     .details-sidebar-col { flex: 0 0 32%; max-width: 32%; }

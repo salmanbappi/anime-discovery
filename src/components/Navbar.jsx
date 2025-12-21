@@ -5,22 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 const CustomNavbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   const inputRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-    } else {
-        document.body.classList.remove('dark-theme');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
 
   const toggleSearch = () => {
       setIsSearchOpen(!isSearchOpen);
@@ -79,19 +65,6 @@ const CustomNavbar = () => {
                      </button>
                  )}
              </div>
-
-             {/* Theme Toggle - Always Visible */}
-             <button 
-                className="btn btn-link p-1" 
-                onClick={toggleTheme}
-                style={{ color: 'var(--text-color)' }}
-             >
-                 {theme === 'dark' ? (
-                     <i className="bi bi-sun-fill fs-5"></i>
-                 ) : (
-                     <i className="bi bi-moon-fill fs-5"></i>
-                 )}
-             </button>
         </div>
       </Container>
     </Navbar>
