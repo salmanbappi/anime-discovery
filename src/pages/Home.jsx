@@ -175,25 +175,25 @@ const Home = () => {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     style={{ overflow: 'hidden' }}
                 >
-                    <div className="filter-toolbar p-3 rounded shadow-sm" style={{ backgroundColor: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div className="filter-toolbar rounded shadow-sm">
                         <Row className="g-3 align-items-end">
                             <Col xs={12} md={3}>
                                 <Form.Label className="small text-muted">Genre</Form.Label>
-                                <Form.Select className="bg-dark text-white border-secondary" value={selectedGenre} onChange={(e) => {setSelectedGenre(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedGenre} onChange={(e) => {setSelectedGenre(e.target.value); setFilterPage(1);}}>
                                     <option value="">All Genres</option>
                                     {genres.map(g => <option key={g} value={g}>{g}</option>)}
                                 </Form.Select>
                             </Col>
                             <Col xs={6} md={2}>
                                 <Form.Label className="small text-muted">Year</Form.Label>
-                                <Form.Select className="bg-dark text-white border-secondary" value={selectedYear} onChange={(e) => {setSelectedYear(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedYear} onChange={(e) => {setSelectedYear(e.target.value); setFilterPage(1);}}>
                                     <option value="">All Years</option>
                                     {years.map(y => <option key={y} value={y}>{y}</option>)}
                                 </Form.Select>
                             </Col>
                             <Col xs={6} md={2}>
                                 <Form.Label className="small text-muted">Season</Form.Label>
-                                <Form.Select className="bg-dark text-white border-secondary" value={selectedSeason} onChange={(e) => {setSelectedSeason(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedSeason} onChange={(e) => {setSelectedSeason(e.target.value); setFilterPage(1);}}>
                                     <option value="">All Seasons</option>
                                     {seasons.map(s => <option key={s} value={s}>{s}</option>)}
                                 </Form.Select>
