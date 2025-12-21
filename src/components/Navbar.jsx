@@ -102,11 +102,13 @@ const CustomNavbar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link href="#">Social</Nav.Link>
+            <Nav.Link as={Link} to="/#trending">Trending</Nav.Link>
+            <Nav.Link as={Link} to="/#popular">Popular</Nav.Link>
+            <Nav.Link href="https://github.com/salmanbappi" target="_blank">Social</Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link href="#">Login</Nav.Link>
-            <Nav.Link href="#" className="btn btn-primary text-white px-3 rounded-pill ms-2" style={{ backgroundColor: '#3db4f2', border: 'none' }}>Sign Up</Nav.Link>
+            <Nav.Link href="#" className="btn btn-primary text-white px-3 rounded-pill ms-lg-2" style={{ backgroundColor: '#3db4f2', border: 'none' }}>Sign Up</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

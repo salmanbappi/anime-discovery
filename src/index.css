@@ -75,37 +75,47 @@ body.dark-theme .btn-pagination {
 }
 
 /* Anime Card & Title Styles */
-.anime-card {
-  position: relative;
-  border-radius: 4px;
-  overflow: hidden;
-  transition: transform 0.2s;
-  cursor: pointer;
+.anime-card-container {
   display: block;
+  cursor: pointer;
+  text-decoration: none !important;
 }
 
-.anime-card:hover {
-  transform: translateY(-5px);
+.anime-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.anime-card-container:hover .anime-card {
+  box-shadow: 0 12px 24px rgba(0,0,0,0.4);
 }
 
 .anime-cover {
   width: 100%;
   aspect-ratio: 2/3;
   object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: block;
 }
 
 .anime-title {
   margin-top: 10px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: inherit !important; /* Inherit color from parent (body) */
+  color: inherit !important;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: color 0.2s;
+}
+
+.anime-card-container:hover .anime-title {
+  color: var(--primary-color) !important;
 }
 
 /* Genre Badge Styles */

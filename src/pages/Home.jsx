@@ -129,7 +129,7 @@ const Home = () => {
         ) : (
             <>
                 {/* Trending Section */}
-                <div className="mb-5">
+                <div className="mb-5" id="trending">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h3 className="section-title mb-0">Trending Now</h3>
                         <PaginationControls 
@@ -153,7 +153,7 @@ const Home = () => {
                 </div>
 
                 {/* Popular Section */}
-                <div>
+                <div id="popular">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <h3 className="section-title mb-0">All Time Popular</h3>
                         <PaginationControls 
