@@ -59,7 +59,7 @@ const AnimeDetails = () => {
       <Container className="details-main-container">
         <Row>
           {/* Left Sidebar: Poster & Stats */}
-          <Col lg={3} md={4} className="details-sidebar-col">
+          <Col lg={4} md={5} className="details-sidebar-col">
             <motion.div 
                 initial={{ y: 40, opacity: 0 }} 
                 animate={{ y: 0, opacity: 1 }} 
@@ -91,7 +91,7 @@ const AnimeDetails = () => {
                     </div>
                     <div className="stat-row border-0">
                         <span className="stat-label"><i className="bi bi-building me-2"></i>Studio</span>
-                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '120px' }}>
+                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '150px' }}>
                             {anime.studios?.nodes[0]?.name || '-'}
                         </span>
                     </div>
@@ -100,7 +100,7 @@ const AnimeDetails = () => {
           </Col>
 
           {/* Right Content: Title, Description, etc. */}
-          <Col lg={9} md={8} className="details-content-col ps-md-5">
+          <Col lg={8} md={7} className="details-content-col ps-md-5">
             <motion.div 
                 initial={{ y: 20, opacity: 0 }} 
                 animate={{ y: 0, opacity: 1 }} 

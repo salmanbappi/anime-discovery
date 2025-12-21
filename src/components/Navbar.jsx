@@ -45,27 +45,28 @@ const CustomNavbar = () => {
   return (
     <Navbar className="navbar-custom py-3" sticky="top">
       <Container className="d-flex justify-content-between align-items-center">
-        {/* Brand Left */}
-        <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
-          <i className="bi bi-stars me-2" style={{ color: 'var(--primary-color)' }}></i>
-          SoraList
-        </Navbar.Brand>
+        {/* Brand Left - Hidden when searching on mobile */}
+        {!isSearchOpen && (
+            <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
+                <i className="bi bi-stars me-2" style={{ color: 'var(--primary-color)' }}></i>
+                SoraList
+            </Navbar.Brand>
+        )}
         
         {/* Controls Right */}
-        <div className="d-flex align-items-center gap-3">
+        <div className={`d-flex align-items-center gap-3 ${isSearchOpen ? 'flex-grow-1 justify-content-end' : ''}`}>
              {/* Search */}
-             <div className={`nav-search-container ${isSearchOpen ? 'active' : ''}`}>
+             <div className={`nav-search-container ${isSearchOpen ? 'active w-100' : ''}`}>
                  {isSearchOpen ? (
-                     <Form onSubmit={handleSearchSubmit}>
+                     <Form onSubmit={handleSearchSubmit} className="w-100">
                          <Form.Control 
                             ref={inputRef}
                             type="text" 
                             placeholder="Search anime..." 
-                            className="nav-search-input"
+                            className="nav-search-input w-100"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onBlur={handleBlur}
-                            style={{ width: '250px' }}
                          />
                      </Form>
                  ) : (
@@ -79,7 +80,7 @@ const CustomNavbar = () => {
                  )}
              </div>
 
-             {/* Theme Toggle */}
+             {/* Theme Toggle - Always Visible */}
              <button 
                 className="btn btn-link p-1" 
                 onClick={toggleTheme}
