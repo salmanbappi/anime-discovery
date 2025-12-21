@@ -137,7 +137,12 @@ const Home = () => {
             <Carousel fade indicators={true} controls={false} interval={6000}>
             {data.trending.slice(0, 5).map(anime => (
               <Carousel.Item key={anime.id}>
-                <div className="hero-slide" style={{ backgroundImage: `url(${anime.bannerImage || anime.coverImage.extraLarge})` }}>
+                <div className="hero-slide">
+                  <img 
+                    src={anime.bannerImage || anime.coverImage.extraLarge} 
+                    alt={anime.title.english || anime.title.romaji} 
+                    className="hero-bg-image"
+                  />
                   <div className="hero-overlay">
                     <Container>
                       <Row>
