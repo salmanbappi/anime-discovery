@@ -6,23 +6,38 @@ const AnimeCard = ({ anime }) => {
   const title = anime.title.english || anime.title.romaji;
   
   return (
-    <Link to={`/anime/${anime.id}`}>
+    <Link to={`/anime/${anime.id}`} className="anime-card-link">
       <motion.div 
-        className="anime-card-container"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
+        className="anime-card"
+        whileHover={{ scale: 1.05, y: -5 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        <div className="anime-card">
-          <img 
-            src={anime.coverImage.large} 
-            alt={title} 
-            className="anime-cover"
-            loading="lazy"
-          />
+        {/* Poster Image */}
+        <img 
+          src={anime.coverImage.large} 
+          alt={title} 
+          className="anime-cover"
+          loading="lazy"
+        />
+
+        {/* Top Badges (Score & Format) */}
+        <div className="card-badges">
+          {anime.averageScore && (
+            <span className="badge-item score">
+              ★ {anime.averageScore / 10}
+            </span>
+          )}
+          <span className="badge-item format">{anime.format}</span>
         </div>
-        <div className="anime-title" title={title}>
-          {title}
+
+        {/* Bottom Gradient and Title */}
+        <div className="card-overlay">
+          <div className="card-gradient"></div>
+          <div className="card-info">
+            <h3 className="card-title" title={title}>
+              {title}
+            </h3>
+          </div>
         </div>
       </motion.div>
     </Link>
