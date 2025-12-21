@@ -219,7 +219,7 @@ h1, h2, h3, h4, h5, h6, strong { color: var(--text-color); font-weight: 800; }
 .char-avatar { width: 65px; object-fit: cover; }
 .char-details { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
 .char-name { font-weight: 800; font-size: 0.95rem; color: var(--text-color) !important; }
-.char-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted) !important; }
+.char-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #aaaaaa !important; }
 
 /* Filter UI */
 .filter-toolbar {
