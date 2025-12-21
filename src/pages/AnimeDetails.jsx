@@ -23,7 +23,7 @@ const AnimeDetails = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh', backgroundColor: 'var(--bg-color)' }}>
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh', backgroundColor: '#000' }}>
         <Spinner animation="border" variant="primary" />
       </div>
     );
@@ -31,7 +31,7 @@ const AnimeDetails = () => {
 
   if (!anime) {
     return (
-      <Container className="text-center py-5" style={{ color: 'var(--text-color)' }}>
+      <Container className="text-center py-5 text-white">
         <h3>Anime not found</h3>
         <Link to="/" className="btn btn-primary mt-3">Back to Home</Link>
       </Container>
@@ -42,138 +42,118 @@ const AnimeDetails = () => {
     <motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
-      className="details-page"
+      className="details-page-v2"
     >
-      {/* Cinematic Blurred Banner */}
-      <div className="details-banner-wrapper">
-        <div 
-            className="details-banner-blur" 
-            style={{ backgroundImage: `url(${anime.bannerImage || anime.coverImage.extraLarge})` }}
-        ></div>
-        {anime.bannerImage && (
-            <img src={anime.bannerImage} alt="Banner" className="details-banner-main" />
-        )}
-        <div className="details-banner-overlay"></div>
-      </div>
+      <Container className="py-3">
+        {/* 1. Cinematic Banner (Top) */}
+        <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="top-banner-container mb-4"
+        >
+            <img 
+                src={anime.bannerImage || anime.coverImage.extraLarge} 
+                alt="Banner" 
+                className="top-banner-img rounded-xl shadow-lg" 
+            />
+        </motion.div>
 
-      <Container className="details-main-container">
-        <Row>
-          {/* Left Sidebar: Poster & Stats */}
-          <Col lg={6} md={6} className="details-sidebar-col">
-            <motion.div 
-                initial={{ y: 40, opacity: 0 }} 
-                animate={{ y: 0, opacity: 1 }} 
-                transition={{ duration: 0.5 }}
-            >
-                <img src={anime.coverImage.extraLarge} alt={anime.title.english} className="details-main-poster shadow-2xl" />
-                
-                <div className="sidebar-stats-card mt-4">
-                    <div className="stats-header">Information</div>
-                    <div className="stat-row">
-                        <span className="stat-label"><i className="bi bi-play-circle me-2"></i>Format</span>
-                        <span className="stat-value">{anime.format}</span>
-                    </div>
-                    <div className="stat-row">
-                        <span className="stat-label"><i className="bi bi-layers me-2"></i>Episodes</span>
-                        <span className="stat-value">{anime.episodes || '?'}</span>
-                    </div>
-                    <div className="stat-row">
-                        <span className="stat-label"><i className="bi bi-info-circle me-2"></i>Status</span>
-                        <span className="stat-value text-capitalize">{anime.status?.toLowerCase().replace('_', ' ')}</span>
-                    </div>
-                    <div className="stat-row">
-                        <span className="stat-label"><i className="bi bi-calendar-event me-2"></i>Season</span>
-                        <span className="stat-value text-capitalize">{anime.season?.toLowerCase()} {anime.seasonYear}</span>
-                    </div>
-                    <div className="stat-row">
-                        <span className="stat-label"><i className="bi bi-star-fill me-2 text-warning"></i>Score</span>
-                        <span className="stat-value text-primary fw-bold">{anime.averageScore}%</span>
-                    </div>
-                    <div className="stat-row border-0">
-                        <span className="stat-label"><i className="bi bi-building me-2"></i>Studio</span>
-                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '300px' }}>
-                            {anime.studios?.nodes[0]?.name || '-'}
-                        </span>
-                    </div>
+        {/* 2. Information Card (Full Width) */}
+        <div className="info-card-v2 mb-4">
+            <h5 className="info-header-v2">INFORMATION</h5>
+            <div className="info-grid-v2">
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-play-circle me-2"></i>Format</span>
+                    <span className="info-value-v2">{anime.format}</span>
                 </div>
-            </motion.div>
-          </Col>
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-layers me-2"></i>Episodes</span>
+                    <span className="info-value-v2">{anime.episodes || '?'}</span>
+                </div>
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-info-circle me-2"></i>Status</span>
+                    <span className="info-value-v2 text-capitalize">{anime.status?.toLowerCase().replace('_', ' ')}</span>
+                </div>
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-calendar-event me-2"></i>Season</span>
+                    <span className="info-value-v2 text-capitalize">{anime.season?.toLowerCase()} {anime.seasonYear}</span>
+                </div>
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-star-fill me-2 text-warning"></i>Score</span>
+                    <span className="info-value-v2 text-primary fw-bold">{anime.averageScore}%</span>
+                </div>
+                <div className="info-item-v2 border-0">
+                    <span className="info-label-v2"><i className="bi bi-building me-2"></i>Studio</span>
+                    <span className="info-value-v2">{anime.studios?.nodes[0]?.name || '-'}</span>
+                </div>
+            </div>
+        </div>
 
-          {/* Right Content: Title, Description, etc. */}
-          <Col lg={6} md={6} className="details-content-col ps-md-5">
-            <motion.div 
-                initial={{ y: 20, opacity: 0 }} 
-                animate={{ y: 0, opacity: 1 }} 
-                transition={{ delay: 0.2 }}
-            >
-                {/* Title and Genres Moved to TOP */}
-                <h1 className="main-title mb-2">{anime.title.english || anime.title.romaji}</h1>
-                <div className="d-flex flex-wrap gap-2 mb-4">
-                    {anime.genres.map(genre => (
-                        <span key={genre} className="genre-tag">{genre}</span>
+        {/* 3. Characters (Two Column Grid) */}
+        {anime.characters?.edges?.length > 0 && (
+            <div className="mb-5">
+                <h5 className="section-header-v2">CHARACTERS</h5>
+                <Row className="g-3">
+                    {anime.characters.edges.map(edge => (
+                        <Col xs={12} md={6} key={edge.node.id}>
+                            <div className="char-card-v2">
+                                <img src={edge.node.image.medium} alt={edge.node.name.full} className="char-img-v2" />
+                                <div className="char-info-v2">
+                                    <div className="char-name-v2 text-white">{edge.node.name.full}</div>
+                                    <div className="char-role-v2">{edge.role}</div>
+                                </div>
+                            </div>
+                        </Col>
                     ))}
+                </Row>
+            </div>
+        )}
+
+        {/* 4. Main Title and Genres (Moved Down) */}
+        <div className="text-center mt-5 mb-4">
+            <h1 className="display-title-v2 mb-3">{anime.title.english || anime.title.romaji}</h1>
+            <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
+                {anime.genres.map(genre => (
+                    <span key={genre} className="genre-pill-v2">{genre}</span>
+                ))}
+            </div>
+        </div>
+
+        {/* 5. Overview and Trailer */}
+        <div className="overview-container-v2 mb-5">
+            <h5 className="section-header-v2">OVERVIEW</h5>
+            <div className="description-text-v2" dangerouslySetInnerHTML={{ __html: anime.description }} />
+        </div>
+
+        {anime.trailer?.site === 'youtube' && (
+            <div className="mb-5">
+                <h5 className="section-header-v2">OFFICIAL TRAILER</h5>
+                <div className="trailer-box-v2 rounded shadow-lg">
+                    <iframe
+                        src={`https://www.youtube.com/embed/${anime.trailer.id}`}
+                        title="Trailer"
+                        allowFullScreen
+                    ></iframe>
                 </div>
+            </div>
+        )}
 
-                <div className="overview-section mb-5">
-                    <h4 className="section-header">Description</h4>
-                    <div className="description-box">
-                        <p dangerouslySetInnerHTML={{ __html: anime.description }} />
-                    </div>
-                </div>
-
-                {/* Trailer */}
-                {anime.trailer?.site === 'youtube' && (
-                    <div className="mb-5">
-                        <h4 className="section-header">Official Trailer</h4>
-                        <div className="video-container rounded-xl shadow-lg">
-                            <iframe
-                                src={`https://www.youtube.com/embed/${anime.trailer.id}`}
-                                title="Trailer"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                    </div>
-                )}
-
-                {/* Characters */}
-                {anime.characters?.edges?.length > 0 && (
-                    <div className="mb-5">
-                        <h4 className="section-header">Characters</h4>
-                        <Row className="g-3">
-                            {anime.characters.edges.map(edge => (
-                                <Col xs={12} sm={6} key={edge.node.id}>
-                                    <div className="char-item">
-                                        <img src={edge.node.image.medium} alt={edge.node.name.full} className="char-avatar" />
-                                        <div className="char-details">
-                                            <div className="char-name">{edge.node.name.full}</div>
-                                            <div className="char-role text-muted">{edge.role}</div>
-                                        </div>
-                                    </div>
-                                </Col>
-                            ))}
-                        </Row>
-                    </div>
-                )}
-
-                {/* Recommendations */}
-                {anime.recommendations?.nodes?.length > 0 && (
-                    <div className="mb-4">
-                        <h4 className="section-header">Recommended</h4>
-                        <Row className="g-3">
-                            {anime.recommendations.nodes.map(rec => {
-                                if (!rec.mediaRecommendation) return null;
-                                return (
-                                    <Col xs={6} sm={4} lg={3} key={rec.mediaRecommendation.id}>
-                                        <AnimeCard anime={rec.mediaRecommendation} />
-                                    </Col>
-                                );
-                            })}
-                        </Row>
-                    </div>
-                )}
-            </motion.div>
-          </Col>
-        </Row>
+        {/* Recommendations */}
+        {anime.recommendations?.nodes?.length > 0 && (
+            <div className="mb-4">
+                <h5 className="section-header-v2">SIMILAR ANIME</h5>
+                <Row className="g-3">
+                    {anime.recommendations.nodes.map(rec => {
+                        if (!rec.mediaRecommendation) return null;
+                        return (
+                            <Col xs={6} sm={4} md={3} key={rec.mediaRecommendation.id}>
+                                <AnimeCard anime={rec.mediaRecommendation} />
+                            </Col>
+                        );
+                    })}
+                </Row>
+            </div>
+        )}
       </Container>
     </motion.div>
   );

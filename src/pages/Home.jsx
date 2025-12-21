@@ -133,9 +133,9 @@ const Home = () => {
                       <Row>
                         <Col md={8} lg={6}>
                           <motion.div initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
-                            <span className="badge-item score mb-3 d-inline-block">Trending Now</span>
-                            <h1 className="hero-title mb-3">{anime.title.english || anime.title.romaji}</h1>
-                            <p className="hero-desc mb-4 d-none d-md-block" dangerouslySetInnerHTML={{ __html: anime.description?.substring(0, 160) + '...' }} />
+                            <span className="badge bg-primary mb-3">Trending Now</span>
+                            <h1 className="hero-title mb-3" style={{ fontSize: '3rem', fontWeight: 900 }}>{anime.title.english || anime.title.romaji}</h1>
+                            <p className="hero-desc mb-4 d-none d-md-block" style={{ fontSize: '1rem', opacity: 0.8 }} dangerouslySetInnerHTML={{ __html: anime.description?.substring(0, 160) + '...' }} />
                             <div className="d-flex gap-3">
                               <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-4 fw-bold">Watch Now</Link>
                               <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 fw-bold">Details</Link>
