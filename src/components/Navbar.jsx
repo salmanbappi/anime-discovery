@@ -47,7 +47,7 @@ const CustomNavbar = () => {
       <Container className="d-flex justify-content-between align-items-center">
         {/* Brand Left */}
         <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
-          <i className="bi bi-stars me-2"></i>
+          <i className="bi bi-stars me-2" style={{ color: 'var(--primary-color)' }}></i>
           SoraList
         </Navbar.Brand>
         

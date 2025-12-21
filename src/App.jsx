@@ -8,7 +8,7 @@ import AnimeDetails from './pages/AnimeDetails';
 function App() {
   return (
     <Router basename={import.meta.env.BASE_URL}>
-      <div className="App">
+      <div className="App min-vh-100" style={{ backgroundColor: 'var(--bg-color)' }}>
         <CustomNavbar />
         <Routes>
           <Route path="/" element={<Home />} />

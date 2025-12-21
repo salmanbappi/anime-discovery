@@ -1,14 +1,14 @@
 :root {
-  /* --- LIGHT MODE (Default) --- */
-  --bg-color: #edf1f5;            /* Main background */
-  --text-color: #647380;          /* Body text */
-  --heading-color: #2b2d42;       /* Headings & Strong text */
-  --nav-bg: #2b2d42;              /* Navbar background */
-  --nav-text: #ffffff;            /* Navbar links */
-  --primary-color: #3db4f2;       /* Action color */
+  /* --- DARK THEME (Main) --- */
+  --bg-color: #0b0b0b;            /* Deep black background */
+  --card-bg: #1a1a1a;             /* Subtle card background */
+  --text-color: #ffffff;          /* White text */
+  --text-muted: #a0a0a0;          /* Gray text */
+  --primary-color: #3db4f2;       /* AniList blue */
+  --nav-bg: #0f0f0f;              /* Darker navbar */
 }
 
-/* Base Styles (Light Mode) */
+/* Base Styles */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -19,49 +19,43 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, strong, .section-title {
-  color: var(--heading-color);
-  font-weight: 700;
-  transition: color 0.3s;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
-/* --- DARK THEME OVERRIDES --- */
+.section-title {
+    font-size: 1.5rem;
+    position: relative;
+    padding-left: 15px;
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* --- THEME OVERRIDES (Legacy compatibility) --- */
 body.dark-theme {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
+  background-color: var(--bg-color) !important;
 }
 
-body.dark-theme h1,
-body.dark-theme h2,
-body.dark-theme h3,
-body.dark-theme h4,
-body.dark-theme h5,
-body.dark-theme h6,
-body.dark-theme strong,
-body.dark-theme .section-title {
-  color: #ffffff !important;
-}
-
-body.dark-theme .anime-title,
-body.dark-theme p, 
-body.dark-theme .text-muted {
-  color: #e0e0e0 !important;
-}
-
-body.dark-theme .btn-pagination {
-    border-color: #ffffff !important;
-    color: #ffffff !important;
-}
-
-/* Navbar Overhaul */
+/* Navbar Modernization */
 .navbar-custom {
-  background-color: #1a1a1a !important;
+  background-color: var(--nav-bg) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-
-body.dark-theme .navbar-custom {
-    background-color: #0f0f0f !important;
+  padding: 1rem 0;
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1100;
 }
 
 .nav-search-input {
@@ -69,228 +63,29 @@ body.dark-theme .navbar-custom {
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #fff !important;
     border-radius: 20px;
-    padding: 6px 18px;
+    padding: 8px 20px;
     font-size: 0.9rem;
-    outline: none;
     transition: all 0.3s ease;
 }
 
 .nav-search-input:focus {
     background-color: rgba(255, 255, 255, 0.1) !important;
     border-color: var(--primary-color) !important;
-    box-shadow: none;
+    box-shadow: 0 0 0 0.25rem rgba(61, 180, 242, 0.25);
 }
 
-.navbar-brand, .nav-link, .btn-link {
-    color: var(--nav-text) !important;
-}
-
-/* Search Input Styles */
-.nav-search-input {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    border-radius: 20px;
-    padding: 5px 15px;
-    width: 200px;
-    outline: none;
-}
-
-/* Anime Card & Layout Overhaul */
-.anime-card-link {
-    text-decoration: none !important;
-    display: block;
-}
-
-.anime-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    background-color: #1a1a1a;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    aspect-ratio: 2/3;
-}
-
-.anime-cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.anime-card:hover .anime-cover {
-    transform: scale(1.1);
-}
-
-/* Badges (Score & Format) */
-.card-badges {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 3;
-}
-
-.badge-item {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    backdrop-filter: blur(4px);
-    color: white;
-}
-
-.badge-item.score {
-    background-color: rgba(61, 180, 242, 0.9); /* Primary Blue */
-}
-
-.badge-item.format {
-    background-color: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Overlay & Title */
-.card-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    z-index: 2;
-}
-
-.card-gradient {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%);
-    transition: height 0.3s ease;
-}
-
-.anime-card:hover .card-gradient {
-    height: 75%;
-}
-
-.card-info {
-    position: relative;
-    padding: 12px;
-    z-index: 3;
-}
-
-.card-title {
-    margin: 0;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #ffffff;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Genre Badge Styles */
-.genre-badge {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    display: inline-block;
-    font-weight: 600;
-}
-
-/* Pagination Buttons */
-.btn-pagination {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition: all 0.2s;
-}
-
-.btn-pagination:hover:not(:disabled) {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    background-color: rgba(61, 180, 242, 0.1);
-}
-
-.btn-pagination:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
-
-/* Character Card Styles - Redesigned */
-.character-card {
-    background-color: var(--nav-bg); /* Matches sidebar/navbar */
-    border-radius: 8px;
-    overflow: hidden;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.character-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.character-img {
-    width: 70px;
-    height: 100%;
-    object-fit: cover;
-}
-
-.character-info {
-    padding: 12px;
-    font-size: 0.9rem;
-    flex: 1;
-}
-
-.character-name {
-    color: #ffffff; /* Always white text on dark card */
-    font-weight: 700;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.character-role {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7); /* Lighter white for role */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Modern Hero Section & Carousel */
+/* Hero Section Modernization */
 .hero-container {
     width: 100%;
-    height: 550px;
+    height: 600px;
     overflow: hidden;
     position: relative;
-    margin-top: -24px;
+    margin-top: -1.5rem; /* Match App padding */
 }
 
 .hero-slide {
     width: 100%;
-    height: 550px;
+    height: 600px;
     background-size: cover;
     background-position: center 20%;
     position: relative;
@@ -299,63 +94,144 @@ body.dark-theme .navbar-custom {
 .hero-overlay {
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, #1a1a1a 0%, rgba(26,26,26,0.8) 30%, rgba(26,26,26,0) 100%),
-                linear-gradient(to top, #1a1a1a 0%, transparent 40%);
+    background: linear-gradient(to right, var(--bg-color) 0%, rgba(11, 11, 11, 0.8) 30%, transparent 100%),
+                linear-gradient(to top, var(--bg-color) 0%, transparent 50%);
     display: flex;
     align-items: center;
-    padding: 2rem 0;
 }
 
 .hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1.1;
-    color: #fff;
-    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .hero-desc {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
-    max-width: 500px;
+    color: var(--text-muted);
     line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    margin-bottom: 2rem;
+    max-width: 600px;
 }
 
-.carousel-indicators [data-bs-target] {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin: 0 5px;
+/* Anime Card - Netflix Premium Style */
+.anime-card-link {
+    text-decoration: none !important;
 }
+
+.anime-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    aspect-ratio: 2/3;
+}
+
+.anime-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.anime-card:hover .anime-cover {
+    transform: scale(1.1);
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 80%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 15px;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.card-badges {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.badge-item {
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    backdrop-filter: blur(5px);
+}
+
+.badge-item.score { background: rgba(61, 180, 242, 0.9); }
+.badge-item.format { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+/* Filter UI Modernization */
+.filter-toolbar {
+    background-color: var(--card-bg) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
+}
+
+.form-select {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    font-size: 0.9rem !important;
+}
+
+.form-select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: none !important;
+}
+
+/* Pagination */
+.btn-pagination {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-pagination:hover:not(:disabled) {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Global Transitions */
+a { transition: all 0.2s ease; }
 
 @media (max-width: 768px) {
-    .hero-container, .hero-slide {
-        height: 400px;
-    }
-    .hero-title {
-        font-size: 2rem;
-    }
+    .hero-container, .hero-slide { height: 450px; }
+    .hero-title { font-size: 2.2rem; }
     .hero-overlay {
-        background: linear-gradient(to top, #1a1a1a 10%, rgba(26,26,26,0.5) 100%);
+        background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%);
         align-items: flex-end;
         padding-bottom: 3rem;
     }
-    .hero-container {
-        margin-top: -10px;
-    }
-}
-
-/* --- GLOBAL STYLE RESET --- */
-/* This will disable underlines on all anchor tags */
-a {
-  text-decoration: none !important;
-}
-
-/* Ensure anime titles inherit color */
-.anime-title {
-  color: inherit !important;
 }
