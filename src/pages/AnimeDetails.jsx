@@ -68,7 +68,7 @@ const AnimeDetails = () => {
                 <img src={anime.coverImage.extraLarge} alt={anime.title.english} className="details-main-poster shadow-2xl" />
                 
                 <div className="sidebar-stats-card mt-4">
-                    <div className="stats-header mb-3">Information</div>
+                    <div className="stats-header">Information</div>
                     <div className="stat-row">
                         <span className="stat-label"><i className="bi bi-play-circle me-2"></i>Format</span>
                         <span className="stat-value">{anime.format}</span>
@@ -91,7 +91,7 @@ const AnimeDetails = () => {
                     </div>
                     <div className="stat-row border-0">
                         <span className="stat-label"><i className="bi bi-building me-2"></i>Studio</span>
-                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '200px' }}>
+                        <span className="stat-value text-truncate ms-2" style={{ maxWidth: '250px' }}>
                             {anime.studios?.nodes[0]?.name || '-'}
                         </span>
                     </div>
@@ -100,7 +100,7 @@ const AnimeDetails = () => {
           </Col>
 
           {/* Right Content: Title, Description, etc. */}
-          <Col lg={7} md={6} className="details-content-col ps-md-4">
+          <Col lg={7} md={6} className="details-content-col ps-md-5">
             <motion.div 
                 initial={{ y: 20, opacity: 0 }} 
                 animate={{ y: 0, opacity: 1 }} 
