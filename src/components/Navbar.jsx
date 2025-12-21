@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Navbar, Container, Nav, Form } from 'react-bootstrap';
+import { Navbar, Container, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
 const CustomNavbar = () => {
@@ -33,8 +33,6 @@ const CustomNavbar = () => {
       e.preventDefault();
       if (searchQuery.trim()) {
           navigate(`/?q=${encodeURIComponent(searchQuery)}`);
-          // Optional: close search on submit? 
-          // setIsSearchOpen(false); 
       }
   };
 
@@ -45,25 +43,45 @@ const CustomNavbar = () => {
   };
 
   return (
-    <Navbar className="navbar-custom" expand="lg">
-      <Container>
-        <Navbar.Brand as={Link} to="/" className="fw-bold text-primary">
-          <img
-            alt="AD Logo"
-            src={import.meta.env.BASE_URL + "AD-logo.svg"}
-            width="30"
-            height="30"
-            className="d-inline-block align-top me-2"
-          />
-          AniDiscovery
+    <Navbar className="navbar-custom py-3" sticky="top">
+      <Container className="d-flex justify-content-between align-items-center">
+        {/* Brand Left */}
+        <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
+          <i className="bi bi-stars me-2"></i>
+          SoraList
         </Navbar.Brand>
         
-        <div className="d-flex align-items-center order-lg-last ms-3 gap-2">
+        {/* Controls Right */}
+        <div className="d-flex align-items-center gap-3">
+             {/* Search */}
+             <div className={`nav-search-container ${isSearchOpen ? 'active' : ''}`}>
+                 {isSearchOpen ? (
+                     <Form onSubmit={handleSearchSubmit}>
+                         <Form.Control 
+                            ref={inputRef}
+                            type="text" 
+                            placeholder="Search anime..." 
+                            className="nav-search-input"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onBlur={handleBlur}
+                            style={{ width: '250px' }}
+                         />
+                     </Form>
+                 ) : (
+                     <button 
+                        className="btn btn-link text-white p-1" 
+                        onClick={toggleSearch}
+                    >
+                         <i className="bi bi-search fs-5"></i>
+                     </button>
+                 )}
+             </div>
+
              {/* Theme Toggle */}
              <button 
-                className="btn btn-link p-1" 
+                className="btn btn-link text-white p-1" 
                 onClick={toggleTheme}
-                style={{ color: 'var(--color-nav-text)' }}
              >
                  {theme === 'dark' ? (
                      <i className="bi bi-sun-fill fs-5"></i>
@@ -71,48 +89,10 @@ const CustomNavbar = () => {
                      <i className="bi bi-moon-fill fs-5"></i>
                  )}
              </button>
-
-             {/* Search Toggle */}
-             <div className={`nav-search-container ${isSearchOpen ? 'active' : ''}`}>
-                 {isSearchOpen ? (
-                     <Form onSubmit={handleSearchSubmit} className="d-flex">
-                         <Form.Control 
-                            ref={inputRef}
-                            type="text" 
-                            placeholder="Search..." 
-                            className="nav-search-input"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onBlur={handleBlur}
-                         />
-                     </Form>
-                 ) : (
-                     <button 
-                        className="btn btn-link p-1" 
-                        onClick={toggleSearch}
-                        style={{ color: 'var(--color-nav-text)' }}
-                    >
-                         <i className="bi bi-search fs-5"></i>
-                     </button>
-                 )}
-             </div>
         </div>
-
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/#trending">Trending</Nav.Link>
-            <Nav.Link as={Link} to="/#popular">Popular</Nav.Link>
-            <Nav.Link href="https://github.com/salmanbappi" target="_blank">Social</Nav.Link>
-          </Nav>
-          <Nav>
-            <Nav.Link href="#">Login</Nav.Link>
-            <Nav.Link href="#" className="btn btn-primary text-white px-3 rounded-pill ms-lg-2" style={{ backgroundColor: '#3db4f2', border: 'none' }}>Sign Up</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 };
+
 export default CustomNavbar;
