@@ -70,8 +70,9 @@ const CustomNavbar = () => {
                      </Form>
                  ) : (
                      <button 
-                        className="btn btn-link text-white p-1" 
+                        className="btn btn-link p-1" 
                         onClick={toggleSearch}
+                        style={{ color: 'var(--text-color)' }}
                     >
                          <i className="bi bi-search fs-5"></i>
                      </button>
@@ -80,8 +81,9 @@ const CustomNavbar = () => {
 
              {/* Theme Toggle */}
              <button 
-                className="btn btn-link text-white p-1" 
+                className="btn btn-link p-1" 
                 onClick={toggleTheme}
+                style={{ color: 'var(--text-color)' }}
              >
                  {theme === 'dark' ? (
                      <i className="bi bi-sun-fill fs-5"></i>

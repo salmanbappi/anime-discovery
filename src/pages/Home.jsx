@@ -231,7 +231,7 @@ const Home = () => {
              <>
              <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="section-title mb-0">Search Results for "{query}"</h3>
-                <Button variant="outline-light" size="sm" className="rounded-pill px-3" onClick={clearSearch}>Clear Search</Button>
+                <Button variant="outline-light" size="sm" className="rounded-pill px-3" onClick={clearSearch} style={{ color: 'var(--text-color)', borderColor: 'var(--border-color)' }}>Clear Search</Button>
              </div>
              {loading ? <div className="text-center py-5"><Spinner animation="border" variant="primary" /></div> : (
                 <motion.div variants={containerVariants} initial="hidden" animate="show">
@@ -240,7 +240,7 @@ const Home = () => {
                         <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
                             <AnimeCard anime={anime} />
                         </Col>
-                        )) : <p className="text-center text-muted w-100">No results found.</p>}
+                        )) : <p className="text-center w-100" style={{ color: 'var(--text-muted)' }}>No results found.</p>}
                     </Row>
                 </motion.div>
              )}
