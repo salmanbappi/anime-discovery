@@ -228,8 +228,8 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 
 .char-avatar { width: 65px; object-fit: cover; }
 .char-details { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
-.char-name { font-weight: 800; font-size: 0.95rem; color: var(--text-color) !important; }
-.char-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #ffffff !important; }
+.char-name { font-weight: 800; font-size: 0.95rem; color: #ffffff !important; }
+.char-role { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #ffffff !important; opacity: 0.9; }
 
 /* Filter UI */
 .filter-toolbar {
