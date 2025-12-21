@@ -3,28 +3,27 @@
   --bg-color: #0b0b0b;
   --card-bg: #151515;
   --text-color: #ffffff;
-  --text-muted: #e0e0e0;
+  --text-muted: #ffffff; /* Brighter for better visibility */
   --primary-color: #3db4f2;
   --nav-bg: #0f0f0f;
   --border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Global Text Overrides */
-.text-muted {
-    color: #ffffff !important; /* Force pure white for all muted text */
-    opacity: 0.8;
+/* Global Text Overrides - FORCE WHITE */
+* {
+    color: #ffffff !important;
 }
 
 /* Base Styles */
 body {
   background-color: var(--bg-color);
-  color: #ffffff;
+  color: #ffffff !important;
   font-family: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title { 
+h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title, .stat-label, .stat-value, .char-name, .char-role, label { 
     color: #ffffff !important; 
     font-weight: 800; 
 }
@@ -49,27 +48,22 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
     font-size: 0.9rem;
 }
 
-/* Hero & General */
-.hero-container { width: 100%; height: 450px; overflow: hidden; position: relative; margin-top: -1.5rem; }
-.hero-slide { width: 100%; height: 450px; background-size: cover; background-position: center 20%; position: relative; }
+/* Hero & General - REDUCED HEIGHT */
+.hero-container { width: 100%; height: 380px !important; overflow: hidden; position: relative; margin-top: -1.5rem; }
+.hero-slide { width: 100%; height: 380px !important; background-size: cover; background-position: center 20%; position: relative; }
 .hero-overlay {
     width: 100%; height: 100%;
     background: linear-gradient(to right, var(--bg-color) 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%),
                 linear-gradient(to top, var(--bg-color) 0%, transparent 50%);
     display: flex; align-items: center;
 }
-.hero-title { font-size: 4rem; font-weight: 900; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-.hero-desc { font-size: 1.1rem; color: #fff; opacity: 0.9; line-height: 1.6; margin-bottom: 2rem; max-width: 600px; }
+.hero-title { font-size: 3rem !important; font-weight: 900; color: #fff !important; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.hero-desc { font-size: 1rem !important; color: #fff !important; opacity: 0.9; line-height: 1.4 !important; margin-bottom: 1.5rem; max-width: 600px; }
 
 @media (max-width: 768px) {
-    .hero-container, .hero-slide { height: 300px; }
-    .hero-title { font-size: 1.8rem; margin-bottom: 1rem; }
-    .hero-desc { font-size: 0.95rem; -webkit-line-clamp: 2; }
-    .hero-overlay {
-        background: linear-gradient(to top, var(--bg-color) 20%, transparent 100%);
-        align-items: flex-end;
-        padding-bottom: 2rem;
-    }
+    .hero-container, .hero-slide { height: 250px !important; }
+    .hero-title { font-size: 1.5rem !important; margin-bottom: 0.5rem; }
+    .hero-desc { font-size: 0.85rem !important; -webkit-line-clamp: 2; }
 }
 
 /* Anime Card */
@@ -85,19 +79,18 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 .card-overlay {
     position: absolute; bottom: 0; left: 0; right: 0; height: 100%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 80%);
-    display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; color: #fff;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; color: #fff !important;
 }
 .card-title { font-size: 0.85rem; font-weight: 700; color: #fff !important; }
-.card-badges { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px; }
-.badge-item { font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; color: #fff; }
-.badge-item.score { background: var(--primary-color); }
-.badge-item.format { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); }
+.badge-item { font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; color: #fff !important; }
+.badge-item.score { background: var(--primary-color) !important; }
+.badge-item.format { background: rgba(0, 0, 0, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
 
 /* --- Anime Details Overhaul --- */
 .details-banner-wrapper {
     position: relative;
     width: 100%;
-    height: 450px;
+    height: 400px;
     overflow: hidden;
     background-color: #000;
 }
@@ -129,7 +122,8 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
     margin-top: -200px;
     position: relative;
     z-index: 20;
-    max-width: 1400px !important; /* Extremely wide */
+    max-width: 1500px !important; /* Extremely wide */
+    padding: 0 20px !important;
 }
 
 .details-main-poster {
@@ -140,21 +134,13 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 }
 
 .sidebar-stats-card {
-    background-color: var(--card-bg);
+    background-color: var(--card-bg) !important;
     border-radius: 12px;
-    padding: 30px;
-    border: 1px solid var(--border-color);
+    padding: 30px !important;
+    border: 1px solid var(--border-color) !important;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
     width: 100% !important;
-}
-
-.stats-header {
-    font-size: 0.95rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: #ffffff !important;
-    letter-spacing: 1.5px;
-    margin-bottom: 15px;
+    margin: 0 !important;
 }
 
 .stat-row {
@@ -166,14 +152,12 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 }
 
 .stat-label {
-    color: #ffffff !important; /* Force white */
+    color: #ffffff !important;
     opacity: 0.8;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
+    font-size: 0.95rem !important;
 }
 
-.stat-value { color: #ffffff !important; font-weight: 700; font-size: 0.9rem; }
+.stat-value { color: #ffffff !important; font-weight: 700; font-size: 0.95rem !important; }
 
 .main-title {
     font-size: 3.5rem;
@@ -185,8 +169,8 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 }
 
 .genre-tag {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--primary-color) !important;
+    color: white !important;
     padding: 6px 18px;
     border-radius: 30px;
     font-size: 0.8rem;
@@ -210,31 +194,14 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
     border-radius: 2px;
 }
 
-.description-box {
+.description-box, .description-box p, .description-box span, .description-box div {
     line-height: 1.8;
     color: #ffffff !important;
     font-size: 1.05rem;
 }
 
-.description-box p, .description-box span, .description-box div {
-    color: #ffffff !important;
-}
-
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-}
-
-.video-container iframe {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    border: none;
-}
-
-/* Character List Fix */
 .char-item {
-    background: var(--card-bg);
+    background: var(--card-bg) !important;
     border-radius: 10px;
     display: flex;
     overflow: hidden;
@@ -245,37 +212,35 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 .char-avatar { width: 65px; object-fit: cover; }
 .char-details { padding: 10px 15px; display: flex; flex-direction: column; justify-content: center; }
 .char-name { font-weight: 800; font-size: 1rem; color: #ffffff !important; }
-.char-role { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: #ffffff !important; opacity: 0.9; }
+.char-role { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: #ffffff !important; opacity: 0.95 !important; }
 
 /* Filter UI labels */
 .filter-toolbar label {
     color: #ffffff !important;
     font-weight: 700;
     font-size: 0.95rem;
-    margin-bottom: 8px;
 }
 
 .form-select {
     background-color: #1a1a1a !important;
     border: 1px solid var(--border-color) !important;
     color: #ffffff !important;
-    border-radius: 10px !important;
 }
 
 @media (min-width: 992px) {
-    .details-sidebar-col { flex: 0 0 45%; max-width: 45%; } /* Much wider sidebar */
-    .details-content-col { flex: 0 0 55%; max-width: 55%; }
+    .details-sidebar-col { flex: 0 0 48% !important; max-width: 48% !important; } /* Extremely wide sidebar */
+    .details-content-col { flex: 0 0 52% !important; max-width: 52% !important; }
 }
 
 @media (max-width: 768px) {
     .main-title { margin-top: 20px; font-size: 2.2rem; text-align: center; }
-    .details-main-container { margin-top: -80px; padding: 0 15px; }
+    .details-main-container { margin-top: -80px; padding: 0 10px !important; }
     .details-sidebar-col { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; }
     .details-main-poster { width: 220px; }
-    .sidebar-stats-card { width: 100%; }
+    .sidebar-stats-card { width: 100% !important; border-radius: 8px; }
 }
 
 /* Global Fixes */
 a { text-decoration: none !important; }
 .section-title { font-size: 1.5rem; font-weight: 800; color: #ffffff !important; }
-.btn-pagination { background: var(--card-bg) !important; border: 1px solid var(--border-color) !important; color: #ffffff !important; }
+.btn-pagination, .btn-pagination * { background: var(--card-bg) !important; color: #ffffff !important; }
