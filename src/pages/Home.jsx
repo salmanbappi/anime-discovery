@@ -114,7 +114,7 @@ const Home = () => {
   const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
       <div className="d-flex align-items-center gap-3">
           <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onPrev} disabled={page === 1}>&lt;</Button>
-          <span className="small text-muted" style={{ minWidth: '50px', textAlign: 'center' }}>Page {page}</span>
+          <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {page}</span>
           <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onNext} disabled={!hasNext}>&gt;</Button>
       </div>
   );
