@@ -17,10 +17,12 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
             extraLarge
             large
           }
+          bannerImage
           averageScore
           genres
           episodes
           format
+          description
         }
       }
       popular: Page(page: $popularPage, perPage: 12) {
@@ -37,6 +39,7 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
             extraLarge
             large
           }
+          bannerImage
           averageScore
           genres
           episodes
@@ -86,6 +89,9 @@ export const searchAnime = async (search) => {
             large
           }
           averageScore
+          genres
+          episodes
+          format
         }
       }
     }
