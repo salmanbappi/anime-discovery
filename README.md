@@ -3,6 +3,7 @@
 A modern, responsive anime discovery application inspired by [Anilist](https://anilist.co). This app allows users to browse trending and popular anime, as well as search for their favorite series, using real-time data from the Anilist GraphQL API.
 
 **Live Demo:** [https://soralist.netlify.app](https://soralist.netlify.app)
+*(Alternative: [https://anime-discovery-sigma.vercel.app/](https://anime-discovery-sigma.vercel.app/))*
 *(Backup: [https://salmanbappi.github.io/anime-discovery/](https://salmanbappi.github.io/anime-discovery/))*
 
 ## Features
@@ -19,7 +20,7 @@ A modern, responsive anime discovery application inspired by [Anilist](https://a
 *   **Styling:** Bootstrap 5, React Bootstrap, Custom CSS
 *   **Routing:** React Router DOM (v7)
 *   **Data Source:** [Anilist GraphQL API](https://github.com/AniList/ApiV2-GraphQL-Docs)
-*   **Deployment:** Netlify (Primary), GitHub Pages (Backup)
+*   **Deployment:** Vercel (Recommended), Netlify, GitHub Pages
 
 ## Local Development
 
