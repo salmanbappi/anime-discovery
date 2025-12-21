@@ -131,10 +131,13 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 .sidebar-stats-card {
     background-color: var(--card-bg);
     border-radius: 12px;
-    padding: 30px; /* Increased padding */
+    padding: 30px;
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-    width: 100%;
+    width: 100% !important; /* Stretch to fill parent */
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .stats-header {
@@ -251,9 +254,22 @@ h1, h2, h3, h4, h5, h6, strong, .section-header, .stats-header, .section-title {
 }
 
 @media (min-width: 992px) {
-    .details-sidebar-col { flex: 0 0 35%; max-width: 35%; }
-    .details-content-col { flex: 0 0 65%; max-width: 65%; }
+    .details-sidebar-col { flex: 0 0 40%; max-width: 40%; }
+    .details-content-col { flex: 0 0 60%; max-width: 60%; }
 }
+
+@media (max-width: 768px) {
+    .details-main-container {
+        padding-left: 10px;
+        padding-right: 10px;
+        max-width: 100%;
+    }
+    .sidebar-stats-card {
+        width: 100%;
+        border-radius: 8px;
+    }
+}
+
 
 @media (max-width: 768px) {
     .main-title { margin-top: 20px; font-size: 2.2rem; text-align: center; }
