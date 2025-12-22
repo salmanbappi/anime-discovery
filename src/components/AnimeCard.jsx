@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import { getProxiedImage } from '../utils/imageHelper';
 
-const AnimeCard = ({ anime, onRemove }) => {
+const AnimeCard = ({ anime, onRemove, onClick }) => {
   const title = anime.title.english || anime.title.romaji;
   
   const handleRemove = (e) => {
@@ -13,7 +13,7 @@ const AnimeCard = ({ anime, onRemove }) => {
   };
 
   return (
-    <Link to={`/anime/${anime.id}`} className="anime-card-link">
+    <Link to={`/anime/${anime.id}`} className="anime-card-link" onClick={onClick}>
       <Motion.div 
         className="anime-card"
         whileHover={{ scale: 1.05, y: -5 }}

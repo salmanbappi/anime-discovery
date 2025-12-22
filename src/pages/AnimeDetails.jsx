@@ -28,6 +28,21 @@ const AnimeDetails = () => {
   const [showAllCharacters, setShowAllCharacters] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(null);
 
+  // Scroll Restoration
+  useEffect(() => {
+    const savedScrollPos = sessionStorage.getItem(`animeScrollPos_${id}`);
+    if (savedScrollPos && !loading) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPos));
+        sessionStorage.removeItem(`animeScrollPos_${id}`);
+      }, 100);
+    }
+  }, [loading, id]);
+
+  const saveScrollPos = () => {
+    sessionStorage.setItem(`animeScrollPos_${id}`, window.scrollY.toString());
+  };
+
   useEffect(() => {
     let isMounted = true;
     const loadDetails = async () => {
@@ -278,7 +293,7 @@ const AnimeDetails = () => {
                 <Row className="g-3">
                     {(showAllCharacters ? anime.characters.edges : anime.characters.edges.slice(0, 6)).map(edge => (
                         <Col xs={12} md={6} key={edge.node.id}>
-                            <Link to={`/character/${edge.node.id}`} className="text-decoration-none">
+                            <Link to={`/character/${edge.node.id}`} className="text-decoration-none" onClick={saveScrollPos}>
                                 <div className="char-card-v2">
                                     <img 
                                         src={getProxiedImage(edge.node.image.medium)} 
@@ -301,7 +316,7 @@ const AnimeDetails = () => {
                             variant="outline-secondary" 
                             size="sm"
                             className="rounded-pill px-4 text-white"
-                            onClick={() => setShowAllCharacters(!showAllCharacters)}
+                            onClick={() => { saveScrollPos(); setShowAllCharacters(!showAllCharacters); }}
                         >
                             {showAllCharacters ? 'Show Less' : 'Show More'} <i className={`bi bi-chevron-${showAllCharacters ? 'up' : 'down'} ms-1`}></i>
                         </Button>
@@ -330,7 +345,7 @@ const AnimeDetails = () => {
                     <span className="info-label-v2"><i className="bi bi-building me-2"></i>Studio</span>
                     <span className="info-value-v2">
                         {anime.studios?.nodes[0] ? (
-                            <Link to={`/studio/${anime.studios.nodes[0].id}`} className="text-white text-decoration-none studio-link-hint">
+                            <Link to={`/studio/${anime.studios.nodes[0].id}`} className="text-white text-decoration-none studio-link-hint" onClick={saveScrollPos}>
                                 {anime.studios.nodes[0].name}
                                 <i className="bi bi-info-circle ms-2" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
                             </Link>
@@ -364,7 +379,7 @@ const AnimeDetails = () => {
                         if (!rec.mediaRecommendation) return null;
                         return (
                             <Col xs={6} sm={4} md={3} key={rec.mediaRecommendation.id}>
-                                <AnimeCard anime={rec.mediaRecommendation} />
+                                <AnimeCard anime={rec.mediaRecommendation} onClick={saveScrollPos} />
                             </Col>
                         );
                     })}

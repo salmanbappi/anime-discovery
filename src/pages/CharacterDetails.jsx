@@ -12,6 +12,21 @@ const CharacterDetails = () => {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
 
+  // Scroll Restoration
+  useEffect(() => {
+    const savedScrollPos = sessionStorage.getItem(`characterScrollPos_${id}`);
+    if (savedScrollPos && !loading) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPos));
+        sessionStorage.removeItem(`characterScrollPos_${id}`);
+      }, 100);
+    }
+  }, [loading, id]);
+
+  const saveScrollPos = () => {
+    sessionStorage.setItem(`characterScrollPos_${id}`, window.scrollY.toString());
+  };
+
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
@@ -135,7 +150,7 @@ const CharacterDetails = () => {
                 <Row className="g-3">
                     {character.media.nodes.map(anime => (
                         <Col xs={6} sm={4} md={3} lg={2} key={anime.id}>
-                            <AnimeCard anime={anime} />
+                            <AnimeCard anime={anime} onClick={saveScrollPos} />
                         </Col>
                     ))}
                 </Row>

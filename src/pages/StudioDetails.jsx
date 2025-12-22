@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Container, Row, Col, Spinner, Form } from 'react-bootstrap';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { Container, Row, Col, Spinner, Form, Button } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchStudioDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 
 const StudioDetails = () => {
   const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [studio, setStudio] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [sort, setSort] = useState('POPULARITY_DESC');
+  
+  const sort = searchParams.get('sort') || 'POPULARITY_DESC';
+
+  // Scroll Restoration
+  useEffect(() => {
+    const savedScrollPos = sessionStorage.getItem(`studioScrollPos_${id}`);
+    if (savedScrollPos && !loading) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPos));
+        sessionStorage.removeItem(`studioScrollPos_${id}`);
+      }, 100);
+    }
+  }, [loading, id]);
+
+  const saveScrollPos = () => {
+    sessionStorage.setItem(`studioScrollPos_${id}`, window.scrollY.toString());
+  };
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -22,7 +39,11 @@ const StudioDetails = () => {
   }, [id, sort]);
 
   const handleSortChange = (e) => {
-    setSort(e.target.value);
+    setSearchParams({ sort: e.target.value });
+  };
+
+  const clearFilters = () => {
+    setSearchParams({});
   };
 
   if (loading) {
@@ -51,24 +72,31 @@ const StudioDetails = () => {
       <Container className="py-5">
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-5 gap-3">
              <h1 className="display-4 fw-bold text-white mb-0">{studio.name}</h1>
-             <Form.Select 
-                aria-label="Sort Anime" 
-                className="w-auto bg-dark text-white border-secondary"
-                value={sort}
-                onChange={handleSortChange}
-            >
-                <option value="POPULARITY_DESC">Most Popular</option>
-                <option value="SCORE_DESC">Top Scored</option>
-                <option value="START_DATE_DESC">Newest / To Be Aired</option>
-                <option value="START_DATE">Oldest Release</option>
-            </Form.Select>
+             <div className="d-flex gap-2 align-items-center">
+                {sort !== 'POPULARITY_DESC' && (
+                    <Button variant="outline-danger" size="sm" className="rounded-pill px-3" onClick={clearFilters}>
+                        Clear
+                    </Button>
+                )}
+                <Form.Select 
+                    aria-label="Sort Anime" 
+                    className="w-auto bg-dark text-white border-secondary"
+                    value={sort}
+                    onChange={handleSortChange}
+                >
+                    <option value="POPULARITY_DESC">Most Popular</option>
+                    <option value="SCORE_DESC">Top Scored</option>
+                    <option value="START_DATE_DESC">Newest / To Be Aired</option>
+                    <option value="START_DATE">Oldest Release</option>
+                </Form.Select>
+             </div>
         </div>
 
         {studio.media?.nodes?.length > 0 ? (
             <Row className="g-3">
                 {studio.media.nodes.map(anime => (
                     <Col xs={6} sm={4} md={3} lg={2} key={anime.id}>
-                        <AnimeCard anime={anime} />
+                        <AnimeCard anime={anime} onClick={saveScrollPos} />
                     </Col>
                 ))}
             </Row>

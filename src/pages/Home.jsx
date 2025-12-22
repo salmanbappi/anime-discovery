@@ -63,24 +63,47 @@ const Home = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   
-  // Filter State
-  const [selectedGenre, setSelectedGenre] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedSeason, setSelectedSeason] = useState('');
-  const [selectedSort, setSelectedSort] = useState('POPULARITY_DESC');
-  const [isFiltering, setIsFiltering] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
+  // Filter & Pagination State from URL
+  const selectedGenre = searchParams.get('genre') || '';
+  const selectedYear = searchParams.get('year') || '';
+  const selectedSeason = searchParams.get('season') || '';
+  const selectedSort = searchParams.get('sort') || 'POPULARITY_DESC';
+  const trendingPage = parseInt(searchParams.get('tp')) || 1;
+  const popularPage = parseInt(searchParams.get('pp')) || 1;
+  const filterPage = parseInt(searchParams.get('fp')) || 1;
 
-  // Pagination State
-  const [trendingPage, setTrendingPage] = useState(1);
-  const [popularPage, setPopularPage] = useState(1);
-  const [filterPage, setFilterPage] = useState(1);
-  const [trendingHasNext, setTrendingHasNext] = useState(false);
-  const [popularHasNext, setPopularHasNext] = useState(false);
-  const [filterHasNext, setFilterHasNext] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   const query = searchParams.get('q');
   const isSearching = !!query;
+  const isFiltering = !!(selectedGenre || selectedYear || selectedSeason || selectedSort !== 'POPULARITY_DESC');
+
+  // Scroll Restoration
+  useEffect(() => {
+    const savedScrollPos = sessionStorage.getItem('homeScrollPos');
+    if (savedScrollPos && !loading) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPos));
+        sessionStorage.removeItem('homeScrollPos');
+      }, 100);
+    }
+  }, [loading]);
+
+  const saveScrollPos = () => {
+    sessionStorage.setItem('homeScrollPos', window.scrollY.toString());
+  };
+
+  const updateParams = (newParams) => {
+    const nextParams = new URLSearchParams(searchParams);
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value === '' || value === undefined || value === null || (key === 'sort' && value === 'POPULARITY_DESC')) {
+        nextParams.delete(key);
+      } else {
+        nextParams.set(key, value.toString());
+      }
+    });
+    setSearchParams(nextParams, { replace: true });
+  };
 
   const handleRemove = async (animeId) => {
     try {
@@ -138,11 +161,7 @@ const Home = () => {
   // Handle Filters
   useEffect(() => {
       const applyFilters = async () => {
-          if (!selectedGenre && !selectedYear && !selectedSeason && selectedSort === 'POPULARITY_DESC') {
-              setIsFiltering(false);
-              return;
-          }
-          setIsFiltering(true);
+          if (!isFiltering) return;
           setLoading(true);
           const result = await fetchAdvancedData({
               page: filterPage,
@@ -158,18 +177,17 @@ const Home = () => {
           setLoading(false);
       };
       applyFilters();
-  }, [selectedGenre, selectedYear, selectedSeason, selectedSort, filterPage]);
+  }, [selectedGenre, selectedYear, selectedSeason, selectedSort, filterPage, isFiltering]);
 
   const clearFilters = () => {
-      setSelectedGenre('');
-      setSelectedYear('');
-      setSelectedSeason('');
-      setSelectedSort('POPULARITY_DESC');
-      setFilterPage(1);
-      setIsFiltering(false);
+      setSearchParams(query ? { q: query } : {}, { replace: true });
   };
 
   const clearSearch = () => setSearchParams({});
+
+  const [trendingHasNext, setTrendingHasNext] = useState(false);
+  const [popularHasNext, setPopularHasNext] = useState(false);
+  const [filterHasNext, setFilterHasNext] = useState(false);
 
   if (authLoading) {
     return (
@@ -277,7 +295,7 @@ const Home = () => {
                                                 <i className="bi bi-youtube fs-4"></i> Trailer
                                             </a>
                                         )}
-                                        <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-3 fw-bold backdrop-blur">
+                                        <Link to={`/anime/${anime.id}`} onClick={saveScrollPos} className="btn btn-outline-light rounded-pill px-4 py-3 fw-bold backdrop-blur">
                                             Details
                                         </Link>
                                       </div>
@@ -294,9 +312,19 @@ const Home = () => {
 
       <Container className="py-4">
         {/* Filter Toggle Button */}
-        <div className="d-flex justify-content-end mb-3">
+        <div className="d-flex justify-content-end mb-3 gap-2">
+            {isFiltering && (
+                <Button 
+                    variant="outline-danger" 
+                    className="rounded-pill px-4 d-flex align-items-center gap-2"
+                    onClick={clearFilters}
+                >
+                    <i className="bi bi-x-circle"></i>
+                    Clear Filters
+                </Button>
+            )}
             <Button 
-                variant={showFilters ? "primary" : "outline-primary"} 
+                variant={showFilters || isFiltering ? "primary" : "outline-primary"} 
                 className="rounded-pill px-4 d-flex align-items-center gap-2"
                 onClick={() => setShowFilters(!showFilters)}
             >
@@ -307,7 +335,7 @@ const Home = () => {
 
         {/* Filter Toolbar */}
         <AnimatePresence>
-            {showFilters && (
+            {(showFilters || isFiltering) && (
                 <motion.div 
                     initial={{ height: 0, opacity: 0, marginBottom: 0 }}
                     animate={{ height: 'auto', opacity: 1, marginBottom: '3rem' }}
@@ -319,34 +347,34 @@ const Home = () => {
                         <Row className="g-3 align-items-end">
                             <Col xs={12} md={3}>
                                 <Form.Label className="small text-muted">Genre</Form.Label>
-                                <Form.Select className="border-secondary" value={selectedGenre} onChange={(e) => {setSelectedGenre(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedGenre} onChange={(e) => {updateParams({ genre: e.target.value, fp: 1 });}}>
                                     <option value="">All Genres</option>
                                     {genres.map(g => <option key={g} value={g}>{g}</option>)}
                                 </Form.Select>
                             </Col>
                             <Col xs={6} md={2}>
                                 <Form.Label className="small text-muted">Year</Form.Label>
-                                <Form.Select className="border-secondary" value={selectedYear} onChange={(e) => {setSelectedYear(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedYear} onChange={(e) => {updateParams({ year: e.target.value, fp: 1 });}}>
                                     <option value="">All Years</option>
                                     {years.map(y => <option key={y} value={y}>{y}</option>)}
                                 </Form.Select>
                             </Col>
                             <Col xs={6} md={2}>
                                 <Form.Label className="small text-muted">Season</Form.Label>
-                                <Form.Select className="border-secondary" value={selectedSeason} onChange={(e) => {setSelectedSeason(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedSeason} onChange={(e) => {updateParams({ season: e.target.value, fp: 1 });}}>
                                     <option value="">All Seasons</option>
                                     {seasons.map(s => <option key={s} value={s}>{s}</option>)}
                                 </Form.Select>
                             </Col>
                             <Col xs={6} md={3}>
                                 <Form.Label className="small text-muted">Sort By</Form.Label>
-                                <Form.Select className="border-secondary" value={selectedSort} onChange={(e) => {setSelectedSort(e.target.value); setFilterPage(1);}}>
+                                <Form.Select className="border-secondary" value={selectedSort} onChange={(e) => {updateParams({ sort: e.target.value, fp: 1 });}}>
                                     {sortOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                                 </Form.Select>
                             </Col>
                             <Col xs={12} md={2} className="ms-auto d-flex gap-2">
-                                {(selectedGenre || selectedYear || selectedSeason || selectedSort !== 'POPULARITY_DESC') && (
-                                    <Button variant="outline-danger" className="w-100 rounded-pill" onClick={clearFilters}>Clear</Button>
+                                {isFiltering && (
+                                    <Button variant="outline-danger" className="w-100 rounded-pill" onClick={clearFilters}>Clear Filters</Button>
                                 )}
                             </Col>
                         </Row>
@@ -377,6 +405,7 @@ const Home = () => {
                                         status_label: bookmark.status
                                     }} 
                                     onRemove={handleRemove}
+                                    onClick={saveScrollPos}
                                 />
                             </Col>
                         ))}
@@ -389,14 +418,14 @@ const Home = () => {
             <div className="mb-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h3 className="section-title mb-0">Filtered Results</h3>
-                    <PaginationControls page={filterPage} hasNext={filterHasNext} onPrev={() => setFilterPage(p => p - 1)} onNext={() => setFilterPage(p => p + 1)} />
+                    <PaginationControls page={filterPage} hasNext={filterHasNext} onPrev={() => updateParams({ fp: filterPage - 1 })} onNext={() => updateParams({ fp: filterPage + 1 })} />
                 </div>
                 {loading ? <SkeletonGrid /> : (
                     <motion.div variants={containerVariants} initial="hidden" animate="show" key={`filter-${filterPage}`}>
                         <Row className="g-4">
                             {filteredData.map(anime => (
                                 <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} />
+                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
                                 </Col>
                             ))}
                         </Row>
@@ -414,7 +443,7 @@ const Home = () => {
                     <Row className="g-4">
                         {searchResults.length > 0 ? searchResults.map(anime => (
                         <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                            <AnimeCard anime={anime} />
+                            <AnimeCard anime={anime} onClick={saveScrollPos} />
                         </Col>
                         )) : <p className="text-center w-100" style={{ color: 'var(--text-muted)' }}>No results found.</p>}
                     </Row>
@@ -426,14 +455,14 @@ const Home = () => {
                 <div className="mb-5" id="trending">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h3 className="section-title mb-0">Trending Now</h3>
-                        <PaginationControls page={trendingPage} hasNext={trendingHasNext} onPrev={() => setTrendingPage(p => p - 1)} onNext={() => setTrendingPage(p => p + 1)} />
+                        <PaginationControls page={trendingPage} hasNext={trendingHasNext} onPrev={() => updateParams({ tp: trendingPage - 1 })} onNext={() => updateParams({ tp: trendingPage + 1 })} />
                     </div>
                     {loading ? <SkeletonGrid /> : (
                         <motion.div variants={containerVariants} initial="hidden" animate="show" key={`trending-${trendingPage}`}>
                             <Row className="g-4">
                                 {data.trending.map(anime => (
                                 <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} />
+                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
                                 </Col>
                                 ))}
                             </Row>
@@ -444,14 +473,14 @@ const Home = () => {
                 <div id="popular">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h3 className="section-title mb-0">All Time Popular</h3>
-                        <PaginationControls page={popularPage} hasNext={popularHasNext} onPrev={() => setPopularPage(p => p - 1)} onNext={() => setPopularPage(p => p + 1)} />
+                        <PaginationControls page={popularPage} hasNext={popularHasNext} onPrev={() => updateParams({ pp: popularPage - 1 })} onNext={() => updateParams({ pp: popularPage + 1 })} />
                     </div>
                     {loading ? <SkeletonGrid /> : (
                         <motion.div variants={containerVariants} initial="hidden" animate="show" key={`popular-${popularPage}`}>
                             <Row className="g-4">
                                 {data.popular.map(anime => (
                                 <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} />
+                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
                                 </Col>
                                 ))}
                             </Row>
