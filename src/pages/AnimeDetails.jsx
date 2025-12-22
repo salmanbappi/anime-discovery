@@ -184,41 +184,48 @@ const AnimeDetails = () => {
                     <i className="bi bi-play-circle-fill me-2"></i>Watch Now
                 </Button>
                 
-                <ButtonGroup className="rounded-pill shadow-sm overflow-hidden">
-                    <Button 
-                        variant={bookmarked ? "warning" : "outline-light"} 
-                        size="lg" 
-                        className="px-4 py-2 fw-bold border-end-0"
-                        onClick={handleBookmarkToggle}
-                    >
-                        <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
-                        {bookmarked ? 'Bookmarked' : 'Bookmark'}
-                    </Button>
-                    
-                    {user && (
-                        <Dropdown as={ButtonGroup}>
-                            <Dropdown.Toggle split variant={bookmarked ? "warning" : "outline-light"} id="dropdown-split-basic" className="px-3" />
-                            <Dropdown.Menu variant="dark">
-                                <Dropdown.Header>Add to List</Dropdown.Header>
-                                {userLists.map(list => {
-                                    const isInList = list.list_items?.some(item => item.anime_id === anime.id);
-                                    return (
-                                        <Dropdown.Item 
-                                            key={list.id} 
-                                            onClick={() => handleAddToList(list.id)}
-                                            disabled={isInList}
-                                        >
-                                            {isInList ? '✓ ' : '+ '}{list.name}
-                                        </Dropdown.Item>
-                                    );
-                                })}
-                                {userLists.length === 0 && (
-                                    <Dropdown.Item disabled>No lists found. Visit Profile to create them.</Dropdown.Item>
-                                )}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    )}
-                </ButtonGroup>
+                <Button 
+                    variant={bookmarked ? "warning" : "outline-light"} 
+                    size="lg" 
+                    className="rounded-pill px-4 py-2 fw-bold shadow-sm"
+                    onClick={handleBookmarkToggle}
+                >
+                    <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
+                    {bookmarked ? 'Saved' : 'Bookmark'}
+                </Button>
+
+                {user && (
+                    <Dropdown>
+                        <Dropdown.Toggle 
+                            variant="outline-primary" 
+                            size="lg" 
+                            className="rounded-pill px-4 py-2 fw-bold"
+                            id="dropdown-lists"
+                        >
+                            <i className="bi bi-plus-lg me-2"></i>Add to List
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu variant="dark" className="shadow-lg border-secondary">
+                            <Dropdown.Header className="text-muted">Select List</Dropdown.Header>
+                            {userLists.map(list => {
+                                const isInList = list.list_items?.some(item => item.anime_id === anime.id);
+                                return (
+                                    <Dropdown.Item 
+                                        key={list.id} 
+                                        onClick={() => handleAddToList(list.id)}
+                                        disabled={isInList}
+                                        className="py-2"
+                                    >
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <span>{list.name}</span>
+                                            {isInList && <i className="bi bi-check2 text-success"></i>}
+                                        </div>
+                                    </Dropdown.Item>
+                                );
+                            })}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                )}
             </div>
         </div>
 
