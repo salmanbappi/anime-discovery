@@ -18,12 +18,23 @@
     justify-content: center;
     z-index: 10;
     transition: all 0.2s;
-    opacity: 0;
     cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
-.anime-card:hover .remove-bookmark-btn {
-    opacity: 1;
+@media (hover: hover) {
+    .remove-bookmark-btn {
+        opacity: 0;
+    }
+    .anime-card:hover .remove-bookmark-btn {
+        opacity: 1;
+    }
+}
+
+@media (hover: none) {
+    .remove-bookmark-btn {
+        opacity: 1;
+    }
 }
 
 .remove-bookmark-btn:hover {

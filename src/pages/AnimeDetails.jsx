@@ -34,7 +34,6 @@ const AnimeDetails = () => {
       setLoading(true);
       
       try {
-        // Parallelize fetchAnimeDetails and getBookmarkStatus
         const [animeData, bookmarkRes] = await Promise.all([
           fetchAnimeDetails(id),
           user ? getBookmarkStatus(user.id, id) : Promise.resolve({ data: null })
@@ -122,7 +121,6 @@ const AnimeDetails = () => {
 
   const getCleanDescription = (desc) => {
     if (!desc) return "";
-    // Remove Anilist "Note" sections which are often raw data
     return desc.split(/<br\s*\/?>\s*<br\s*\/?>\s*<b>Note:<\/b>/i)[0];
   };
 
@@ -150,7 +148,7 @@ const AnimeDetails = () => {
       className="details-page-v2"
     >
       <Container className="py-3">
-        {/* 1. Cinematic Banner (Visual Hook) */}
+        {/* Cinematic Banner */}
         <Motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -164,12 +162,11 @@ const AnimeDetails = () => {
             />
         </Motion.div>
 
-            {/* 2. Title, Genres & Quick Stats */}
+        {/* Title, Genres & Quick Stats */}
         <div className="text-center mt-4 mb-5 details-header-section">
             <h1 className="display-title-v2 mb-3 text-uppercase">{anime.title.english || anime.title.romaji}</h1>
             
             <div className="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-4">
-                {/* Genres */}
                 <div className="d-flex flex-wrap gap-2">
                     {anime.genres.map(genre => (
                         <span key={genre} className="genre-pill-v2">{genre}</span>
@@ -178,7 +175,6 @@ const AnimeDetails = () => {
 
                 <div className="vr d-none d-md-block bg-secondary mx-2" style={{ height: '30px', opacity: 0.3 }}></div>
 
-                {/* Quick Stats Badges */}
                 <div className="d-flex gap-3 align-items-center">
                     <span className="stat-item-v2">
                         <i className="bi bi-star-fill text-warning me-1"></i> {anime.averageScore}%
@@ -192,7 +188,7 @@ const AnimeDetails = () => {
                 </div>
             </div>
 
-            {/* Action: Watch Now & Status */}
+            {/* Action Buttons */}
             <div className="d-flex flex-wrap justify-content-center gap-3 action-buttons-v2">
                 <Button 
                     variant="primary" 
@@ -204,50 +200,55 @@ const AnimeDetails = () => {
                     <i className="bi bi-play-circle-fill me-2"></i>WATCH NOW
                 </Button>
                 
-                <Dropdown as={ButtonGroup} className="status-dropdown-v2 rounded-pill shadow-sm overflow-hidden">
-                    <Button 
-                        variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
-                        className="px-4 fw-bold border-end-0"
-                        onClick={() => !currentStatus && handleStatusChange('Plan to watch')}
-                    >
-                        <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'bookmark-plus'} me-2`}></i>
-                        {currentStatus || 'BOOKMARK'}
-                    </Button>
+                <div className="d-flex gap-2">
+                    <Dropdown as={ButtonGroup} className="status-dropdown-v2 rounded-pill shadow-sm overflow-hidden">
+                        <Button 
+                            variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
+                            className="px-4 fw-bold border-end-0"
+                            onClick={() => !currentStatus && handleStatusChange('Plan to watch')}
+                        >
+                            <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'bookmark-plus'} me-2`}></i>
+                            {currentStatus || 'BOOKMARK'}
+                        </Button>
 
-                    <Dropdown.Toggle 
-                        split 
-                        variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
-                        className="px-3"
-                    />
+                        <Dropdown.Toggle 
+                            split 
+                            variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
+                            className="px-3"
+                        />
 
-                    <Dropdown.Menu variant="dark" className="shadow-lg border-secondary py-0 overflow-hidden">
-                        <div className="dropdown-header-custom">SET STATUS</div>
-                        {statuses.map(s => (
-                            <Dropdown.Item 
-                                key={s.label} 
-                                onClick={() => handleStatusChange(s.label)}
-                                className={`py-2 px-4 ${currentStatus === s.label ? 'bg-primary text-white' : ''}`}
-                            >
-                                <div className="d-flex align-items-center">
-                                    <div className={`status-dot bg-${s.color} me-3`}></div>
-                                    {s.label}
-                                </div>
-                            </Dropdown.Item>
-                        ))}
-                        {currentStatus && (
-                            <>
-                                <Dropdown.Divider className="m-0 bg-secondary" style={{ opacity: 0.1 }} />
-                                <Dropdown.Item onClick={handleRemoveBookmark} className="text-danger py-2 px-4 hover-danger">
-                                    <i className="bi bi-x-circle me-3"></i>REMOVE
+                        <Dropdown.Menu variant="dark" className="shadow-lg border-secondary py-0 overflow-hidden">
+                            <div className="dropdown-header-custom">SET STATUS</div>
+                            {statuses.map(s => (
+                                <Dropdown.Item 
+                                    key={s.label} 
+                                    onClick={() => handleStatusChange(s.label)}
+                                    className={`py-2 px-4 ${currentStatus === s.label ? 'bg-primary text-white' : ''}`}
+                                >
+                                    <div className="d-flex align-items-center">
+                                        <div className={`status-dot bg-${s.color} me-3`}></div>
+                                        {s.label}
+                                    </div>
                                 </Dropdown.Item>
-                            </>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+
+                    {currentStatus && (
+                        <Button 
+                            variant="outline-danger" 
+                            className="rounded-pill px-3 fw-bold"
+                            onClick={handleRemoveBookmark}
+                            title="Remove Bookmark"
+                        >
+                            <i className="bi bi-trash-fill"></i>
+                        </Button>
+                    )}
+                </div>
             </div>
         </div>
 
-        {/* 3. Overview (The "Hook") */}
+        {/* Overview */}
         <div className="overview-container-v2 mb-5">
             <h5 className="section-header-v2">OVERVIEW</h5>
             <div 
@@ -257,7 +258,7 @@ const AnimeDetails = () => {
             />
         </div>
 
-        {/* 4. Characters (The "Hype") - Moved UP */}
+        {/* Characters */}
         {anime.characters?.edges?.length > 0 && (
             <div className="mb-5">
                 <h5 className="section-header-v2">CHARACTERS</h5>
@@ -296,7 +297,7 @@ const AnimeDetails = () => {
             </div>
         )}
 
-        {/* 5. Information Card (The "Details") - Reduced */}
+        {/* Information Card */}
         <div className="info-card-v2 mb-5">
             <h5 className="info-header-v2">DETAILS</h5>
             <div className="info-grid-v2">
@@ -326,7 +327,7 @@ const AnimeDetails = () => {
             </div>
         </div>
 
-        {/* 6. Trailer (The "Push") - Moved DOWN */}
+        {/* Trailer */}
         {anime.trailer?.site === 'youtube' && (
             <div className="mb-5">
                 <h5 className="section-header-v2">OFFICIAL TRAILER</h5>
@@ -341,7 +342,7 @@ const AnimeDetails = () => {
             </div>
         )}
 
-        {/* 7. Recommendations (The "Next Step") */}
+        {/* Recommendations */}
         {anime.recommendations?.nodes?.length > 0 && (
             <div className="mb-4">
                 <h5 className="section-header-v2">SIMILAR ANIME</h5>

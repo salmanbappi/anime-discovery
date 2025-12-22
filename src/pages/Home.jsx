@@ -183,7 +183,7 @@ const Home = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       {!isSearching && !isFiltering && data.trending.length > 0 && trendingPage === 1 && (
         <div className="hero-container mb-2">
-            {/* Hero Carousel remains here */}
+            {/* Hero Carousel */}
                         <Carousel fade indicators={true} controls={false} interval={6000}>
                         {data.trending.slice(0, 5).map((anime, index) => (
                           <Carousel.Item key={anime.id}>
@@ -205,12 +205,12 @@ const Home = () => {
                                   bottom: 0,
                                   left: 0,
                                   right: 0,
-                                  height: '100%', // Cover full for the side shadow, but gradient is concentrated
+                                  height: '100%', 
                                   zIndex: 1, 
                                   background: 'linear-gradient(to top, #000000 0%, rgba(0,0,0,0.6) 40%, transparent 60%), linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 100%)',
                               }}></div>
             
-                              {/* Content in a relative container to stay above the absolute overlay */}
+                              {/* Content */}
                               <Container className="h-100" style={{ position: 'relative', zIndex: 2 }}>
                                 <Row className="align-items-center h-100 py-5">
                                   {/* Poster Column */}
