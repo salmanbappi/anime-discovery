@@ -203,21 +203,32 @@ const AnimeDetails = () => {
                 </Button>
                 
                 <div className="d-flex gap-2">
-                    <Dropdown as={ButtonGroup} className="status-dropdown-v2 rounded-pill shadow-sm overflow-hidden">
-                        <Button 
-                            variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
-                            className="px-4 fw-bold border-end-0"
-                            onClick={() => !currentStatus && handleStatusChange('Plan to watch')}
-                        >
-                            <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'bookmark-plus'} me-2`}></i>
-                            {currentStatus || 'BOOKMARK'}
-                        </Button>
-
-                        <Dropdown.Toggle 
-                            split 
-                            variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
-                            className="px-3"
-                        />
+                    <Dropdown as={ButtonGroup} className="status-dropdown-v2 rounded-pill shadow-sm">
+                        {!currentStatus ? (
+                            <>
+                                <Button 
+                                    variant="outline-light" 
+                                    className="px-4 fw-bold border-end-0"
+                                    onClick={() => handleStatusChange('Plan to watch')}
+                                >
+                                    <i className="bi bi-bookmark-plus me-2"></i>
+                                    BOOKMARK
+                                </Button>
+                                <Dropdown.Toggle 
+                                    split 
+                                    variant="outline-light" 
+                                    className="px-3"
+                                />
+                            </>
+                        ) : (
+                            <Dropdown.Toggle 
+                                variant={statuses.find(s => s.label === currentStatus)?.color || "success"} 
+                                className="px-4 fw-bold rounded-pill"
+                            >
+                                <i className="bi bi-check-circle-fill me-2"></i>
+                                {currentStatus.toUpperCase()}
+                            </Dropdown.Toggle>
+                        )}
 
                         <Dropdown.Menu variant="dark" className="shadow-lg border-secondary py-0 overflow-hidden">
                             <div className="dropdown-header-custom">SET STATUS</div>
