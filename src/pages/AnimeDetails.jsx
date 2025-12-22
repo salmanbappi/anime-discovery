@@ -309,10 +309,11 @@ const AnimeDetails = () => {
         {anime.trailer?.site === 'youtube' && (
             <div className="mb-5">
                 <h5 className="section-header-v2">OFFICIAL TRAILER</h5>
-                <div className="trailer-box-v2 rounded shadow-lg">
+                <div className="trailer-box-v2 rounded shadow-lg overflow-hidden">
                     <iframe
-                        src={`https://www.youtube.com/embed/${anime.trailer.id}`}
+                        src={`https://www.youtube.com/embed/${anime.trailer.id}?enablejsapi=1&origin=${window.location.origin}&rel=0`}
                         title="Trailer"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                     ></iframe>
                 </div>
