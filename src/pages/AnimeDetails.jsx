@@ -48,6 +48,12 @@ const AnimeDetails = () => {
     }
   };
 
+  const getCleanDescription = (desc) => {
+    if (!desc) return "";
+    // Remove Anilist "Note" sections which are often raw data
+    return desc.split(/<br\s*\/?>\s*<br\s*\/?>\s*<b>Note:<\/b>/i)[0];
+  };
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh', backgroundColor: '#000' }}>
@@ -127,7 +133,7 @@ const AnimeDetails = () => {
             <h5 className="section-header-v2">OVERVIEW</h5>
             <div 
                 className="description-text-v2" 
-                dangerouslySetInnerHTML={{ __html: anime.description }} 
+                dangerouslySetInnerHTML={{ __html: getCleanDescription(anime.description) }} 
                 onClick={handleDescriptionClick}
             />
         </div>
@@ -170,6 +176,10 @@ const AnimeDetails = () => {
         <div className="info-card-v2 mb-5">
             <h5 className="info-header-v2">DETAILS</h5>
             <div className="info-grid-v2">
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-calendar3 me-2"></i>Released</span>
+                    <span className="info-value-v2">{anime.startDate?.year ? `${anime.startDate.day || ''}/${anime.startDate.month || ''}/${anime.startDate.year}` : '?'}</span>
+                </div>
                 <div className="info-item-v2">
                     <span className="info-label-v2"><i className="bi bi-layers me-2"></i>Episodes</span>
                     <span className="info-value-v2">{anime.episodes || '?'}</span>

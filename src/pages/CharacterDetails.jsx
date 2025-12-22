@@ -49,6 +49,11 @@ const CharacterDetails = () => {
     }
   };
 
+  const getCleanDescription = (desc) => {
+    if (!desc) return "";
+    return desc.split(/<br\s*\/?>\s*<br\s*\/?>\s*<b>Note:<\/b>/i)[0];
+  };
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
@@ -102,7 +107,7 @@ const CharacterDetails = () => {
 
                  <div 
                     className="description-text-v2" 
-                    dangerouslySetInnerHTML={{ __html: character.description }}
+                    dangerouslySetInnerHTML={{ __html: getCleanDescription(character.description) }}
                     onClick={handleDescriptionClick}
                     style={{ 
                         maxHeight: expanded ? 'none' : '150px', 
