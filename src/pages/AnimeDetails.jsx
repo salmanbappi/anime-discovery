@@ -73,7 +73,7 @@ const AnimeDetails = () => {
       className="details-page-v2"
     >
       <Container className="py-3">
-        {/* 1. Cinematic Banner (Top) */}
+        {/* 1. Cinematic Banner (Visual Hook) */}
         <Motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -86,17 +86,37 @@ const AnimeDetails = () => {
             />
         </Motion.div>
 
-        {/* 2. Main Title and Genres (Moved Up) */}
-        <div className="text-center mt-4 mb-4">
+        {/* 2. Title, Genres & Quick Stats */}
+        <div className="text-center mt-4 mb-5">
             <h1 className="display-title-v2 mb-3">{anime.title.english || anime.title.romaji}</h1>
-            <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
+            
+            {/* Genres */}
+            <div className="d-flex flex-wrap justify-content-center gap-2 mb-3">
                 {anime.genres.map(genre => (
                     <span key={genre} className="genre-pill-v2">{genre}</span>
                 ))}
             </div>
+
+            {/* Quick Stats Badges */}
+            <div className="d-flex flex-wrap justify-content-center gap-3 mb-4 align-items-center">
+                <span className="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill">
+                    <i className="bi bi-star-fill me-1"></i> {anime.averageScore}%
+                </span>
+                <span className="badge bg-secondary fs-6 px-3 py-2 rounded-pill">
+                    {anime.format}
+                </span>
+                <span className="badge bg-success fs-6 px-3 py-2 rounded-pill text-uppercase">
+                    {anime.status?.replace('_', ' ')}
+                </span>
+            </div>
+
+            {/* Action: Watch Now */}
+            <Button variant="primary" size="lg" className="rounded-pill px-5 py-2 fw-bold shadow-lg">
+                <i className="bi bi-play-circle-fill me-2"></i>Watch Now
+            </Button>
         </div>
 
-        {/* 3. Overview (Moved Up) */}
+        {/* 3. Overview (The "Hook") */}
         <div className="overview-container-v2 mb-5">
             <h5 className="section-header-v2">OVERVIEW</h5>
             <div 
@@ -106,45 +126,7 @@ const AnimeDetails = () => {
             />
         </div>
 
-        {/* 4. Information Card (Full Width) */}
-        <div className="info-card-v2 mb-5">
-            <h5 className="info-header-v2">INFORMATION</h5>
-            <div className="info-grid-v2">
-                <div className="info-item-v2">
-                    <span className="info-label-v2"><i className="bi bi-play-circle me-2"></i>Format</span>
-                    <span className="info-value-v2">{anime.format}</span>
-                </div>
-                <div className="info-item-v2">
-                    <span className="info-label-v2"><i className="bi bi-layers me-2"></i>Episodes</span>
-                    <span className="info-value-v2">{anime.episodes || '?'}</span>
-                </div>
-                <div className="info-item-v2">
-                    <span className="info-label-v2"><i className="bi bi-info-circle me-2"></i>Status</span>
-                    <span className="info-value-v2 text-capitalize">{anime.status?.toLowerCase().replace('_', ' ')}</span>
-                </div>
-                <div className="info-item-v2">
-                    <span className="info-label-v2"><i className="bi bi-calendar-event me-2"></i>Season</span>
-                    <span className="info-value-v2 text-capitalize">{anime.season?.toLowerCase()} {anime.seasonYear}</span>
-                </div>
-                <div className="info-item-v2">
-                    <span className="info-label-v2"><i className="bi bi-star-fill me-2 text-warning"></i>Score</span>
-                    <span className="info-value-v2 text-primary fw-bold">{anime.averageScore}%</span>
-                </div>
-                <div className="info-item-v2 border-0">
-                    <span className="info-label-v2"><i className="bi bi-building me-2"></i>Studio</span>
-                    <span className="info-value-v2">
-                        {anime.studios?.nodes[0] ? (
-                            <Link to={`/studio/${anime.studios.nodes[0].id}`} className="text-white text-decoration-none studio-link-hint">
-                                {anime.studios.nodes[0].name}
-                                <i className="bi bi-info-circle ms-2" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
-                            </Link>
-                        ) : '-'}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        {/* 5. Characters (Two Column Grid) */}
+        {/* 4. Characters (The "Hype") - Moved UP */}
         {anime.characters?.edges?.length > 0 && (
             <div className="mb-5">
                 <h5 className="section-header-v2">CHARACTERS</h5>
@@ -178,7 +160,33 @@ const AnimeDetails = () => {
             </div>
         )}
 
-        {/* 6. Trailer */}
+        {/* 5. Information Card (The "Details") - Reduced */}
+        <div className="info-card-v2 mb-5">
+            <h5 className="info-header-v2">DETAILS</h5>
+            <div className="info-grid-v2">
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-layers me-2"></i>Episodes</span>
+                    <span className="info-value-v2">{anime.episodes || '?'}</span>
+                </div>
+                <div className="info-item-v2">
+                    <span className="info-label-v2"><i className="bi bi-calendar-event me-2"></i>Season</span>
+                    <span className="info-value-v2 text-capitalize">{anime.season?.toLowerCase()} {anime.seasonYear}</span>
+                </div>
+                <div className="info-item-v2 border-0">
+                    <span className="info-label-v2"><i className="bi bi-building me-2"></i>Studio</span>
+                    <span className="info-value-v2">
+                        {anime.studios?.nodes[0] ? (
+                            <Link to={`/studio/${anime.studios.nodes[0].id}`} className="text-white text-decoration-none studio-link-hint">
+                                {anime.studios.nodes[0].name}
+                                <i className="bi bi-info-circle ms-2" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
+                            </Link>
+                        ) : '-'}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {/* 6. Trailer (The "Push") - Moved DOWN */}
         {anime.trailer?.site === 'youtube' && (
             <div className="mb-5">
                 <h5 className="section-header-v2">OFFICIAL TRAILER</h5>
@@ -192,7 +200,7 @@ const AnimeDetails = () => {
             </div>
         )}
 
-        {/* 7. Recommendations */}
+        {/* 7. Recommendations (The "Next Step") */}
         {anime.recommendations?.nodes?.length > 0 && (
             <div className="mb-4">
                 <h5 className="section-header-v2">SIMILAR ANIME</h5>
