@@ -78,6 +78,10 @@ body {
 .info-label-v2 { color: #888; font-size: 0.95rem; font-weight: 500; }
 .info-value-v2 { color: #fff; font-weight: 700; font-size: 0.95rem; }
 
+.studio-link-hint:hover {
+    color: var(--primary-color) !important;
+}
+
 .section-header-v2 {
     font-size: 0.9rem;
     font-weight: 800;

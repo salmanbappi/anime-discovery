@@ -113,8 +113,9 @@ const AnimeDetails = () => {
                     <span className="info-label-v2"><i className="bi bi-building me-2"></i>Studio</span>
                     <span className="info-value-v2">
                         {anime.studios?.nodes[0] ? (
-                            <Link to={`/studio/${anime.studios.nodes[0].id}`} className="text-white text-decoration-underline">
+                            <Link to={`/studio/${anime.studios.nodes[0].id}`} className="text-white text-decoration-none studio-link-hint">
                                 {anime.studios.nodes[0].name}
+                                <i className="bi bi-info-circle ms-2" style={{ fontSize: '0.8em', opacity: 0.7 }}></i>
                             </Link>
                         ) : '-'}
                     </span>
