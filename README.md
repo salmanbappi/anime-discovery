@@ -1,6 +1,6 @@
-# Anime Discovery
+# Anime Discovery (v2.6)
 
-A modern, responsive anime discovery application inspired by [Anilist](https://anilist.co). This app allows users to browse trending and popular anime, as well as search for their favorite series, using real-time data from the Anilist GraphQL API.
+A modern, responsive anime discovery application. Now featuring remodeled anime details and improved bookmark tracking.
 
 **Live Demo:** [https://solarlist.vercel.app/](https://solarlist.vercel.app/)
 *(Backup: [https://salmanbappi.github.io/anime-discovery/](https://salmanbappi.github.io/anime-discovery/))*
