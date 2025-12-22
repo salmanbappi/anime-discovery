@@ -160,6 +160,9 @@ const Home = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <div style={{ backgroundColor: '#ff0000', color: '#fff', textAlign: 'center', padding: '5px', fontSize: '12px', fontWeight: 'bold' }}>
+        VERSION 2.6.1 DEPLOYED - CACHE BUSTER {Date.now()}
+      </div>
       {!isSearching && !isFiltering && data.trending.length > 0 && trendingPage === 1 && (
         <div className="hero-container mb-2">
             {/* Hero Carousel remains here */}
