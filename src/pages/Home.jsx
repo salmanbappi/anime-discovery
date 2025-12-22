@@ -37,9 +37,9 @@ const itemVariants = {
 };
 
 const SkeletonGrid = () => (
-    <Row className="g-4">
+    <Row className="g-3">
         {Array.from({ length: 12 }).map((_, i) => (
-            <Col key={i} xs={12} sm={6} md={4} lg={4}>
+            <Col key={i} xs={4} sm={4} md={3} lg={2}>
                 <SkeletonCard />
             </Col>
         ))}
@@ -93,7 +93,7 @@ const Home = () => {
              setUpcomingPage(prev => prev + 1);
         }
       }
-    });
+    }, { rootMargin: '200px' });
     if (node) observer.current.observe(node);
   }, [loading, viewAll, trendingHasNext, popularHasNext, upcomingHasNext]);
 
@@ -160,8 +160,6 @@ const Home = () => {
         setData(prev => {
             const newData = { ...prev };
             
-            // Deduplicate logic could be added here if needed, but simple append works for now
-            // Assuming unique IDs is best practice, but Set overhead might be fine.
             const merge = (oldData, newData) => {
                 const ids = new Set(oldData.map(d => d.id));
                 return [...oldData, ...newData.filter(d => !ids.has(d.id))];
@@ -276,17 +274,17 @@ const Home = () => {
             
             {loading && page === 1 ? <SkeletonGrid /> : (
                 <motion.div variants={containerVariants} initial="hidden" animate="show" key={`${sectionKey}-${page}`}>
-                    <Row className="g-4">
+                    <Row className="g-3">
                         {items.map((anime, index) => {
                             if (items.length === index + 1 && isViewAllActive) {
                                 return (
-                                    <Col ref={lastElementRef} key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
+                                    <Col ref={lastElementRef} key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
                                         <AnimeCard anime={anime} onClick={saveScrollPos} />
                                     </Col>
                                 );
                             } else {
                                 return (
-                                    <Col key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
+                                    <Col key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
                                         <AnimeCard anime={anime} onClick={saveScrollPos} />
                                     </Col>
                                 );
