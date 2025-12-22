@@ -19,6 +19,7 @@ const AnimeCard = ({ anime }) => {
           alt={title} 
           className="anime-cover"
           loading="lazy"
+          referrerPolicy="no-referrer"
         />
 
         {/* Top Badges (Score & Format) */}

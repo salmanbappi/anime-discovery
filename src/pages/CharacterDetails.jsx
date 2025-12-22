@@ -83,9 +83,10 @@ const CharacterDetails = () => {
                  <Motion.img 
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    src={getProxiedImage(character.image.large)} 
+                    src={character.image.large} 
                     alt={character.name.full} 
                     className="img-fluid rounded shadow-lg"
+                    referrerPolicy="no-referrer"
                     style={{ maxWidth: '100%', borderRadius: '15px' }}
                 />
             </Col>

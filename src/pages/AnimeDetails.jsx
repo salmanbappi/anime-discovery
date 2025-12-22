@@ -146,6 +146,7 @@ const AnimeDetails = () => {
                 src={getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)} 
                 alt="Banner" 
                 className="top-banner-img rounded-xl shadow-lg" 
+                referrerPolicy="no-referrer"
             />
         </Motion.div>
 
@@ -250,7 +251,12 @@ const AnimeDetails = () => {
                         <Col xs={12} md={6} key={edge.node.id}>
                             <Link to={`/character/${edge.node.id}`} className="text-decoration-none">
                                 <div className="char-card-v2">
-                                    <img src={getProxiedImage(edge.node.image.medium)} alt={edge.node.name.full} className="char-img-v2" />
+                                    <img 
+                                        src={getProxiedImage(edge.node.image.medium)} 
+                                        alt={edge.node.name.full} 
+                                        className="char-img-v2" 
+                                        referrerPolicy="no-referrer"
+                                    />
                                     <div className="char-info-v2">
                                         <div className="char-name-v2 text-white">{edge.node.name.full}</div>
                                         <div className="char-role-v2">{edge.role}</div>
@@ -311,7 +317,7 @@ const AnimeDetails = () => {
                 <h5 className="section-header-v2">OFFICIAL TRAILER</h5>
                 <div className="trailer-box-v2 rounded shadow-lg overflow-hidden">
                     <iframe
-                        src={`https://www.youtube.com/embed/${anime.trailer.id}?enablejsapi=1&origin=${window.location.origin}&rel=0`}
+                        src={`https://www.youtube.com/embed/${anime.trailer.id}?rel=0`}
                         title="Trailer"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen

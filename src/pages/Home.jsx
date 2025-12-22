@@ -201,6 +201,7 @@ const Home = () => {
                                           src={getProxiedImage(anime.coverImage.extraLarge)} 
                                           alt={anime.title.english}
                                           className="img-fluid rounded shadow-lg"
+                                          referrerPolicy="no-referrer"
                                           style={{ 
                                               maxHeight: '400px', 
                                               width: 'auto',
