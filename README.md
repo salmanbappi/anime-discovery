@@ -2,7 +2,7 @@
 
 A modern, responsive anime discovery application. Now featuring infinite scrolling, a dedicated upcoming section, and optimized mobile layouts.
 
-**Last Updated:** December 2025
+**Last Updated:** December 23, 2025 (v2.9.3)
 **Live Demo:** [https://solarlist.vercel.app/](https://solarlist.vercel.app/)
 *(Backup: [https://salmanbappi.github.io/anime-discovery/](https://salmanbappi.github.io/anime-discovery/))*
 
