@@ -1,7 +1,7 @@
 {
   "name": "anime-discovery",
   "private": true,
-  "version": "2.9.2",
+  "version": "2.9.3",
   "type": "module",
   "homepage": "https://solarlist.vercel.app/",
   "scripts": {
@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build:gh",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "update": "node scripts/auto-version.js && git add . && git commit -m 'auto: version bump and update' && git push && npm run deploy"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
