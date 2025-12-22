@@ -7,9 +7,7 @@ import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
 import { useAuth } from '../context/AuthContext';
 import { addBookmark, removeBookmark, isBookmarked } from '../services/bookmarkService';
-import { getLists, addToList, removeFromList } from '../services/listService';
 import { toast } from 'react-toastify';
-import { Dropdown, ButtonGroup } from 'react-bootstrap';
 
 const AnimeDetails = () => {
   const { id } = useParams();
@@ -19,7 +17,6 @@ const AnimeDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const [userLists, setUserLists] = useState([]);
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -28,34 +25,14 @@ const AnimeDetails = () => {
       setAnime(data);
       
       if (user && data) {
-        const [bookmarkedStatus, listsRes] = await Promise.all([
-          isBookmarked(user.id, data.id),
-          getLists(user.id)
-        ]);
+        const bookmarkedStatus = await isBookmarked(user.id, data.id);
         setBookmarked(bookmarkedStatus);
-        if (listsRes.data) setUserLists(listsRes.data);
       }
       
       setLoading(false);
     };
     loadDetails();
   }, [id, user]);
-
-  const handleAddToList = async (listId) => {
-    const { error } = await addToList(user.id, listId, anime);
-    if (error) {
-        if (error.code === '23505') {
-            toast.info("Already in this list");
-        } else {
-            toast.error("Error adding to list");
-        }
-    } else {
-        toast.success("Added to list!");
-        // Refresh lists
-        const { data } = await getLists(user.id);
-        if (data) setUserLists(data);
-    }
-  };
 
   const handleBookmarkToggle = async () => {
     if (!user) {
@@ -193,39 +170,6 @@ const AnimeDetails = () => {
                     <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
                     {bookmarked ? 'Saved' : 'Bookmark'}
                 </Button>
-
-                {user && (
-                    <Dropdown>
-                        <Dropdown.Toggle 
-                            variant="outline-primary" 
-                            size="lg" 
-                            className="rounded-pill px-4 py-2 fw-bold"
-                            id="dropdown-lists"
-                        >
-                            <i className="bi bi-plus-lg me-2"></i>Add to List
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu variant="dark" className="shadow-lg border-secondary">
-                            <Dropdown.Header className="text-muted">Select List</Dropdown.Header>
-                            {userLists.map(list => {
-                                const isInList = list.list_items?.some(item => item.anime_id === anime.id);
-                                return (
-                                    <Dropdown.Item 
-                                        key={list.id} 
-                                        onClick={() => handleAddToList(list.id)}
-                                        disabled={isInList}
-                                        className="py-2"
-                                    >
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <span>{list.name}</span>
-                                            {isInList && <i className="bi bi-check2 text-success"></i>}
-                                        </div>
-                                    </Dropdown.Item>
-                                );
-                            })}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                )}
             </div>
         </div>
 
