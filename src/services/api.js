@@ -194,6 +194,7 @@ export const fetchAnimeDetails = async (id) => {
         genres
         studios(isMain: true) {
           nodes {
+            id
             name
           }
         }
@@ -312,6 +313,60 @@ export const fetchCharacterDetails = async (id) => {
     return data.data.Character;
   } catch (error) {
     console.error("Error fetching character details:", error);
+    return null;
+  }
+};
+
+export const fetchStudioDetails = async ({ id, page = 1, sort = "POPULARITY_DESC" }) => {
+  const query = `
+    query ($id: Int, $page: Int, $sort: [MediaSort]) {
+      Studio(id: $id) {
+        id
+        name
+        isAnimationStudio
+        media(page: $page, perPage: 20, sort: $sort, isMain: true) {
+          pageInfo {
+            hasNextPage
+            lastPage
+          }
+          nodes {
+             id
+            title {
+              english
+              romaji
+            }
+            coverImage {
+              large
+            }
+            averageScore
+            genres
+            episodes
+            format
+            startDate {
+              year
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = { id, page, sort: [sort] };
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ query, variables })
+  };
+
+  try {
+    const response = await fetch(API_URL, options);
+    const data = await response.json();
+    return data.data.Studio;
+  } catch (error) {
+    console.error("Error fetching studio details:", error);
     return null;
   }
 };

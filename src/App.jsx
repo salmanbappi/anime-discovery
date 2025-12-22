@@ -5,6 +5,7 @@ import CustomNavbar from './components/Navbar';
 import Home from './pages/Home';
 import AnimeDetails from './pages/AnimeDetails';
 import CharacterDetails from './pages/CharacterDetails';
+import StudioDetails from './pages/StudioDetails';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/anime/:id" element={<AnimeDetails />} />
           <Route path="/character/:id" element={<CharacterDetails />} />
+          <Route path="/studio/:id" element={<StudioDetails />} />
         </Routes>
       </div>
     </Router>
