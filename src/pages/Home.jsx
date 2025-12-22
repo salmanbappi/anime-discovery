@@ -138,7 +138,7 @@ const Home = () => {
             <Carousel fade indicators={true} controls={false} interval={6000}>
             {data.trending.slice(0, 5).map((anime, index) => (
               <Carousel.Item key={anime.id}>
-                <div className="hero-slide" style={{ overflow: 'hidden', position: 'relative', minHeight: '75vh' }}>
+                <div className="hero-slide" style={{ overflow: 'hidden', position: 'relative', minHeight: '55vh' }}>
                   <div 
                     className="hero-bg-image-wrapper"
                     style={{
@@ -146,58 +146,59 @@ const Home = () => {
                         backgroundImage: `url(${getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center 20%',
-                        filter: 'brightness(1.1)',
+                        filter: 'brightness(1.2) contrast(1.1)',
                         zIndex: 0
                     }}
                   ></div>
                   <div className="hero-overlay" style={{ 
                       position: 'relative', 
                       zIndex: 1, 
-                      background: 'linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%)',
-                      minHeight: '75vh',
+                      background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%)',
+                      minHeight: '55vh',
                       display: 'flex',
                       alignItems: 'center'
                   }}>
                     <Container>
-                      <Row className="align-items-center py-5">
+                      <Row className="align-items-center py-4">
                         {/* Poster Column */}
-                        <Col md={4} lg={3} className="d-none d-md-block">
+                        <Col md={3} lg={2} className="d-none d-md-block">
                             <motion.img 
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5, delay: 0.2 }}
                                 src={getProxiedImage(anime.coverImage.extraLarge)} 
                                 alt={anime.title.english}
                                 className="img-fluid rounded shadow-lg"
                                 style={{ 
-                                    maxHeight: '420px', 
+                                    maxHeight: '280px', 
                                     width: '100%',
                                     objectFit: 'cover', 
-                                    borderRadius: '12px',
-                                    border: '1px solid rgba(255,255,255,0.1)'
+                                    borderRadius: '8px',
+                                    boxShadow: '0 10px 20px rgba(0,0,0,0.5)',
+                                    border: '1px solid rgba(255,255,255,0.2)'
                                 }}
                             />
                         </Col>
 
                         {/* Text Column */}
-                        <Col md={8} lg={9}>
+                        <Col md={9} lg={10}>
                           <motion.div 
                             initial={{ y: 20, opacity: 0 }} 
                             animate={{ y: 0, opacity: 1 }} 
                             transition={{ duration: 0.6, delay: 0.3 }}
                             className="text-center text-md-start ps-md-4"
                           >
-                             <div className="d-flex align-items-center gap-2 mb-3 justify-content-center justify-content-md-start flex-wrap">
-                                  <span className="badge bg-primary rounded-pill px-3 py-2 fw-bold">#{index + 1} Trending</span>
-                                  <span className="badge bg-dark bg-opacity-50 border border-secondary rounded-pill px-3 py-2">{anime.format}</span>
-                                  <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold">★ {anime.averageScore}%</span>
+                             <div className="d-flex align-items-center gap-2 mb-2 justify-content-center justify-content-md-start flex-wrap">
+                                  <span className="badge bg-primary rounded-pill px-2 py-1 small">#{index + 1} Trending</span>
+                                  <span className="badge bg-dark bg-opacity-50 border border-secondary rounded-pill px-2 py-1 small">{anime.format}</span>
+                                  <span className="badge bg-warning text-dark rounded-pill px-2 py-1 small fw-bold">★ {anime.averageScore}%</span>
                               </div>
                             
-                            <h1 className="hero-title mb-3" style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.5rem)', fontWeight: '900', textShadow: '2px 2px 10px rgba(0,0,0,0.7)', lineHeight: 1.1 }}>
+                            <h1 className="hero-title mb-2" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.8rem)', fontWeight: '900', textShadow: '2px 2px 8px rgba(0,0,0,0.6)', lineHeight: 1.1 }}>
                                 {anime.title.english || anime.title.romaji}
                             </h1>
 
-                            <div className="d-flex flex-wrap gap-2 mb-4 justify-content-center justify-content-md-start">
+                            <div className="d-flex flex-wrap gap-2 mb-3 justify-content-center justify-content-md-start">
                                 {anime.genres?.slice(0, 4).map((genre) => (
                                     <span key={genre} className="badge rounded-pill bg-light bg-opacity-10 px-3 py-1 small fw-bold">
                                         {genre}
@@ -206,27 +207,27 @@ const Home = () => {
                             </div>
 
                             <div 
-                                className="hero-desc mb-4 d-none d-md-block text-white" 
+                                className="hero-desc mb-3 d-none d-md-block text-white" 
                                 style={{ 
-                                    fontSize: '1.05rem', 
-                                    lineHeight: '1.6', 
-                                    textShadow: '1px 1px 5px rgba(0,0,0,0.8)',
-                                    maxWidth: '750px',
+                                    fontSize: '0.95rem', 
+                                    lineHeight: '1.5', 
+                                    textShadow: '1px 1px 4px rgba(0,0,0,0.8)',
+                                    maxWidth: '700px',
                                     display: '-webkit-box',
-                                    WebkitLineClamp: 3,
+                                    WebkitLineClamp: 2,
                                     WebkitBoxOrient: 'vertical',
                                     overflow: 'hidden',
-                                    opacity: 0.9
+                                    opacity: 0.95
                                 }} 
                                 dangerouslySetInnerHTML={{ __html: anime.description }} 
                             />
                             
-                            <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-2">
-                              <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg d-flex align-items-center gap-2 transition-transform">
-                                  <i className="bi bi-play-fill fs-4"></i> Watch Now
+                            <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-1">
+                              <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-lg d-flex align-items-center gap-2">
+                                  <i className="bi bi-play-fill fs-5"></i> Watch Now
                               </Link>
-                              <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-3 fw-bold backdrop-blur">
-                                  View Details
+                              <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-2 fw-bold backdrop-blur">
+                                  Details
                               </Link>
                             </div>
                           </motion.div>
