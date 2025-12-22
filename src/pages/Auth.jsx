@@ -3,6 +3,7 @@ import { Container, Form, Button, Alert, Card, Row, Col } from 'react-bootstrap'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { toast } from 'react-toastify'
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false)
@@ -26,14 +27,16 @@ const Auth = () => {
       if (isSignUp) {
         const { error } = await signUp(email, password)
         if (error) throw error
-        alert('Check your email for the confirmation link!')
+        toast.success('Check your email for the confirmation link!')
       } else {
         const { error } = await signIn(email, password)
         if (error) throw error
+        toast.success('Welcome back!')
         navigate(from, { replace: true })
       }
     } catch (err) {
       setError(err.message)
+      toast.error(err.message)
     } finally {
       setLoading(false)
     }

@@ -7,6 +7,7 @@ import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
 import { useAuth } from '../context/AuthContext';
 import { addBookmark, removeBookmark, isBookmarked } from '../services/bookmarkService';
+import { toast } from 'react-toastify';
 
 const AnimeDetails = () => {
   const { id } = useParams();
@@ -35,16 +36,23 @@ const AnimeDetails = () => {
 
   const handleBookmarkToggle = async () => {
     if (!user) {
+      toast.info("Please log in to bookmark anime");
       navigate('/login', { state: { from: { pathname: `/anime/${id}` } } });
       return;
     }
 
-    if (bookmarked) {
-      await removeBookmark(user.id, anime.id);
-      setBookmarked(false);
-    } else {
-      await addBookmark(user.id, anime);
-      setBookmarked(true);
+    try {
+      if (bookmarked) {
+        await removeBookmark(user.id, anime.id);
+        setBookmarked(false);
+        toast.info("Removed from bookmarks");
+      } else {
+        await addBookmark(user.id, anime);
+        setBookmarked(true);
+        toast.success("Added to bookmarks!");
+      }
+    } catch (err) {
+      toast.error("Failed to update bookmark");
     }
   };
 
