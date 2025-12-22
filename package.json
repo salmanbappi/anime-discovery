@@ -1,7 +1,7 @@
 {
   "name": "anime-discovery",
   "private": true,
-  "version": "2.8.4",
+  "version": "2.8.5",
   "type": "module",
   "homepage": "https://solarlist.vercel.app/",
   "scripts": {

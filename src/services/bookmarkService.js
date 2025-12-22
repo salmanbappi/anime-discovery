@@ -2,6 +2,14 @@ import { supabase } from './supabaseClient'
 
 export const addBookmark = async (userId, anime, status = 'Plan to watch') => {
   const animeId = parseInt(anime.id)
+  
+  // Manual check for existing bookmark
+  const { data: existing } = await supabase
+    .from('bookmarks')
+    .select('id')
+    .match({ user_id: userId, anime_id: animeId })
+    .maybeSingle()
+
   const payload = { 
     user_id: userId, 
     anime_id: animeId, 
@@ -11,13 +19,23 @@ export const addBookmark = async (userId, anime, status = 'Plan to watch') => {
     anime_format: anime.format || null,
     status: status
   }
-  
-  const { data, error } = await supabase
-    .from('bookmarks')
-    .upsert(payload, { onConflict: 'user_id,anime_id' })
-    .select()
-    
-  return { data: data ? data[0] : null, error }
+
+  if (existing) {
+    // Update
+    const { data, error } = await supabase
+      .from('bookmarks')
+      .update({ status: status })
+      .match({ user_id: userId, anime_id: animeId })
+      .select()
+    return { data: data ? data[0] : null, error }
+  } else {
+    // Insert
+    const { data, error } = await supabase
+      .from('bookmarks')
+      .insert([payload])
+      .select()
+    return { data: data ? data[0] : null, error }
+  }
 }
 
 export const getBookmarkStatus = async (userId, animeId) => {
