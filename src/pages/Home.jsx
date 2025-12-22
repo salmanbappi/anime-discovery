@@ -146,11 +146,11 @@ const Home = () => {
                         backgroundImage: `url(${getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        filter: 'blur(8px)',
+                        filter: 'blur(8px) brightness(1.2)',
                         transform: 'scale(1.1)',
                     }}
                   ></div>
-                  <div className="hero-overlay" style={{ background: 'rgba(0,0,0,0.6)' }}>
+                  <div className="hero-overlay" style={{ background: 'rgba(0,0,0,0.4)' }}>
                     <Container>
                       <Row className="align-items-center" style={{ minHeight: '60vh' }}>
                         <Col md={8} lg={7}>
