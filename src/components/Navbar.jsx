@@ -35,7 +35,7 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-stars me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v1.1</small>
             </Navbar.Brand>
         )}
         
