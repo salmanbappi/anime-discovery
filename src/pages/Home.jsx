@@ -224,15 +224,21 @@ const Home = () => {
                               dangerouslySetInnerHTML={{ __html: anime.description }} 
                           />
                           
-                          <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-1">
-                            <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-lg d-flex align-items-center gap-2 btn-sm">
-                                <i className="bi bi-play-fill fs-5"></i> Watch Now
-                            </Link>
-                            <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-2 fw-bold backdrop-blur btn-sm">
-                                Details
-                            </Link>
-                          </div>
-                        </motion.div>
+                                                      <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-1">
+                                                        {anime.trailer?.site === 'youtube' && (
+                                                            <a 
+                                                              href={`https://www.youtube.com/watch?v=${anime.trailer.id}`} 
+                                                              target="_blank" 
+                                                              rel="noopener noreferrer"
+                                                              className="btn btn-danger rounded-pill px-4 py-2 fw-bold shadow-lg d-flex align-items-center gap-2 btn-sm"
+                                                            >
+                                                                <i className="bi bi-youtube fs-5"></i> Trailer
+                                                            </a>
+                                                        )}
+                                                        <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-2 fw-bold backdrop-blur btn-sm">
+                                                            More Info
+                                                        </Link>
+                                                      </div>                        </motion.div>
                       </Col>
                     </Row>
                   </Container>

@@ -23,6 +23,10 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
           episodes
           format
           description(asHtml: false)
+          trailer {
+            id
+            site
+          }
         }
       }
       popular: Page(page: $popularPage, perPage: 12) {
