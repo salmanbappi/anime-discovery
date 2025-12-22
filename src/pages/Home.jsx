@@ -3,11 +3,14 @@ import { Container, Row, Col, Spinner, Carousel, Form, Dropdown, Button } from '
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchHomeData, searchAnime, fetchAdvancedData } from '../services/api';
-import { getBookmarks } from '../services/bookmarkService';
-import { useAuth } from '../context/AuthContext';
+import { getBookmarks, removeBookmark } from '../services/bookmarkService';
+import { useAuth } from '../context/useAuth';
 import AnimeCard from '../components/AnimeCard';
 import SkeletonCard from '../components/SkeletonCard';
 import { getProxiedImage } from '../utils/imageHelper';
+import { toast } from 'react-toastify';
+
+// ... (keep constants)
 
 const genres = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
 const years = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i);
@@ -80,6 +83,18 @@ const Home = () => {
 
   const query = searchParams.get('q');
   const isSearching = !!query;
+
+  const handleRemove = async (animeId) => {
+    try {
+      const { error } = await removeBookmark(user.id, animeId);
+      if (error) throw error;
+      setBookmarks(bookmarks.filter(b => b.anime_id !== animeId));
+      toast.info("Removed from bookmarks");
+    } catch (err) {
+      console.error("Error removing bookmark:", err);
+      toast.error("Failed to remove bookmark");
+    }
+  };
 
   // Load Bookmarks
   useEffect(() => {
@@ -355,6 +370,7 @@ const Home = () => {
                                         format: bookmark.anime_format,
                                         status_label: bookmark.status
                                     }} 
+                                    onRemove={handleRemove}
                                 />
                             </Col>
                         ))}

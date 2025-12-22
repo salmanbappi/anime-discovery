@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, Button, Form, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import { getProfile, updateProfile } from '../services/profileService'
 import { toast } from 'react-toastify'
 
@@ -13,26 +13,27 @@ const Profile = () => {
   const [formData, setFormData] = useState({ username: '', full_name: '', bio: '', avatar_url: '' })
 
   useEffect(() => {
-    if (user) {
-      loadUserData()
+    let isMounted = true
+    const load = async () => {
+      if (!user) return
+      setLoading(true)
+      const { data } = await getProfile(user.id)
+      
+      if (data && isMounted) {
+        setProfile(data)
+        setFormData({ 
+          username: data.username || '', 
+          full_name: data.full_name || '', 
+          bio: data.bio || '',
+          avatar_url: data.avatar_url || ''
+        })
+      }
+      if (isMounted) setLoading(false)
     }
-  }, [user])
-
-  const loadUserData = async () => {
-    setLoading(true)
-    const { data } = await getProfile(user.id)
     
-    if (data) {
-      setProfile(data)
-      setFormData({ 
-        username: data.username || '', 
-        full_name: data.full_name || '', 
-        bio: data.bio || '',
-        avatar_url: data.avatar_url || ''
-      })
-    }
-    setLoading(false)
-  }
+    load()
+    return () => { isMounted = false }
+  }, [user])
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault()

@@ -4,7 +4,6 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchCharacterDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
-import { getProxiedImage } from '../utils/imageHelper';
 
 const CharacterDetails = () => {
   const { id } = useParams();

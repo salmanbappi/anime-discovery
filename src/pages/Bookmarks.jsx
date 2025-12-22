@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Spinner } from 'react-bootstrap'
-import { useAuth } from '../context/AuthContext'
-import { getBookmarks } from '../services/bookmarkService'
+import { useAuth } from '../context/useAuth'
+import { getBookmarks, removeBookmark } from '../services/bookmarkService'
 import AnimeCard from '../components/AnimeCard'
+import { toast } from 'react-toastify'
 
 const Bookmarks = () => {
   const { user, loading: authLoading } = useAuth()
   const [bookmarks, setBookmarks] = useState([])
   const [loading, setLoading] = useState(true)
+
+  const handleRemove = async (animeId) => {
+    try {
+      const { error } = await removeBookmark(user.id, animeId)
+      if (error) throw error
+      setBookmarks(bookmarks.filter(b => b.anime_id !== animeId))
+      toast.info("Removed from bookmarks")
+    } catch (err) {
+      console.error("Error removing bookmark:", err)
+      toast.error("Failed to remove bookmark")
+    }
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -56,6 +69,7 @@ const Bookmarks = () => {
                   format: bookmark.anime_format,
                   status_label: bookmark.status
                 }} 
+                onRemove={handleRemove}
               />
             </Col>
           ))}

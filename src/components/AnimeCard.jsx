@@ -3,9 +3,15 @@ import { Link } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import { getProxiedImage } from '../utils/imageHelper';
 
-const AnimeCard = ({ anime }) => {
+const AnimeCard = ({ anime, onRemove }) => {
   const title = anime.title.english || anime.title.romaji;
   
+  const handleRemove = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onRemove) onRemove(anime.id);
+  };
+
   return (
     <Link to={`/anime/${anime.id}`} className="anime-card-link">
       <Motion.div 
@@ -21,6 +27,17 @@ const AnimeCard = ({ anime }) => {
           loading="lazy"
           referrerPolicy="no-referrer"
         />
+
+        {/* Remove Button */}
+        {onRemove && (
+          <button 
+            className="remove-bookmark-btn" 
+            onClick={handleRemove}
+            title="Remove from bookmarks"
+          >
+            <i className="bi bi-x"></i>
+          </button>
+        )}
 
         {/* Top Badges (Score & Format) */}
         <div className="card-badges">

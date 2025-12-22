@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Container, Form, Button, Alert, Card, Row, Col } from 'react-bootstrap'
-import { useAuth } from '../context/AuthContext'
+import { Container, Form, Button, Alert, Card } from 'react-bootstrap'
+import { useAuth } from '../context/useAuth'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { toast } from 'react-toastify'
 
 const Auth = () => {
+  // ... (keep states)
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -44,12 +44,7 @@ const Auth = () => {
 
   return (
     <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-100" 
-        style={{ maxWidth: '400px' }}
-      >
+      <div className="w-100" style={{ maxWidth: '400px' }}>
         <Card className="border-secondary bg-dark text-white shadow-lg rounded-xl">
           <Card.Body className="p-4">
             <h2 className="text-center mb-4 fw-bold">{isSignUp ? 'Join SoraList' : 'Welcome Back'}</h2>
@@ -91,7 +86,7 @@ const Auth = () => {
             </div>
           </Card.Body>
         </Card>
-      </motion.div>
+      </div>
     </Container>
   )
 }

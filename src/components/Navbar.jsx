@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Navbar, Container, Form, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 const CustomNavbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -37,7 +37,7 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-moon-stars-fill me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.6.1</small>
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.7.0</small>
             </Navbar.Brand>
         )}
         

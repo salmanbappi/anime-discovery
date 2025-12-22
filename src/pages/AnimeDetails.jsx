@@ -5,7 +5,7 @@ import { motion as Motion } from 'framer-motion';
 import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { addBookmark, removeBookmark, getBookmarkStatus } from '../services/bookmarkService';
 import { toast } from 'react-toastify';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
@@ -194,6 +194,7 @@ const AnimeDetails = () => {
                     <Button 
                         variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
                         className="px-4 fw-bold border-end-0"
+                        onClick={() => !currentStatus && handleStatusChange('Plan to watch')}
                     >
                         <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'bookmark-plus'} me-2`}></i>
                         {currentStatus || 'BOOKMARK'}

@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { supabase } from '../services/supabaseClient'
-
-const AuthContext = createContext({})
+import { AuthContext } from './AuthContext'
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -42,5 +41,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   )
 }
-
-export const useAuth = () => useContext(AuthContext)
