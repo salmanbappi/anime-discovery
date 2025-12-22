@@ -1,15 +1,18 @@
-# Anime Discovery (v2.6)
+# Anime Discovery (v2.9.2)
 
-A modern, responsive anime discovery application. Now featuring remodeled anime details and improved bookmark tracking.
+A modern, responsive anime discovery application. Now featuring infinite scrolling, a dedicated upcoming section, and optimized mobile layouts.
 
 **Live Demo:** [https://solarlist.vercel.app/](https://solarlist.vercel.app/)
 *(Backup: [https://salmanbappi.github.io/anime-discovery/](https://salmanbappi.github.io/anime-discovery/))*
 
 ## Features
 
+*   **Infinite Scrolling:** Seamlessly browse Trending, Popular, Upcoming, Search Results, and Filtered lists without manual pagination.
+*   **Upcoming Next Season:** Dedicated section for anticipated anime releases.
+*   **Optimized Grid:** Responsive layout displaying 3 items per row on mobile for a better viewing experience.
 *   **Trending Now:** View the top anime currently trending.
 *   **All Time Popular:** Explore the most popular anime of all time.
-*   **Search Functionality:** Search for specific anime titles.
+*   **Search Functionality:** Real-time search for specific anime titles.
 *   **Responsive Design:** Fully responsive UI built with Bootstrap, optimized for mobile and desktop.
 *   **Dark Mode:** Sleek dark aesthetic similar to Anilist.
 
