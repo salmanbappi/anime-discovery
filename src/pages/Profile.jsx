@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, Button, Form, Spinner } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { useAuth } from '../context/useAuth'
+import { useAuth } from '../context/AuthContext'
 import { getProfile, updateProfile } from '../services/profileService'
 import { toast } from 'react-toastify'
 

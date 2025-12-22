@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Spinner } from 'react-bootstrap'
-import { useAuth } from '../context/useAuth'
+import { useAuth } from '../context/AuthContext'
 import { getBookmarks, removeBookmark } from '../services/bookmarkService'
 import AnimeCard from '../components/AnimeCard'
 import { toast } from 'react-toastify'

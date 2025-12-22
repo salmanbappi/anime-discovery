@@ -4,7 +4,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchHomeData, searchAnime, fetchAdvancedData } from '../services/api';
 import { getBookmarks, removeBookmark } from '../services/bookmarkService';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import AnimeCard from '../components/AnimeCard';
 import SkeletonCard from '../components/SkeletonCard';
 import { getProxiedImage } from '../utils/imageHelper';

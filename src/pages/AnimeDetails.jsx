@@ -5,7 +5,7 @@ import { motion as Motion } from 'framer-motion';
 import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
-import { useAuth } from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { addBookmark, removeBookmark, getBookmarkStatus } from '../services/bookmarkService';
 import { toast } from 'react-toastify';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
