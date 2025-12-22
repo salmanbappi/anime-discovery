@@ -6,10 +6,12 @@ import Home from './pages/Home';
 import AnimeDetails from './pages/AnimeDetails';
 import CharacterDetails from './pages/CharacterDetails';
 import StudioDetails from './pages/StudioDetails';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router basename={import.meta.env.BASE_URL}>
+      <ScrollToTop />
       <div className="App min-vh-100" style={{ backgroundColor: 'var(--bg-color)' }}>
         <CustomNavbar />
         <Routes>

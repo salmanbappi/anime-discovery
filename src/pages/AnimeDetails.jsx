@@ -16,7 +16,6 @@ const AnimeDetails = () => {
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
-      window.scrollTo(0, 0);
       const data = await fetchAnimeDetails(id);
       setAnime(data);
       setLoading(false);

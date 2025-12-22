@@ -16,7 +16,6 @@ const CharacterDetails = () => {
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
-      window.scrollTo(0, 0);
       const data = await fetchCharacterDetails(parseInt(id));
       setCharacter(data);
       setLoading(false);

@@ -14,7 +14,6 @@ const StudioDetails = () => {
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
-      window.scrollTo(0, 0);
       const data = await fetchStudioDetails({ id: parseInt(id), sort });
       setStudio(data);
       setLoading(false);
