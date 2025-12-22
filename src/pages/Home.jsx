@@ -206,31 +206,21 @@ const Home = () => {
                                     >
                                        <div className="d-flex align-items-center gap-2 mb-3 justify-content-center justify-content-md-start flex-wrap">
                                             <span className="badge bg-primary rounded-pill px-3 py-2 fw-bold">#{index + 1} Trending</span>
-                                            <span className="badge bg-dark bg-opacity-50 border border-secondary rounded-pill px-3 py-2">{anime.format}</span>
                                             <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold">★ {anime.averageScore}%</span>
                                         </div>
                                       
-                                      <h1 className="hero-title mb-3" style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.5rem)', fontWeight: '900', textShadow: '2px 2px 10px rgba(0,0,0,0.7)', lineHeight: 1.1 }}>
+                                      <h1 className="hero-title mb-3" style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', fontWeight: '900', textShadow: '2px 2px 10px rgba(0,0,0,0.7)', lineHeight: 1.1 }}>
                                           {anime.title.english || anime.title.romaji}
                                       </h1>
-            
-                                      <div className="d-flex flex-wrap gap-2 mb-4 justify-content-center justify-content-md-start">
-                                          {anime.genres?.slice(0, 4).map((genre) => (
-                                              <span key={genre} className="badge rounded-pill bg-light bg-opacity-10 px-3 py-1 small fw-bold">
-                                                  {genre}
-                                              </span>
-                                          ))}
-                                      </div>
             
                                       <div 
                                           className="hero-desc mb-4 d-none d-md-block text-white" 
                                           style={{ 
                                               fontSize: '1.05rem', 
                                               lineHeight: '1.6', 
-                                              textShadow: '1px 1px 5px rgba(0,0,0,0.8)',
-                                              maxWidth: '750px',
+                                              maxWidth: '700px',
                                               display: '-webkit-box',
-                                              WebkitLineClamp: 3,
+                                              WebkitLineClamp: 2,
                                               WebkitBoxOrient: 'vertical',
                                               overflow: 'hidden',
                                               opacity: 0.95
