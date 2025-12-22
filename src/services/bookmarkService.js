@@ -1,18 +1,29 @@
 import { supabase } from './supabaseClient'
 
-export const addBookmark = async (userId, anime) => {
+export const addBookmark = async (userId, anime, status = 'Plan to watch') => {
   const { data, error } = await supabase
     .from('bookmarks')
-    .insert([
-      { 
-        user_id: userId, 
-        anime_id: anime.id, 
-        anime_title: anime.title.english || anime.title.romaji, 
-        anime_image: anime.coverImage.large,
-        anime_score: anime.averageScore,
-        anime_format: anime.format
-      }
-    ])
+    .upsert({ 
+      user_id: userId, 
+      anime_id: anime.id, 
+      anime_title: anime.title.english || anime.title.romaji, 
+      anime_image: anime.coverImage.large,
+      anime_score: anime.averageScore,
+      anime_format: anime.format,
+      status: status,
+      updated_at: new Date()
+    }, { onConflict: 'user_id, anime_id' })
+    .select()
+    .single()
+  return { data, error }
+}
+
+export const getBookmarkStatus = async (userId, animeId) => {
+  const { data, error } = await supabase
+    .from('bookmarks')
+    .select('status')
+    .match({ user_id: userId, anime_id: animeId })
+    .single()
   return { data, error }
 }
 

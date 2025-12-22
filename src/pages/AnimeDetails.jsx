@@ -6,8 +6,18 @@ import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
 import { useAuth } from '../context/AuthContext';
-import { addBookmark, removeBookmark, isBookmarked } from '../services/bookmarkService';
+import { addBookmark, removeBookmark, isBookmarked, getBookmarkStatus } from '../services/bookmarkService';
 import { toast } from 'react-toastify';
+import { Dropdown, ButtonGroup } from 'react-bootstrap';
+
+const statuses = [
+  { label: 'Watching', color: 'success' },
+  { label: 'Completed', color: 'primary' },
+  { label: 'On hold', color: 'warning' },
+  { label: 'Dropped', color: 'danger' },
+  { label: 'Plan to watch', color: 'info' },
+  { label: 'Rewatching', color: 'secondary' }
+];
 
 const AnimeDetails = () => {
   const { id } = useParams();
@@ -17,6 +27,7 @@ const AnimeDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(null);
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -25,8 +36,14 @@ const AnimeDetails = () => {
       setAnime(data);
       
       if (user && data) {
-        const bookmarkedStatus = await isBookmarked(user.id, data.id);
-        setBookmarked(bookmarkedStatus);
+        const { data: bData } = await getBookmarkStatus(user.id, data.id);
+        if (bData) {
+          setBookmarked(true);
+          setCurrentStatus(bData.status);
+        } else {
+          setBookmarked(false);
+          setCurrentStatus(null);
+        }
       }
       
       setLoading(false);
@@ -34,25 +51,34 @@ const AnimeDetails = () => {
     loadDetails();
   }, [id, user]);
 
-  const handleBookmarkToggle = async () => {
+  const handleStatusChange = async (newStatus) => {
     if (!user) {
-      toast.info("Please log in to bookmark anime");
+      toast.info("Please log in to set status");
       navigate('/login', { state: { from: { pathname: `/anime/${id}` } } });
       return;
     }
 
     try {
-      if (bookmarked) {
-        await removeBookmark(user.id, anime.id);
-        setBookmarked(false);
-        toast.info("Removed from bookmarks");
-      } else {
-        await addBookmark(user.id, anime);
-        setBookmarked(true);
-        toast.success("Added to bookmarks!");
-      }
+      const { error } = await addBookmark(user.id, anime, newStatus);
+      if (error) throw error;
+      
+      setBookmarked(true);
+      setCurrentStatus(newStatus);
+      toast.success(`Set to ${newStatus}`);
     } catch (err) {
-      toast.error("Failed to update bookmark");
+      toast.error("Failed to update status");
+    }
+  };
+
+  const handleRemoveBookmark = async () => {
+    if (!user) return;
+    try {
+      await removeBookmark(user.id, anime.id);
+      setBookmarked(false);
+      setCurrentStatus(null);
+      toast.info("Removed from list");
+    } catch (err) {
+      toast.error("Failed to remove");
     }
   };
 
@@ -148,7 +174,7 @@ const AnimeDetails = () => {
                 </span>
             </div>
 
-            {/* Action: Watch Now & Bookmark */}
+            {/* Action: Watch Now & Status */}
             <div className="d-flex flex-wrap justify-content-center gap-3">
                 <Button 
                     variant="primary" 
@@ -161,15 +187,43 @@ const AnimeDetails = () => {
                     <i className="bi bi-play-circle-fill me-2"></i>Watch Now
                 </Button>
                 
-                <Button 
-                    variant={bookmarked ? "warning" : "outline-light"} 
-                    size="lg" 
-                    className="rounded-pill px-4 py-2 fw-bold shadow-sm"
-                    onClick={handleBookmarkToggle}
-                >
-                    <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
-                    {bookmarked ? 'Saved' : 'Bookmark'}
-                </Button>
+                <Dropdown as={ButtonGroup} className="rounded-pill shadow-sm overflow-hidden">
+                    <Button 
+                        variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
+                        size="lg" 
+                        className="px-4 py-2 fw-bold border-end-0"
+                    >
+                        <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'plus-lg'} me-2`}></i>
+                        {currentStatus || 'Add to List'}
+                    </Button>
+
+                    <Dropdown.Toggle 
+                        split 
+                        variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
+                        className="px-3"
+                    />
+
+                    <Dropdown.Menu variant="dark" className="shadow-lg border-secondary">
+                        <Dropdown.Header className="text-muted small">SET STATUS</Dropdown.Header>
+                        {statuses.map(s => (
+                            <Dropdown.Item 
+                                key={s.label} 
+                                onClick={() => handleStatusChange(s.label)}
+                                className={`py-2 ${currentStatus === s.label ? 'bg-primary' : ''}`}
+                            >
+                                {s.label}
+                            </Dropdown.Item>
+                        ))}
+                        {currentStatus && (
+                            <>
+                                <Dropdown.Divider className="bg-secondary" />
+                                <Dropdown.Item onClick={handleRemoveBookmark} className="text-danger py-2">
+                                    <i className="bi bi-trash3 me-2"></i>Remove from List
+                                </Dropdown.Item>
+                            </>
+                        )}
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
         </div>
 

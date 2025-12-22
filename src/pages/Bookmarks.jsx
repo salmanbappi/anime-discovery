@@ -52,7 +52,8 @@ const Bookmarks = () => {
                   title: { english: bookmark.anime_title },
                   coverImage: { large: bookmark.anime_image },
                   averageScore: bookmark.anime_score,
-                  format: bookmark.anime_format
+                  format: bookmark.anime_format,
+                  status_label: bookmark.status
                 }} 
               />
             </Col>

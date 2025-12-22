@@ -23,6 +23,11 @@ const AnimeCard = ({ anime }) => {
 
         {/* Top Badges (Score & Format) */}
         <div className="card-badges">
+          {anime.status_label && (
+             <span className={`badge-item status ${anime.status_label.toLowerCase().replace(/\s+/g, '-')}`}>
+               {anime.status_label}
+             </span>
+          )}
           {anime.averageScore && (
             <span className="badge-item score">
               ★ {anime.averageScore / 10}
