@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
-import { fetchAnimeDetails } from '../services/anilist';
+import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 
 const AnimeDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [anime, setAnime] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,6 +21,31 @@ const AnimeDetails = () => {
     };
     loadDetails();
   }, [id]);
+
+  const handleDescriptionClick = (e) => {
+    const link = e.target.closest('a');
+    if (link && link.href) {
+      try {
+        const url = new URL(link.href);
+        if (url.hostname.includes('anilist.co')) {
+          e.preventDefault();
+          const pathParts = url.pathname.split('/');
+          const type = pathParts[1];
+          const typeId = pathParts[2];
+          
+          if (type === 'character' && typeId) {
+            navigate(`/character/${typeId}`);
+          } else if (type === 'anime' && typeId) {
+            navigate(`/anime/${typeId}`);
+          } else {
+             window.open(link.href, '_blank');
+          }
+        }
+      } catch (err) {
+        console.error("Invalid URL", err);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -124,7 +150,11 @@ const AnimeDetails = () => {
         {/* 5. Overview and Trailer */}
         <div className="overview-container-v2 mb-5">
             <h5 className="section-header-v2">OVERVIEW</h5>
-            <div className="description-text-v2" dangerouslySetInnerHTML={{ __html: anime.description }} />
+            <div 
+                className="description-text-v2" 
+                dangerouslySetInnerHTML={{ __html: anime.description }} 
+                onClick={handleDescriptionClick}
+            />
         </div>
 
         {anime.trailer?.site === 'youtube' && (

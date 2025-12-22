@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
-import { fetchCharacterDetails } from '../services/anilist';
+import { fetchCharacterDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 
 const CharacterDetails = () => {

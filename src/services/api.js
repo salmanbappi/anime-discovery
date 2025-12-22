@@ -1,4 +1,4 @@
-const ANILIST_API_URL = 'https://graphql.anilist.co';
+const API_URL = 'https://graphql.anilist.co';
 
 export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
   const query = `
@@ -61,7 +61,7 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
   };
 
   try {
-    const response = await fetch(ANILIST_API_URL, options);
+    const response = await fetch(API_URL, options);
     const data = await response.json();
     
     if (data.errors) {
@@ -70,7 +70,7 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
     
     return data.data;
   } catch (error) {
-    console.error("Error fetching data from Anilist:", error);
+    console.error("Error fetching data:", error);
     return null;
   }
 };
@@ -107,7 +107,7 @@ export const searchAnime = async (search) => {
       };
     
       try {
-        const response = await fetch(ANILIST_API_URL, options);
+        const response = await fetch(API_URL, options);
         const data = await response.json();
         return data.data.Page.media;
       } catch (error) {
@@ -154,7 +154,7 @@ export const fetchAdvancedData = async ({ page = 1, genre, year, season, sort = 
   };
 
   try {
-    const response = await fetch(ANILIST_API_URL, options);
+    const response = await fetch(API_URL, options);
     const data = await response.json();
     return data.data.Page;
   } catch (error) {
@@ -244,7 +244,7 @@ export const fetchAnimeDetails = async (id) => {
   };
 
   try {
-    const response = await fetch(ANILIST_API_URL, options);
+    const response = await fetch(API_URL, options);
     const data = await response.json();
     return data.data.Media;
   } catch (error) {
@@ -307,7 +307,7 @@ export const fetchCharacterDetails = async (id) => {
   };
 
   try {
-    const response = await fetch(ANILIST_API_URL, options);
+    const response = await fetch(API_URL, options);
     const data = await response.json();
     return data.data.Character;
   } catch (error) {

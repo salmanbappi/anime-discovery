@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Spinner, Carousel, Form, Dropdown, Button } from 'react-bootstrap';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchHomeData, searchAnime, fetchAdvancedData } from '../services/anilist';
+import { fetchHomeData, searchAnime, fetchAdvancedData } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 
 const genres = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
