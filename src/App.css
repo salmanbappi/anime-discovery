@@ -6,12 +6,10 @@
 /* Hero Carousel */
 .hero-container {
     position: relative;
-    height: 95vh;
     margin-top: -20px;
 }
 
 .hero-slide {
-    height: 100%;
     position: relative;
     overflow: hidden;
 }

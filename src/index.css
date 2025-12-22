@@ -142,7 +142,6 @@ body {
 @media (max-width: 768px) {
     .display-title-v2 { font-size: 2rem; }
     .top-banner-container { padding: 0 10px; }
-    .hero-container, .hero-slide { height: 70vh; }
     .hero-title { font-size: 2rem; }
     .hero-overlay {
         background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.7) 100%);
@@ -240,12 +239,10 @@ body {
 /* Hero Carousel */
 .hero-container {
     position: relative;
-    height: 85vh;
     margin-top: -20px;
 }
 
 .hero-slide {
-    height: 85vh;
     background-size: cover;
     background-position: center;
     position: relative;
