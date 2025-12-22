@@ -11,6 +11,7 @@ const CharacterDetails = () => {
   const navigate = useNavigate();
   const [character, setCharacter] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -104,7 +105,23 @@ const CharacterDetails = () => {
                     className="description-text-v2" 
                     dangerouslySetInnerHTML={{ __html: character.description }}
                     onClick={handleDescriptionClick}
+                    style={{ 
+                        maxHeight: expanded ? 'none' : '150px', 
+                        overflow: 'hidden',
+                        maskImage: expanded ? 'none' : 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                        WebkitMaskImage: expanded ? 'none' : 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                        transition: 'all 0.3s ease'
+                    }}
                  />
+                 {character.description && character.description.length > 300 && (
+                    <div 
+                        className="text-primary mt-2 fw-bold" 
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        {expanded ? 'Read Less' : 'Read More'}
+                    </div>
+                 )}
             </Col>
         </Row>
 
