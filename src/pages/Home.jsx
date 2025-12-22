@@ -138,7 +138,7 @@ const Home = () => {
             <Carousel fade indicators={true} controls={false} interval={6000}>
             {data.trending.slice(0, 5).map((anime, index) => (
               <Carousel.Item key={anime.id}>
-                <div className="hero-slide">
+                <div className="hero-slide" style={{ overflow: 'hidden' }}>
                   <div 
                     className="hero-bg-image-wrapper"
                     style={{
@@ -146,9 +146,11 @@ const Home = () => {
                         backgroundImage: `url(${getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        filter: 'blur(8px)',
+                        transform: 'scale(1.1)',
                     }}
                   ></div>
-                  <div className="hero-overlay">
+                  <div className="hero-overlay" style={{ background: 'rgba(0,0,0,0.6)' }}>
                     <Container>
                       <Row className="align-items-center" style={{ minHeight: '60vh' }}>
                         <Col md={8} lg={7}>
@@ -158,17 +160,17 @@ const Home = () => {
                             transition={{ duration: 0.8, delay: 0.3 }}
                             className="text-center text-md-start"
                           >
-                             <div className="d-flex align-items-center gap-2 mb-3 justify-content-center justify-content-md-start flex-wrap">
-                                  <span className="badge bg-primary rounded-pill px-3 py-2">#{index + 1} Trending</span>
-                                  <span className="badge bg-dark border border-secondary rounded-pill px-3 py-2">{anime.format}</span>
-                                  <span className="badge bg-warning text-dark rounded-pill px-3 py-2">★ {anime.averageScore}%</span>
+                             <div className="d-flex align-items-center gap-2 mb-2 justify-content-center justify-content-md-start flex-wrap">
+                                  <span className="badge bg-primary rounded-pill px-2 py-1 small">#{index + 1} Trending</span>
+                                  <span className="badge bg-dark border border-secondary rounded-pill px-2 py-1 small">{anime.format}</span>
+                                  <span className="badge bg-warning text-dark rounded-pill px-2 py-1 small">★ {anime.averageScore}%</span>
                               </div>
                             
-                            <h1 className="hero-title mb-3" style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: '900', textShadow: '0 4px 8px rgba(0,0,0,0.8)' }}>
+                            <h1 className="hero-title mb-2" style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.8rem)', fontWeight: '800', textShadow: '0 4px 8px rgba(0,0,0,0.8)' }}>
                                 {anime.title.english || anime.title.romaji}
                             </h1>
 
-                            <div className="d-flex flex-wrap gap-3 mb-4 justify-content-center justify-content-md-start text-white-50 fw-bold">
+                            <div className="d-flex flex-wrap gap-2 mb-3 justify-content-center justify-content-md-start text-white-50 fw-bold small">
                                 {anime.genres?.slice(0, 3).map((genre, i) => (
                                     <span key={genre} className="d-flex align-items-center">
                                         {i > 0 && <span className="mx-2">•</span>}
@@ -180,10 +182,10 @@ const Home = () => {
                             <div 
                                 className="hero-desc mb-4 d-none d-md-block mx-auto mx-md-0 text-light" 
                                 style={{ 
-                                    fontSize: '1.1rem', 
-                                    lineHeight: '1.7', 
+                                    fontSize: '0.95rem', 
+                                    lineHeight: '1.5', 
                                     textShadow: '0 2px 4px rgba(0,0,0,0.9)',
-                                    maxWidth: '650px',
+                                    maxWidth: '550px',
                                     display: '-webkit-box',
                                     WebkitLineClamp: 3,
                                     WebkitBoxOrient: 'vertical',
@@ -192,11 +194,11 @@ const Home = () => {
                                 dangerouslySetInnerHTML={{ __html: anime.description }} 
                             />
                             
-                            <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-2">
-                              <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg d-flex align-items-center gap-2">
-                                  <i className="bi bi-play-fill fs-4"></i> Watch Now
+                            <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-1">
+                              <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2">
+                                  <i className="bi bi-play-fill fs-5"></i> Watch Now
                               </Link>
-                              <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-3 fw-bold backdrop-blur">
+                              <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-2 fw-bold backdrop-blur">
                                   More Info
                               </Link>
                             </div>
