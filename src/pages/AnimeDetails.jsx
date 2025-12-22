@@ -22,7 +22,7 @@ const statuses = [
 const AnimeDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [anime, setAnime] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
@@ -45,8 +45,10 @@ const AnimeDetails = () => {
       
       setLoading(false);
     };
-    loadDetails();
-  }, [id, user]);
+    if (!authLoading) {
+      loadDetails();
+    }
+  }, [id, user, authLoading]);
 
   const handleStatusChange = async (newStatus) => {
     if (!user) {
@@ -112,7 +114,7 @@ const AnimeDetails = () => {
     return desc.split(/<br\s*\/?>\s*<br\s*\/?>\s*<b>Note:<\/b>/i)[0];
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh', backgroundColor: '#000' }}>
         <Spinner animation="border" variant="primary" />

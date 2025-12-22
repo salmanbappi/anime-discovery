@@ -6,7 +6,7 @@ import { getProfile, updateProfile } from '../services/profileService'
 import { toast } from 'react-toastify'
 
 const Profile = () => {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -15,7 +15,11 @@ const Profile = () => {
   useEffect(() => {
     let isMounted = true
     const load = async () => {
-      if (!user) return
+      if (!user) {
+        if (!authLoading) setLoading(false)
+        return
+      }
+      
       setLoading(true)
       const { data } = await getProfile(user.id)
       
@@ -33,7 +37,7 @@ const Profile = () => {
     
     load()
     return () => { isMounted = false }
-  }, [user])
+  }, [user, authLoading])
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault()
@@ -47,11 +51,20 @@ const Profile = () => {
     }
   }
 
-  if (loading) return (
+  if (authLoading || loading) return (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
       <Spinner animation="border" variant="primary" />
     </div>
   )
+
+  if (!user) {
+    return (
+      <Container className="text-center py-5 text-white">
+        <h3>Please log in to see your profile</h3>
+        <Link to="/login" className="btn btn-primary mt-3">Log In</Link>
+      </Container>
+    )
+  }
 
   return (
     <Container className="py-5 text-white">

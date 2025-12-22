@@ -10,8 +10,6 @@ import SkeletonCard from '../components/SkeletonCard';
 import { getProxiedImage } from '../utils/imageHelper';
 import { toast } from 'react-toastify';
 
-// ... (keep constants)
-
 const genres = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
 const years = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i);
 const seasons = ["WINTER", "SPRING", "SUMMER", "FALL"];
@@ -57,7 +55,7 @@ const SkeletonGrid = () => (
 );
 
 const Home = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [data, setData] = useState({ trending: [], popular: [] });
   const [bookmarks, setBookmarks] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -172,6 +170,14 @@ const Home = () => {
   };
 
   const clearSearch = () => setSearchParams({});
+
+  if (authLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
