@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Container, Row, Col, Spinner, Carousel, Form, Dropdown, Button } from 'react-bootstrap';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,18 +36,10 @@ const itemVariants = {
   show: { opacity: 1, scale: 1, y: 0 }
 };
 
-const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
-    <div className="d-flex align-items-center gap-3">
-        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onPrev} disabled={page === 1}>&lt;</Button>
-        <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {page}</span>
-        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onNext} disabled={!hasNext}>&gt;</Button>
-    </div>
-);
-
 const SkeletonGrid = () => (
     <Row className="g-4">
         {Array.from({ length: 12 }).map((_, i) => (
-            <Col key={i} xs={6} sm={4} md={3} lg={2}>
+            <Col key={i} xs={12} sm={6} md={4} lg={4}>
                 <SkeletonCard />
             </Col>
         ))}
@@ -56,7 +48,7 @@ const SkeletonGrid = () => (
 
 const Home = () => {
   const { user, loading: authLoading } = useAuth();
-  const [data, setData] = useState({ trending: [], popular: [] });
+  const [data, setData] = useState({ trending: [], popular: [], upcoming: [] });
   const [bookmarks, setBookmarks] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,15 +60,43 @@ const Home = () => {
   const selectedYear = searchParams.get('year') || '';
   const selectedSeason = searchParams.get('season') || '';
   const selectedSort = searchParams.get('sort') || 'POPULARITY_DESC';
-  const trendingPage = parseInt(searchParams.get('tp')) || 1;
-  const popularPage = parseInt(searchParams.get('pp')) || 1;
+  // Use internal state for pages instead of URL for infinite scroll logic
+  const [trendingPage, setTrendingPage] = useState(1);
+  const [popularPage, setPopularPage] = useState(1);
+  const [upcomingPage, setUpcomingPage] = useState(1);
   const filterPage = parseInt(searchParams.get('fp')) || 1;
 
   const [showFilters, setShowFilters] = useState(false);
+  const [viewAll, setViewAll] = useState(null); // 'trending', 'popular', 'upcoming'
 
   const query = searchParams.get('q');
   const isSearching = !!query;
   const isFiltering = !!(selectedGenre || selectedYear || selectedSeason || selectedSort !== 'POPULARITY_DESC');
+
+  const [trendingHasNext, setTrendingHasNext] = useState(false);
+  const [popularHasNext, setPopularHasNext] = useState(false);
+  const [upcomingHasNext, setUpcomingHasNext] = useState(false);
+  const [filterHasNext, setFilterHasNext] = useState(false);
+
+  // Observer for infinite scroll
+  const observer = useRef();
+  const lastElementRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        if (viewAll === 'trending' && trendingHasNext) {
+             setTrendingPage(prev => prev + 1);
+        } else if (viewAll === 'popular' && popularHasNext) {
+             setPopularPage(prev => prev + 1);
+        } else if (viewAll === 'upcoming' && upcomingHasNext) {
+             setUpcomingPage(prev => prev + 1);
+        }
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, viewAll, trendingHasNext, popularHasNext, upcomingHasNext]);
+
 
   // Scroll Restoration
   useEffect(() => {
@@ -130,21 +150,43 @@ const Home = () => {
     }
   }, [user]);
 
-  // Load Data (Trending/Popular)
+  // Load Data (Trending/Popular/Upcoming)
   useEffect(() => {
     const loadData = async () => {
       if (isSearching || isFiltering) return;
       setLoading(true);
-      const result = await fetchHomeData(trendingPage, popularPage);
+      const result = await fetchHomeData(trendingPage, popularPage, upcomingPage);
       if (result) {
-        setData({ trending: result.trending.media, popular: result.popular.media });
+        setData(prev => {
+            const newData = { ...prev };
+            
+            // Deduplicate logic could be added here if needed, but simple append works for now
+            // Assuming unique IDs is best practice, but Set overhead might be fine.
+            const merge = (oldData, newData) => {
+                const ids = new Set(oldData.map(d => d.id));
+                return [...oldData, ...newData.filter(d => !ids.has(d.id))];
+            }
+
+            if (trendingPage === 1) newData.trending = result.trending.media;
+            else newData.trending = merge(prev.trending, result.trending.media);
+            
+            if (popularPage === 1) newData.popular = result.popular.media;
+            else newData.popular = merge(prev.popular, result.popular.media);
+
+            if (upcomingPage === 1) newData.upcoming = result.upcoming.media;
+            else newData.upcoming = merge(prev.upcoming, result.upcoming.media);
+
+            return newData;
+        });
+
         setTrendingHasNext(result.trending.pageInfo.hasNextPage);
         setPopularHasNext(result.popular.pageInfo.hasNextPage);
+        setUpcomingHasNext(result.upcoming.pageInfo.hasNextPage);
       }
       setLoading(false);
     };
     loadData();
-  }, [trendingPage, popularPage, isSearching, isFiltering]);
+  }, [trendingPage, popularPage, upcomingPage, isSearching, isFiltering]);
 
   // Handle Search
   useEffect(() => {
@@ -185,9 +227,18 @@ const Home = () => {
 
   const clearSearch = () => setSearchParams({});
 
-  const [trendingHasNext, setTrendingHasNext] = useState(false);
-  const [popularHasNext, setPopularHasNext] = useState(false);
-  const [filterHasNext, setFilterHasNext] = useState(false);
+  const handleViewAll = (section) => {
+      setViewAll(section);
+      window.scrollTo(0, 0);
+  };
+
+  const handleBackToHome = () => {
+      setViewAll(null);
+      setTrendingPage(1);
+      setPopularPage(1);
+      setUpcomingPage(1);
+      window.scrollTo(0, 0);
+  };
 
   if (authLoading) {
     return (
@@ -197,9 +248,66 @@ const Home = () => {
     );
   }
 
+  const renderSection = (title, items, sectionKey, hasNext, page) => {
+      if (!items || items.length === 0) return null;
+      
+      // If View All is active, only show the active section
+      if (viewAll && viewAll !== sectionKey) return null;
+
+      const isViewAllActive = viewAll === sectionKey;
+
+      return (
+        <div className="mb-5" id={sectionKey}>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <div className="d-flex align-items-center gap-3">
+                    {isViewAllActive && (
+                        <Button variant="outline-secondary" size="sm" className="rounded-circle" onClick={handleBackToHome}>
+                            <i className="bi bi-arrow-left"></i>
+                        </Button>
+                    )}
+                    <h3 className="section-title mb-0">{title}</h3>
+                </div>
+                {!isViewAllActive && (
+                    <Button variant="link" className="text-decoration-none fw-bold" onClick={() => handleViewAll(sectionKey)}>
+                        View All <i className="bi bi-arrow-right"></i>
+                    </Button>
+                )}
+            </div>
+            
+            {loading && page === 1 ? <SkeletonGrid /> : (
+                <motion.div variants={containerVariants} initial="hidden" animate="show" key={`${sectionKey}-${page}`}>
+                    <Row className="g-4">
+                        {items.map((anime, index) => {
+                            if (items.length === index + 1 && isViewAllActive) {
+                                return (
+                                    <Col ref={lastElementRef} key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
+                                        <AnimeCard anime={anime} onClick={saveScrollPos} />
+                                    </Col>
+                                );
+                            } else {
+                                return (
+                                    <Col key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
+                                        <AnimeCard anime={anime} onClick={saveScrollPos} />
+                                    </Col>
+                                );
+                            }
+                        })}
+                    </Row>
+                    {loading && page > 1 && (
+                        <div className="text-center py-4">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                    )}
+                </motion.div>
+            )}
+        </div>
+      );
+  };
+
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      {!isSearching && !isFiltering && data.trending.length > 0 && trendingPage === 1 && (
+      {!isSearching && !isFiltering && !viewAll && data.trending.length > 0 && trendingPage === 1 && (
         <div className="hero-container mb-2">
             {/* Hero Carousel */}
                         <Carousel fade indicators={true} controls={false} interval={6000}>
@@ -312,20 +420,22 @@ const Home = () => {
 
       <Container className="py-4">
         {/* Filter Toggle Button */}
-        <div className="d-flex justify-content-end mb-3">
-            <Button 
-                variant={showFilters || isFiltering ? "primary" : "outline-primary"} 
-                className="rounded-pill px-4 d-flex align-items-center gap-2"
-                onClick={() => setShowFilters(!showFilters)}
-            >
-                <i className={`bi bi-filter${showFilters ? '-left' : ''}`}></i>
-                {showFilters ? 'Hide Filters' : 'Show Filters'}
-            </Button>
-        </div>
+        {!viewAll && (
+            <div className="d-flex justify-content-end mb-3">
+                <Button 
+                    variant={showFilters || isFiltering ? "primary" : "outline-primary"} 
+                    className="rounded-pill px-4 d-flex align-items-center gap-2"
+                    onClick={() => setShowFilters(!showFilters)}
+                >
+                    <i className={`bi bi-filter${showFilters ? '-left' : ''}`}></i>
+                    {showFilters ? 'Hide Filters' : 'Show Filters'}
+                </Button>
+            </div>
+        )}
 
         {/* Filter Toolbar */}
         <AnimatePresence>
-            {(showFilters || isFiltering) && (
+            {(showFilters || isFiltering) && !viewAll && (
                 <motion.div 
                     initial={{ height: 0, opacity: 0, marginBottom: 0 }}
                     animate={{ height: 'auto', opacity: 1, marginBottom: '3rem' }}
@@ -373,7 +483,7 @@ const Home = () => {
             )}
         </AnimatePresence>
 
-        {user && bookmarks.length > 0 && !isSearching && !isFiltering && (
+        {user && bookmarks.length > 0 && !isSearching && !isFiltering && !viewAll && (
             <div className="mb-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h3 className="section-title mb-0">Recently Bookmarked</h3>
@@ -384,7 +494,7 @@ const Home = () => {
                 <motion.div variants={containerVariants} initial="hidden" animate="show">
                     <Row className="g-4">
                         {bookmarks.map(bookmark => (
-                            <Col key={bookmark.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
+                            <Col key={bookmark.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
                                 <AnimeCard 
                                     anime={{
                                         id: bookmark.anime_id,
@@ -408,13 +518,17 @@ const Home = () => {
             <div className="mb-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h3 className="section-title mb-0">Filtered Results</h3>
-                    <PaginationControls page={filterPage} hasNext={filterHasNext} onPrev={() => updateParams({ fp: filterPage - 1 })} onNext={() => updateParams({ fp: filterPage + 1 })} />
+                    <div className="d-flex align-items-center gap-3">
+                        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={() => updateParams({ fp: filterPage - 1 })} disabled={filterPage === 1}>&lt;</Button>
+                        <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {filterPage}</span>
+                        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={() => updateParams({ fp: filterPage + 1 })} disabled={!filterHasNext}>&gt;</Button>
+                    </div>
                 </div>
                 {loading ? <SkeletonGrid /> : (
                     <motion.div variants={containerVariants} initial="hidden" animate="show" key={`filter-${filterPage}`}>
                         <Row className="g-4">
                             {filteredData.map(anime => (
-                                <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
+                                <Col key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
                                     <AnimeCard anime={anime} onClick={saveScrollPos} />
                                 </Col>
                             ))}
@@ -432,7 +546,7 @@ const Home = () => {
                 <motion.div variants={containerVariants} initial="hidden" animate="show">
                     <Row className="g-4">
                         {searchResults.length > 0 ? searchResults.map(anime => (
-                        <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
+                        <Col key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
                             <AnimeCard anime={anime} onClick={saveScrollPos} />
                         </Col>
                         )) : <p className="text-center w-100" style={{ color: 'var(--text-muted)' }}>No results found.</p>}
@@ -442,41 +556,9 @@ const Home = () => {
            </>
         ) : (
             <>
-                <div className="mb-5" id="trending">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h3 className="section-title mb-0">Trending Now</h3>
-                        <PaginationControls page={trendingPage} hasNext={trendingHasNext} onPrev={() => updateParams({ tp: trendingPage - 1 })} onNext={() => updateParams({ tp: trendingPage + 1 })} />
-                    </div>
-                    {loading ? <SkeletonGrid /> : (
-                        <motion.div variants={containerVariants} initial="hidden" animate="show" key={`trending-${trendingPage}`}>
-                            <Row className="g-4">
-                                {data.trending.map(anime => (
-                                <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
-                                </Col>
-                                ))}
-                            </Row>
-                        </motion.div>
-                    )}
-                </div>
-
-                <div id="popular">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h3 className="section-title mb-0">All Time Popular</h3>
-                        <PaginationControls page={popularPage} hasNext={popularHasNext} onPrev={() => updateParams({ pp: popularPage - 1 })} onNext={() => updateParams({ pp: popularPage + 1 })} />
-                    </div>
-                    {loading ? <SkeletonGrid /> : (
-                        <motion.div variants={containerVariants} initial="hidden" animate="show" key={`popular-${popularPage}`}>
-                            <Row className="g-4">
-                                {data.popular.map(anime => (
-                                <Col key={anime.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
-                                </Col>
-                                ))}
-                            </Row>
-                        </motion.div>
-                    )}
-                </div>
+                {renderSection("Trending Now", data.trending, 'trending', trendingHasNext, trendingPage)}
+                {renderSection("All Time Popular", data.popular, 'popular', popularHasNext, popularPage)}
+                {renderSection("Upcoming Next Season", data.upcoming, 'upcoming', upcomingHasNext, upcomingPage)}
             </>
         )}
       </Container>

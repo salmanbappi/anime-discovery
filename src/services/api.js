@@ -1,15 +1,15 @@
 const API_URL = 'https://graphql.anilist.co';
 const homeCache = new Map();
 
-export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
-  const cacheKey = `${trendingPage}-${popularPage}`;
+export const fetchHomeData = async (trendingPage = 1, popularPage = 1, upcomingPage = 1) => {
+  const cacheKey = `${trendingPage}-${popularPage}-${upcomingPage}`;
   if (homeCache.has(cacheKey)) {
     return homeCache.get(cacheKey);
   }
 
   const query = `
-    query ($trendingPage: Int, $popularPage: Int) {
-      trending: Page(page: $trendingPage, perPage: 12) {
+    query ($trendingPage: Int, $popularPage: Int, $upcomingPage: Int) {
+      trending: Page(page: $trendingPage, perPage: 24) {
         pageInfo {
           hasNextPage
         }
@@ -35,7 +35,7 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
           }
         }
       }
-      popular: Page(page: $popularPage, perPage: 12) {
+      popular: Page(page: $popularPage, perPage: 24) {
         pageInfo {
           hasNextPage
         }
@@ -56,10 +56,36 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
           format
         }
       }
+      upcoming: Page(page: $upcomingPage, perPage: 24) {
+        pageInfo {
+          hasNextPage
+        }
+        media(sort: POPULARITY_DESC, type: ANIME, status: NOT_YET_RELEASED) {
+          id
+          title {
+            english
+            romaji
+          }
+          coverImage {
+            extraLarge
+            large
+          }
+          bannerImage
+          averageScore
+          genres
+          episodes
+          format
+          startDate {
+            year
+            month
+            day
+          }
+        }
+      }
     }
   `;
 
-  const variables = { trendingPage, popularPage };
+  const variables = { trendingPage, popularPage, upcomingPage };
 
   const options = {
     method: 'POST',
