@@ -85,8 +85,28 @@ const AnimeDetails = () => {
             />
         </Motion.div>
 
-        {/* 2. Information Card (Full Width) */}
-        <div className="info-card-v2 mb-4">
+        {/* 2. Main Title and Genres (Moved Up) */}
+        <div className="text-center mt-4 mb-4">
+            <h1 className="display-title-v2 mb-3">{anime.title.english || anime.title.romaji}</h1>
+            <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
+                {anime.genres.map(genre => (
+                    <span key={genre} className="genre-pill-v2">{genre}</span>
+                ))}
+            </div>
+        </div>
+
+        {/* 3. Overview (Moved Up) */}
+        <div className="overview-container-v2 mb-5">
+            <h5 className="section-header-v2">OVERVIEW</h5>
+            <div 
+                className="description-text-v2" 
+                dangerouslySetInnerHTML={{ __html: anime.description }} 
+                onClick={handleDescriptionClick}
+            />
+        </div>
+
+        {/* 4. Information Card (Full Width) */}
+        <div className="info-card-v2 mb-5">
             <h5 className="info-header-v2">INFORMATION</h5>
             <div className="info-grid-v2">
                 <div className="info-item-v2">
@@ -123,7 +143,7 @@ const AnimeDetails = () => {
             </div>
         </div>
 
-        {/* 3. Characters (Two Column Grid) */}
+        {/* 5. Characters (Two Column Grid) */}
         {anime.characters?.edges?.length > 0 && (
             <div className="mb-5">
                 <h5 className="section-header-v2">CHARACTERS</h5>
@@ -145,26 +165,7 @@ const AnimeDetails = () => {
             </div>
         )}
 
-        {/* 4. Main Title and Genres (Moved Down) */}
-        <div className="text-center mt-5 mb-4">
-            <h1 className="display-title-v2 mb-3">{anime.title.english || anime.title.romaji}</h1>
-            <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
-                {anime.genres.map(genre => (
-                    <span key={genre} className="genre-pill-v2">{genre}</span>
-                ))}
-            </div>
-        </div>
-
-        {/* 5. Overview and Trailer */}
-        <div className="overview-container-v2 mb-5">
-            <h5 className="section-header-v2">OVERVIEW</h5>
-            <div 
-                className="description-text-v2" 
-                dangerouslySetInnerHTML={{ __html: anime.description }} 
-                onClick={handleDescriptionClick}
-            />
-        </div>
-
+        {/* 6. Trailer */}
         {anime.trailer?.site === 'youtube' && (
             <div className="mb-5">
                 <h5 className="section-header-v2">OFFICIAL TRAILER</h5>
@@ -178,7 +179,7 @@ const AnimeDetails = () => {
             </div>
         )}
 
-        {/* Recommendations */}
+        {/* 7. Recommendations */}
         {anime.recommendations?.nodes?.length > 0 && (
             <div className="mb-4">
                 <h5 className="section-header-v2">SIMILAR ANIME</h5>
