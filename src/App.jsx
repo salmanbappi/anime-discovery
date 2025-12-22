@@ -12,11 +12,13 @@ import Auth from './pages/Auth';
 import Bookmarks from './pages/Bookmarks';
 import Profile from './pages/Profile';
 import ScrollToTop from './components/ScrollToTop';
+import BackToTop from './components/BackToTop';
 
 function App() {
   return (
     <Router basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
+      <BackToTop />
       <ToastContainer position="bottom-right" theme="dark" autoClose={3000} />
       <div className="App min-vh-100" style={{ backgroundColor: 'var(--bg-color)' }}>
         <CustomNavbar />

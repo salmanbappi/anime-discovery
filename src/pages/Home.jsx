@@ -70,7 +70,7 @@ const Home = () => {
   const filterPage = parseInt(searchParams.get('fp')) || 1;
 
   const [showFilters, setShowFilters] = useState(false);
-  const [viewAll, setViewAll] = useState(null); // 'trending', 'popular', 'upcoming'
+  const viewAll = searchParams.get('view'); // 'trending', 'popular', 'upcoming'
 
   const query = searchParams.get('q');
   const isSearching = !!query;
@@ -205,12 +205,15 @@ const Home = () => {
   const clearSearch = () => setSearchParams({});
 
   const handleViewAll = (section) => {
-      setViewAll(section);
+      updateParams({ view: section });
       window.scrollTo(0, 0);
   };
 
   const handleBackToHome = () => {
-      setViewAll(null);
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete('view');
+      setSearchParams(nextParams, { replace: true });
+      
       setTrendingPage(1);
       setPopularPage(1);
       setUpcomingPage(1);
