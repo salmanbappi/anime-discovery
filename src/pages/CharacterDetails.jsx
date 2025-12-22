@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchCharacterDetails } from '../services/anilist';
@@ -7,6 +7,7 @@ import AnimeCard from '../components/AnimeCard';
 
 const CharacterDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [character, setCharacter] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,6 +21,32 @@ const CharacterDetails = () => {
     };
     loadDetails();
   }, [id]);
+
+  const handleDescriptionClick = (e) => {
+    const link = e.target.closest('a');
+    if (link && link.href) {
+      try {
+        const url = new URL(link.href);
+        if (url.hostname.includes('anilist.co')) {
+          e.preventDefault();
+          const pathParts = url.pathname.split('/');
+          // pathParts usually ["", "character", "123", "Name"]
+          const type = pathParts[1];
+          const typeId = pathParts[2];
+          
+          if (type === 'character' && typeId) {
+            navigate(`/character/${typeId}`);
+          } else if (type === 'anime' && typeId) {
+            navigate(`/anime/${typeId}`);
+          } else {
+             window.open(link.href, '_blank');
+          }
+        }
+      } catch (err) {
+        console.error("Invalid URL in description", err);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -72,7 +99,11 @@ const CharacterDetails = () => {
                     )}
                  </div>
 
-                 <div className="description-text-v2" dangerouslySetInnerHTML={{ __html: character.description }} />
+                 <div 
+                    className="description-text-v2" 
+                    dangerouslySetInnerHTML={{ __html: character.description }}
+                    onClick={handleDescriptionClick}
+                 />
             </Col>
         </Row>
 
