@@ -252,3 +252,66 @@ export const fetchAnimeDetails = async (id) => {
     return null;
   }
 };
+
+export const fetchCharacterDetails = async (id) => {
+  const query = `
+    query ($id: Int) {
+      Character(id: $id) {
+        id
+        name {
+          full
+          native
+        }
+        image {
+          large
+          medium
+        }
+        description(asHtml: true)
+        gender
+        dateOfBirth {
+          year
+          month
+          day
+        }
+        age
+        bloodType
+        media(type: ANIME, sort: POPULARITY_DESC, perPage: 24) {
+          nodes {
+            id
+            title {
+              english
+              romaji
+            }
+            coverImage {
+              extraLarge
+              large
+            }
+            averageScore
+            genres
+            episodes
+            format
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = { id };
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({ query, variables })
+  };
+
+  try {
+    const response = await fetch(ANILIST_API_URL, options);
+    const data = await response.json();
+    return data.data.Character;
+  } catch (error) {
+    console.error("Error fetching character details:", error);
+    return null;
+  }
+};

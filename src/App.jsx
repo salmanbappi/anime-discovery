@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomNavbar from './components/Navbar';
 import Home from './pages/Home';
 import AnimeDetails from './pages/AnimeDetails';
+import CharacterDetails from './pages/CharacterDetails';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/anime/:id" element={<AnimeDetails />} />
+          <Route path="/character/:id" element={<CharacterDetails />} />
         </Routes>
       </div>
     </Router>
