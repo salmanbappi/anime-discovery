@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import AnimeDetails from './pages/AnimeDetails';
 import CharacterDetails from './pages/CharacterDetails';
 import StudioDetails from './pages/StudioDetails';
+import Auth from './pages/Auth';
+import Bookmarks from './pages/Bookmarks';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
           <Route path="/anime/:id" element={<AnimeDetails />} />
           <Route path="/character/:id" element={<CharacterDetails />} />
           <Route path="/studio/:id" element={<StudioDetails />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
         </Routes>
       </div>
     </Router>

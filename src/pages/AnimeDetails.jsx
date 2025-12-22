@@ -5,23 +5,48 @@ import { motion as Motion } from 'framer-motion';
 import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
+import { useAuth } from '../context/AuthContext';
+import { addBookmark, removeBookmark, isBookmarked } from '../services/bookmarkService';
 
 const AnimeDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [anime, setAnime] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
       const data = await fetchAnimeDetails(id);
       setAnime(data);
+      
+      if (user && data) {
+        const bookmarkedStatus = await isBookmarked(user.id, data.id);
+        setBookmarked(bookmarkedStatus);
+      }
+      
       setLoading(false);
     };
     loadDetails();
-  }, [id]);
+  }, [id, user]);
+
+  const handleBookmarkToggle = async () => {
+    if (!user) {
+      navigate('/login', { state: { from: { pathname: `/anime/${id}` } } });
+      return;
+    }
+
+    if (bookmarked) {
+      await removeBookmark(user.id, anime.id);
+      setBookmarked(false);
+    } else {
+      await addBookmark(user.id, anime);
+      setBookmarked(true);
+    }
+  };
 
   const handleDescriptionClick = (e) => {
     const link = e.target.closest('a');
@@ -115,17 +140,28 @@ const AnimeDetails = () => {
                 </span>
             </div>
 
-            {/* Action: Watch Now */}
-            <Button 
-                variant="primary" 
-                size="lg" 
-                className="rounded-pill px-5 py-2 fw-bold shadow-lg"
-                href={`https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <i className="bi bi-play-circle-fill me-2"></i>Watch Now
-            </Button>
+            {/* Action: Watch Now & Bookmark */}
+            <div className="d-flex flex-wrap justify-content-center gap-3">
+                <Button 
+                    variant="primary" 
+                    size="lg" 
+                    className="rounded-pill px-5 py-2 fw-bold shadow-lg"
+                    href={`https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <i className="bi bi-play-circle-fill me-2"></i>Watch Now
+                </Button>
+                <Button 
+                    variant={bookmarked ? "warning" : "outline-light"} 
+                    size="lg" 
+                    className="rounded-pill px-4 py-2 fw-bold shadow-sm"
+                    onClick={handleBookmarkToggle}
+                >
+                    <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
+                    {bookmarked ? 'Bookmarked' : 'Bookmark'}
+                </Button>
+            </div>
         </div>
 
         {/* 3. Overview (The "Hook") */}

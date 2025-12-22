@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { Navbar, Container, Form } from 'react-bootstrap';
+import { Navbar, Container, Form, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const CustomNavbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { user, signOut } = useAuth();
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -35,12 +37,12 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-moon-stars-fill me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v1.6</small>
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v1.7</small>
             </Navbar.Brand>
         )}
         
         {/* Controls Right */}
-        <div className={`d-flex align-items-center gap-3 ${isSearchOpen ? 'flex-grow-1 justify-content-end' : ''}`}>
+        <div className={`d-flex align-items-center gap-2 gap-md-3 ${isSearchOpen ? 'flex-grow-1 justify-content-end' : ''}`}>
              {/* Search */}
              <div className={`nav-search-container ${isSearchOpen ? 'active w-100' : ''}`}>
                  {isSearchOpen ? (
@@ -65,6 +67,26 @@ const CustomNavbar = () => {
                      </button>
                  )}
              </div>
+
+             {/* Auth Buttons */}
+             {!isSearchOpen && (
+                 <>
+                    {user ? (
+                        <div className="d-flex align-items-center gap-2">
+                            <Link to="/bookmarks" className="btn btn-link p-1 text-white d-none d-md-block">
+                                <i className="bi bi-bookmark-fill fs-5"></i>
+                            </Link>
+                            <Button variant="outline-light" size="sm" className="rounded-pill px-3" onClick={signOut}>
+                                Log Out
+                            </Button>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="btn btn-primary btn-sm rounded-pill px-4 fw-bold">
+                            Log In
+                        </Link>
+                    )}
+                 </>
+             )}
         </div>
       </Container>
     </Navbar>
