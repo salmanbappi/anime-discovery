@@ -26,6 +26,10 @@ const AnimeCard = ({ anime, onRemove, onClick }) => {
           className="anime-cover"
           loading="lazy"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            e.target.onerror = null; 
+            e.target.src = "https://via.placeholder.com/300x450?text=No+Image";
+          }}
         />
 
         {/* Remove Button */}

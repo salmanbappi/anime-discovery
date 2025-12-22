@@ -1,14 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Navbar, Container, Form, Button } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const CustomNavbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const { user, signOut } = useAuth();
   const inputRef = useRef(null);
   const navigate = useNavigate();
+
+  // Automatic Live Search (Debounced)
+  useEffect(() => {
+    if (!isSearchOpen && !searchQuery) return;
+    
+    const handler = setTimeout(() => {
+      if (searchQuery.trim()) {
+        navigate(`/?q=${encodeURIComponent(searchQuery)}`, { replace: true });
+      } else if (isSearchOpen && !searchQuery) {
+        // If search is open but empty, clear search
+        navigate(`/`, { replace: true });
+      }
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(handler);
+  }, [searchQuery, navigate]);
 
   const toggleSearch = () => {
       setIsSearchOpen(!isSearchOpen);
@@ -37,7 +54,7 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-moon-stars-fill me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.9.3</small>
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.9.4</small>
             </Navbar.Brand>
         )}
         
