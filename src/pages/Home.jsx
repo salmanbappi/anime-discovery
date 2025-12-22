@@ -138,37 +138,43 @@ const Home = () => {
             <Carousel fade indicators={true} controls={false} interval={6000}>
             {data.trending.slice(0, 5).map((anime, index) => (
               <Carousel.Item key={anime.id}>
-                <div className="hero-slide" style={{ overflow: 'hidden', position: 'relative' }}>
+                <div className="hero-slide" style={{ overflow: 'hidden', position: 'relative', minHeight: '75vh' }}>
                   <div 
                     className="hero-bg-image-wrapper"
                     style={{
                         position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                         backgroundImage: `url(${getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)})`,
                         backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        filter: 'blur(10px) brightness(0.7)',
-                        transform: 'scale(1.1)',
+                        backgroundPosition: 'center 20%',
+                        filter: 'brightness(1.1)',
                         zIndex: 0
                     }}
                   ></div>
-                  <div className="hero-overlay" style={{ position: 'relative', zIndex: 1, background: 'linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%)' }}>
-                    <Container className="h-100">
-                      <Row className="align-items-center h-100" style={{ minHeight: '65vh', padding: '40px 0' }}>
-                        {/* Poster Column (Visible on larger screens) */}
-                        <Col md={4} lg={3} className="d-none d-md-block text-center">
+                  <div className="hero-overlay" style={{ 
+                      position: 'relative', 
+                      zIndex: 1, 
+                      background: 'linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%)',
+                      minHeight: '75vh',
+                      display: 'flex',
+                      alignItems: 'center'
+                  }}>
+                    <Container>
+                      <Row className="align-items-center py-5">
+                        {/* Poster Column */}
+                        <Col md={4} lg={3} className="d-none d-md-block">
                             <motion.img 
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.5, delay: 0.2 }}
                                 src={getProxiedImage(anime.coverImage.extraLarge)} 
                                 alt={anime.title.english}
                                 className="img-fluid rounded shadow-lg"
                                 style={{ 
-                                    maxHeight: '450px', 
-                                    width: 'auto',
+                                    maxHeight: '420px', 
+                                    width: '100%',
                                     objectFit: 'cover', 
-                                    boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
-                                    borderRadius: '12px'
+                                    borderRadius: '12px',
+                                    border: '1px solid rgba(255,255,255,0.1)'
                                 }}
                             />
                         </Col>
@@ -176,51 +182,51 @@ const Home = () => {
                         {/* Text Column */}
                         <Col md={8} lg={9}>
                           <motion.div 
-                            initial={{ y: 30, opacity: 0 }} 
+                            initial={{ y: 20, opacity: 0 }} 
                             animate={{ y: 0, opacity: 1 }} 
-                            transition={{ duration: 0.8, delay: 0.3 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
                             className="text-center text-md-start ps-md-4"
                           >
                              <div className="d-flex align-items-center gap-2 mb-3 justify-content-center justify-content-md-start flex-wrap">
-                                  <span className="badge bg-primary rounded-pill px-3 py-2">#{index + 1} Trending</span>
-                                  <span className="badge bg-dark border border-secondary rounded-pill px-3 py-2">{anime.format}</span>
-                                  <span className="badge bg-warning text-dark rounded-pill px-3 py-2">★ {anime.averageScore}%</span>
+                                  <span className="badge bg-primary rounded-pill px-3 py-2 fw-bold">#{index + 1} Trending</span>
+                                  <span className="badge bg-dark bg-opacity-50 border border-secondary rounded-pill px-3 py-2">{anime.format}</span>
+                                  <span className="badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold">★ {anime.averageScore}%</span>
                               </div>
                             
-                            <h1 className="hero-title mb-3" style={{ fontSize: 'clamp(2rem, 4vw, 3.8rem)', fontWeight: '900', textShadow: '0 4px 8px rgba(0,0,0,0.8)', lineHeight: 1.1 }}>
+                            <h1 className="hero-title mb-3" style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.5rem)', fontWeight: '900', textShadow: '2px 2px 10px rgba(0,0,0,0.7)', lineHeight: 1.1 }}>
                                 {anime.title.english || anime.title.romaji}
                             </h1>
 
-                            <div className="d-flex flex-wrap gap-3 mb-4 justify-content-center justify-content-md-start text-white-50 fw-bold">
-                                {anime.genres?.slice(0, 3).map((genre, i) => (
-                                    <span key={genre} className="d-flex align-items-center">
-                                        {i > 0 && <span className="mx-2">•</span>}
+                            <div className="d-flex flex-wrap gap-2 mb-4 justify-content-center justify-content-md-start">
+                                {anime.genres?.slice(0, 4).map((genre) => (
+                                    <span key={genre} className="badge rounded-pill bg-light bg-opacity-10 px-3 py-1 small fw-bold">
                                         {genre}
                                     </span>
                                 ))}
                             </div>
 
                             <div 
-                                className="hero-desc mb-4 d-none d-md-block text-light" 
+                                className="hero-desc mb-4 d-none d-md-block text-white" 
                                 style={{ 
                                     fontSize: '1.05rem', 
-                                    lineHeight: '1.7', 
-                                    textShadow: '0 2px 4px rgba(0,0,0,0.9)',
-                                    maxWidth: '800px',
+                                    lineHeight: '1.6', 
+                                    textShadow: '1px 1px 5px rgba(0,0,0,0.8)',
+                                    maxWidth: '750px',
                                     display: '-webkit-box',
                                     WebkitLineClamp: 3,
                                     WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden'
+                                    overflow: 'hidden',
+                                    opacity: 0.9
                                 }} 
                                 dangerouslySetInnerHTML={{ __html: anime.description }} 
                             />
                             
                             <div className="d-flex gap-3 justify-content-center justify-content-md-start pt-2">
-                              <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg d-flex align-items-center gap-2">
+                              <Link to={`/anime/${anime.id}`} className="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-lg d-flex align-items-center gap-2 transition-transform">
                                   <i className="bi bi-play-fill fs-4"></i> Watch Now
                               </Link>
                               <Link to={`/anime/${anime.id}`} className="btn btn-outline-light rounded-pill px-4 py-3 fw-bold backdrop-blur">
-                                  Details
+                                  View Details
                               </Link>
                             </div>
                           </motion.div>
