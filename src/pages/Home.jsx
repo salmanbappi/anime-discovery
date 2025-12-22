@@ -4,6 +4,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchHomeData, searchAnime, fetchAdvancedData } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
+import SkeletonCard from '../components/SkeletonCard';
 import { getProxiedImage } from '../utils/imageHelper';
 
 const genres = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Mahou Shoujo", "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi", "Slice of Life", "Sports", "Supernatural", "Thriller"];
@@ -38,6 +39,16 @@ const PaginationControls = ({ page, hasNext, onPrev, onNext }) => (
         <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {page}</span>
         <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={onNext} disabled={!hasNext}>&gt;</Button>
     </div>
+);
+
+const SkeletonGrid = () => (
+    <Row className="g-4">
+        {Array.from({ length: 12 }).map((_, i) => (
+            <Col key={i} xs={6} sm={4} md={3} lg={2}>
+                <SkeletonCard />
+            </Col>
+        ))}
+    </Row>
 );
 
 const Home = () => {
@@ -318,7 +329,7 @@ const Home = () => {
                     <h3 className="section-title mb-0">Filtered Results</h3>
                     <PaginationControls page={filterPage} hasNext={filterHasNext} onPrev={() => setFilterPage(p => p - 1)} onNext={() => setFilterPage(p => p + 1)} />
                 </div>
-                {loading ? <div className="text-center py-5"><Spinner animation="border" variant="primary" /></div> : (
+                {loading ? <SkeletonGrid /> : (
                     <motion.div variants={containerVariants} initial="hidden" animate="show" key={`filter-${filterPage}`}>
                         <Row className="g-4">
                             {filteredData.map(anime => (
@@ -336,7 +347,7 @@ const Home = () => {
                 <h3 className="section-title mb-0">Search Results for "{query}"</h3>
                 <Button variant="outline-light" size="sm" className="rounded-pill px-3" onClick={clearSearch} style={{ color: 'var(--text-color)', borderColor: 'var(--border-color)' }}>Clear Search</Button>
              </div>
-             {loading ? <div className="text-center py-5"><Spinner animation="border" variant="primary" /></div> : (
+             {loading ? <SkeletonGrid /> : (
                 <motion.div variants={containerVariants} initial="hidden" animate="show">
                     <Row className="g-4">
                         {searchResults.length > 0 ? searchResults.map(anime => (
@@ -355,7 +366,7 @@ const Home = () => {
                         <h3 className="section-title mb-0">Trending Now</h3>
                         <PaginationControls page={trendingPage} hasNext={trendingHasNext} onPrev={() => setTrendingPage(p => p - 1)} onNext={() => setTrendingPage(p => p + 1)} />
                     </div>
-                    {loading ? <div className="text-center py-5"><Spinner animation="border" variant="primary" /></div> : (
+                    {loading ? <SkeletonGrid /> : (
                         <motion.div variants={containerVariants} initial="hidden" animate="show" key={`trending-${trendingPage}`}>
                             <Row className="g-4">
                                 {data.trending.map(anime => (
@@ -373,7 +384,7 @@ const Home = () => {
                         <h3 className="section-title mb-0">All Time Popular</h3>
                         <PaginationControls page={popularPage} hasNext={popularHasNext} onPrev={() => setPopularPage(p => p - 1)} onNext={() => setPopularPage(p => p + 1)} />
                     </div>
-                    {loading ? <div className="text-center py-5"><Spinner animation="border" variant="primary" /></div> : (
+                    {loading ? <SkeletonGrid /> : (
                         <motion.div variants={containerVariants} initial="hidden" animate="show" key={`popular-${popularPage}`}>
                             <Row className="g-4">
                                 {data.popular.map(anime => (
