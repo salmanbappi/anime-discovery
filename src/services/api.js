@@ -216,7 +216,7 @@ export const fetchAnimeDetails = async (id) => {
             }
           }
         }
-        characters(sort: ROLE, perPage: 6) {
+        characters(sort: ROLE, perPage: 25) {
           edges {
             role
             node {

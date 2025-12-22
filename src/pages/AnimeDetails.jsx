@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
@@ -11,6 +11,7 @@ const AnimeDetails = () => {
   const navigate = useNavigate();
   const [anime, setAnime] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAllCharacters, setShowAllCharacters] = useState(false);
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -148,7 +149,7 @@ const AnimeDetails = () => {
             <div className="mb-5">
                 <h5 className="section-header-v2">CHARACTERS</h5>
                 <Row className="g-3">
-                    {anime.characters.edges.map(edge => (
+                    {(showAllCharacters ? anime.characters.edges : anime.characters.edges.slice(0, 6)).map(edge => (
                         <Col xs={12} md={6} key={edge.node.id}>
                             <Link to={`/character/${edge.node.id}`} className="text-decoration-none">
                                 <div className="char-card-v2">
@@ -162,6 +163,18 @@ const AnimeDetails = () => {
                         </Col>
                     ))}
                 </Row>
+                {anime.characters.edges.length > 6 && (
+                    <div className="text-center mt-3">
+                        <Button 
+                            variant="outline-secondary" 
+                            size="sm"
+                            className="rounded-pill px-4 text-white"
+                            onClick={() => setShowAllCharacters(!showAllCharacters)}
+                        >
+                            {showAllCharacters ? 'Show Less' : 'Show More'} <i className={`bi bi-chevron-${showAllCharacters ? 'up' : 'down'} ms-1`}></i>
+                        </Button>
+                    </div>
+                )}
             </div>
         )}
 
