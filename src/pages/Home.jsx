@@ -149,19 +149,18 @@ const Home = () => {
                         <Carousel fade indicators={true} controls={false} interval={6000}>
                         {data.trending.slice(0, 5).map((anime, index) => (
                           <Carousel.Item key={anime.id}>
-                            <div className="hero-slide" style={{ overflow: 'hidden', position: 'relative', height: '65vh' }}>
-                              <div 
-                                className="hero-bg-image-wrapper"
-                                style={{
-                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                                    backgroundImage: `url(${getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center 20%',
-                                    filter: 'brightness(1.1) contrast(1.1)',
-                                    zIndex: 0
-                                }}
-                              ></div>
-                              
+                                            <div className="hero-slide" style={{ overflow: 'hidden', position: 'relative', height: '65vh' }}>
+                                              <div 
+                                                className="hero-bg-image-wrapper"
+                                                style={{
+                                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                                                    backgroundImage: `url(${getProxiedImage(anime.coverImage.extraLarge)})`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center',
+                                                    filter: 'brightness(1.1) contrast(1.1)',
+                                                    zIndex: 0
+                                                }}
+                                              ></div>                              
                               {/* Bottom Half Gradient Overlay */}
                               <div className="hero-overlay-bottom" style={{ 
                                   position: 'absolute', 
