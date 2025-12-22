@@ -78,7 +78,7 @@ const AnimeDetails = () => {
       toast.success(`Set to ${newStatus}`);
     } catch (err) {
       console.error("Status update error:", err);
-      toast.error("Failed to update status");
+      toast.error(`Failed: ${err.message || 'Unknown error'}`);
     }
   };
 
