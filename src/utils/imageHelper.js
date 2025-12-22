@@ -1,7 +1,5 @@
 export const getProxiedImage = (url) => {
   if (!url) return '';
-  // Use Statically as an image proxy
-  // Format: https://cdn.statically.io/img/:domain/:path
-  const cleanUrl = url.replace(/^https?:\/\//, '');
-  return `https://cdn.statically.io/img/${cleanUrl}`;
+  // Using imageproxy.org as a reliable alternative
+  return `https://imageproxy.org/600x,q80,fit/${url}`;
 };
