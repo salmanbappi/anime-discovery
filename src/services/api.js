@@ -1,6 +1,12 @@
 const API_URL = 'https://graphql.anilist.co';
+const homeCache = new Map();
 
 export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
+  const cacheKey = `${trendingPage}-${popularPage}`;
+  if (homeCache.has(cacheKey)) {
+    return homeCache.get(cacheKey);
+  }
+
   const query = `
     query ($trendingPage: Int, $popularPage: Int) {
       trending: Page(page: $trendingPage, perPage: 12) {
@@ -72,6 +78,7 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1) => {
       throw new Error(data.errors[0].message);
     }
     
+    homeCache.set(cacheKey, data.data);
     return data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
