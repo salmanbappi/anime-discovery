@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Navbar, Container, Form, Button } from 'react-bootstrap';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const CustomNavbar = () => {
@@ -10,22 +10,39 @@ const CustomNavbar = () => {
   const { user, signOut } = useAuth();
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Close search when location changes (navigating to anime details)
+  useEffect(() => {
+      if (!location.search.includes('q=')) {
+          setIsSearchOpen(false);
+          // Only clear query if we really moved away from search
+          if (location.pathname !== '/') {
+              setSearchQuery('');
+          }
+      }
+  }, [location.pathname, location.search]);
 
   // Automatic Live Search (Debounced)
   useEffect(() => {
+    // Don't trigger search if the bar is closed or if we are on a details page
     if (!isSearchOpen && !searchQuery) return;
+    if (location.pathname.startsWith('/anime/')) return; 
     
     const handler = setTimeout(() => {
       if (searchQuery.trim()) {
-        navigate(`/?q=${encodeURIComponent(searchQuery)}`, { replace: true });
+        // Only navigate if the query is different from URL to prevent loop
+        const currentQ = new URLSearchParams(location.search).get('q');
+        if (currentQ !== searchQuery) {
+            navigate(`/?q=${encodeURIComponent(searchQuery)}`, { replace: true });
+        }
       } else if (isSearchOpen && !searchQuery) {
-        // If search is open but empty, clear search
         navigate(`/`, { replace: true });
       }
-    }, 500); // 500ms debounce
+    }, 500);
 
     return () => clearTimeout(handler);
-  }, [searchQuery, navigate]);
+  }, [searchQuery, navigate, isSearchOpen, location.pathname, location.search]);
 
   const toggleSearch = () => {
       setIsSearchOpen(!isSearchOpen);
@@ -54,7 +71,7 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-moon-stars-fill me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.9.4</small>
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.9.5</small>
             </Navbar.Brand>
         )}
         
