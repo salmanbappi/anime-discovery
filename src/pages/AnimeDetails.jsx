@@ -29,25 +29,37 @@ const AnimeDetails = () => {
   const [currentStatus, setCurrentStatus] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
     const loadDetails = async () => {
       setLoading(true);
-      const data = await fetchAnimeDetails(id);
-      setAnime(data);
       
-      if (user && data) {
-        const { data: bData } = await getBookmarkStatus(user.id, data.id);
-        if (bData) {
-          setCurrentStatus(bData.status);
-        } else {
-          setCurrentStatus(null);
+      try {
+        // Parallelize fetchAnimeDetails and getBookmarkStatus
+        const [animeData, bookmarkRes] = await Promise.all([
+          fetchAnimeDetails(id),
+          user ? getBookmarkStatus(user.id, id) : Promise.resolve({ data: null })
+        ]);
+
+        if (isMounted) {
+          setAnime(animeData);
+          if (bookmarkRes && bookmarkRes.data) {
+            setCurrentStatus(bookmarkRes.data.status);
+          } else {
+            setCurrentStatus(null);
+          }
         }
+      } catch (err) {
+        console.error("Error loading anime details:", err);
+      } finally {
+        if (isMounted) setLoading(false);
       }
-      
-      setLoading(false);
     };
+
     if (!authLoading) {
       loadDetails();
     }
+
+    return () => { isMounted = false; };
   }, [id, user, authLoading]);
 
   const handleStatusChange = async (newStatus) => {
