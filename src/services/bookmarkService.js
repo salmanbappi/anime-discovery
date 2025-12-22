@@ -8,7 +8,9 @@ export const addBookmark = async (userId, anime) => {
         user_id: userId, 
         anime_id: anime.id, 
         anime_title: anime.title.english || anime.title.romaji, 
-        anime_image: anime.coverImage.large 
+        anime_image: anime.coverImage.large,
+        anime_score: anime.averageScore,
+        anime_format: anime.format
       }
     ])
   return { data, error }

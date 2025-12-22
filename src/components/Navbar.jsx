@@ -37,7 +37,7 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-moon-stars-fill me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.0</small>
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.1</small>
             </Navbar.Brand>
         )}
         
@@ -73,8 +73,11 @@ const CustomNavbar = () => {
                  <>
                     {user ? (
                         <div className="d-flex align-items-center gap-2">
-                            <Link to="/bookmarks" className="btn btn-link p-1 text-white d-none d-md-block">
+                            <Link to="/bookmarks" className="btn btn-link p-1 text-white">
                                 <i className="bi bi-bookmark-fill fs-5"></i>
+                            </Link>
+                            <Link to="/profile" className="btn btn-link p-1 text-white">
+                                <i className="bi bi-person-circle fs-5"></i>
                             </Link>
                             <Button variant="outline-light" size="sm" className="rounded-pill px-3" onClick={signOut}>
                                 Log Out

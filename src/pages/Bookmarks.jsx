@@ -50,7 +50,9 @@ const Bookmarks = () => {
                 anime={{
                   id: bookmark.anime_id,
                   title: { english: bookmark.anime_title },
-                  coverImage: { large: bookmark.anime_image }
+                  coverImage: { large: bookmark.anime_image },
+                  averageScore: bookmark.anime_score,
+                  format: bookmark.anime_format
                 }} 
               />
             </Col>

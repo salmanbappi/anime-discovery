@@ -7,7 +7,9 @@ import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
 import { useAuth } from '../context/AuthContext';
 import { addBookmark, removeBookmark, isBookmarked } from '../services/bookmarkService';
+import { getLists, addToList, removeFromList } from '../services/listService';
 import { toast } from 'react-toastify';
+import { Dropdown, ButtonGroup } from 'react-bootstrap';
 
 const AnimeDetails = () => {
   const { id } = useParams();
@@ -17,6 +19,7 @@ const AnimeDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [userLists, setUserLists] = useState([]);
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -25,14 +28,34 @@ const AnimeDetails = () => {
       setAnime(data);
       
       if (user && data) {
-        const bookmarkedStatus = await isBookmarked(user.id, data.id);
+        const [bookmarkedStatus, listsRes] = await Promise.all([
+          isBookmarked(user.id, data.id),
+          getLists(user.id)
+        ]);
         setBookmarked(bookmarkedStatus);
+        if (listsRes.data) setUserLists(listsRes.data);
       }
       
       setLoading(false);
     };
     loadDetails();
   }, [id, user]);
+
+  const handleAddToList = async (listId) => {
+    const { error } = await addToList(user.id, listId, anime);
+    if (error) {
+        if (error.code === '23505') {
+            toast.info("Already in this list");
+        } else {
+            toast.error("Error adding to list");
+        }
+    } else {
+        toast.success("Added to list!");
+        // Refresh lists
+        const { data } = await getLists(user.id);
+        if (data) setUserLists(data);
+    }
+  };
 
   const handleBookmarkToggle = async () => {
     if (!user) {
@@ -160,15 +183,42 @@ const AnimeDetails = () => {
                 >
                     <i className="bi bi-play-circle-fill me-2"></i>Watch Now
                 </Button>
-                <Button 
-                    variant={bookmarked ? "warning" : "outline-light"} 
-                    size="lg" 
-                    className="rounded-pill px-4 py-2 fw-bold shadow-sm"
-                    onClick={handleBookmarkToggle}
-                >
-                    <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
-                    {bookmarked ? 'Bookmarked' : 'Bookmark'}
-                </Button>
+                
+                <ButtonGroup className="rounded-pill shadow-sm overflow-hidden">
+                    <Button 
+                        variant={bookmarked ? "warning" : "outline-light"} 
+                        size="lg" 
+                        className="px-4 py-2 fw-bold border-end-0"
+                        onClick={handleBookmarkToggle}
+                    >
+                        <i className={`bi bi-bookmark${bookmarked ? '-fill' : ''} me-2`}></i>
+                        {bookmarked ? 'Bookmarked' : 'Bookmark'}
+                    </Button>
+                    
+                    {user && (
+                        <Dropdown as={ButtonGroup}>
+                            <Dropdown.Toggle split variant={bookmarked ? "warning" : "outline-light"} id="dropdown-split-basic" className="px-3" />
+                            <Dropdown.Menu variant="dark">
+                                <Dropdown.Header>Add to List</Dropdown.Header>
+                                {userLists.map(list => {
+                                    const isInList = list.list_items?.some(item => item.anime_id === anime.id);
+                                    return (
+                                        <Dropdown.Item 
+                                            key={list.id} 
+                                            onClick={() => handleAddToList(list.id)}
+                                            disabled={isInList}
+                                        >
+                                            {isInList ? '✓ ' : '+ '}{list.name}
+                                        </Dropdown.Item>
+                                    );
+                                })}
+                                {userLists.length === 0 && (
+                                    <Dropdown.Item disabled>No lists found. Visit Profile to create them.</Dropdown.Item>
+                                )}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    )}
+                </ButtonGroup>
             </div>
         </div>
 

@@ -10,6 +10,7 @@ import CharacterDetails from './pages/CharacterDetails';
 import StudioDetails from './pages/StudioDetails';
 import Auth from './pages/Auth';
 import Bookmarks from './pages/Bookmarks';
+import Profile from './pages/Profile';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/studio/:id" element={<StudioDetails />} />
           <Route path="/login" element={<Auth />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>

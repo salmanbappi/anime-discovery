@@ -28,7 +28,7 @@ const AnimeCard = ({ anime }) => {
               ★ {anime.averageScore / 10}
             </span>
           )}
-          <span className="badge-item format">{anime.format}</span>
+          {anime.format && <span className="badge-item format">{anime.format}</span>}
         </div>
 
         {/* Bottom Gradient and Title */}

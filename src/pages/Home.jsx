@@ -3,6 +3,8 @@ import { Container, Row, Col, Spinner, Carousel, Form, Dropdown, Button } from '
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchHomeData, searchAnime, fetchAdvancedData } from '../services/api';
+import { getBookmarks } from '../services/bookmarkService';
+import { useAuth } from '../context/AuthContext';
 import AnimeCard from '../components/AnimeCard';
 import SkeletonCard from '../components/SkeletonCard';
 import { getProxiedImage } from '../utils/imageHelper';
@@ -52,7 +54,9 @@ const SkeletonGrid = () => (
 );
 
 const Home = () => {
+  const { user } = useAuth();
   const [data, setData] = useState({ trending: [], popular: [] });
+  const [bookmarks, setBookmarks] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState([]);
@@ -76,6 +80,19 @@ const Home = () => {
 
   const query = searchParams.get('q');
   const isSearching = !!query;
+
+  // Load Bookmarks
+  useEffect(() => {
+    if (user) {
+      const loadBookmarks = async () => {
+        const { data: bookmarkData } = await getBookmarks(user.id);
+        if (bookmarkData) setBookmarks(bookmarkData.slice(0, 6));
+      };
+      loadBookmarks();
+    } else {
+      setBookmarks([]);
+    }
+  }, [user]);
 
   // Load Data (Trending/Popular)
   useEffect(() => {
@@ -315,6 +332,34 @@ const Home = () => {
                 </motion.div>
             )}
         </AnimatePresence>
+
+        {user && bookmarks.length > 0 && !isSearching && !isFiltering && (
+            <div className="mb-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h3 className="section-title mb-0">Recently Bookmarked</h3>
+                    <Link to="/bookmarks" className="btn btn-link text-decoration-none p-0" style={{ color: 'var(--primary-color)' }}>
+                        View All <i className="bi bi-chevron-right small"></i>
+                    </Link>
+                </div>
+                <motion.div variants={containerVariants} initial="hidden" animate="show">
+                    <Row className="g-4">
+                        {bookmarks.map(bookmark => (
+                            <Col key={bookmark.id} xs={6} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
+                                <AnimeCard 
+                                    anime={{
+                                        id: bookmark.anime_id,
+                                        title: { english: bookmark.anime_title },
+                                        coverImage: { large: bookmark.anime_image },
+                                        averageScore: bookmark.anime_score,
+                                        format: bookmark.anime_format
+                                    }} 
+                                />
+                            </Col>
+                        ))}
+                    </Row>
+                </motion.div>
+            </div>
+        )}
 
         {isFiltering ? (
             <div className="mb-5">
