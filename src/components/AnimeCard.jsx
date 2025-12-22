@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
+import { getProxiedImage } from '../utils/imageHelper';
 
 const AnimeCard = ({ anime }) => {
   const title = anime.title.english || anime.title.romaji;
@@ -14,7 +15,7 @@ const AnimeCard = ({ anime }) => {
       >
         {/* Poster Image */}
         <img 
-          src={anime.coverImage.large} 
+          src={getProxiedImage(anime.coverImage.large)} 
           alt={title} 
           className="anime-cover"
           loading="lazy"

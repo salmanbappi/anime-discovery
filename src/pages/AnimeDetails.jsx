@@ -4,6 +4,7 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
+import { getProxiedImage } from '../utils/imageHelper';
 
 const AnimeDetails = () => {
   const { id } = useParams();
@@ -78,7 +79,7 @@ const AnimeDetails = () => {
             className="top-banner-container mb-4"
         >
             <img 
-                src={anime.bannerImage || anime.coverImage.extraLarge} 
+                src={getProxiedImage(anime.bannerImage || anime.coverImage.extraLarge)} 
                 alt="Banner" 
                 className="top-banner-img rounded-xl shadow-lg" 
             />
@@ -124,7 +125,7 @@ const AnimeDetails = () => {
                         <Col xs={12} md={6} key={edge.node.id}>
                             <Link to={`/character/${edge.node.id}`} className="text-decoration-none">
                                 <div className="char-card-v2">
-                                    <img src={edge.node.image.medium} alt={edge.node.name.full} className="char-img-v2" />
+                                    <img src={getProxiedImage(edge.node.image.medium)} alt={edge.node.name.full} className="char-img-v2" />
                                     <div className="char-info-v2">
                                         <div className="char-name-v2 text-white">{edge.node.name.full}</div>
                                         <div className="char-role-v2">{edge.role}</div>

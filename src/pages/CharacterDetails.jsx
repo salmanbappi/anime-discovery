@@ -4,6 +4,7 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchCharacterDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
+import { getProxiedImage } from '../utils/imageHelper';
 
 const CharacterDetails = () => {
   const { id } = useParams();
@@ -77,7 +78,7 @@ const CharacterDetails = () => {
                  <Motion.img 
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    src={character.image.large} 
+                    src={getProxiedImage(character.image.large)} 
                     alt={character.name.full} 
                     className="img-fluid rounded shadow-lg"
                     style={{ maxWidth: '100%', borderRadius: '15px' }}
