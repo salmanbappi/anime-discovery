@@ -12,7 +12,7 @@ const Profile = () => {
   const [lists, setLists] = useState([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
-  const [formData, setFormData] = useState({ username: '', full_name: '', bio: '' })
+  const [formData, setFormData] = useState({ username: '', full_name: '', bio: '', avatar_url: '' })
 
   useEffect(() => {
     if (user) {
@@ -32,7 +32,8 @@ const Profile = () => {
       setFormData({ 
         username: profRes.data.username || '', 
         full_name: profRes.data.full_name || '', 
-        bio: profRes.data.bio || '' 
+        bio: profRes.data.bio || '',
+        avatar_url: profRes.data.avatar_url || ''
       })
     }
     
@@ -79,9 +80,18 @@ const Profile = () => {
         <Col md={4}>
           <Card className="bg-dark border-secondary text-white text-center p-4">
             <div className="mb-3">
-              <div className="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" style={{ width: '100px', height: '100px', fontSize: '2.5rem' }}>
-                {profile?.username?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
-              </div>
+              {profile?.avatar_url ? (
+                <img 
+                  src={profile.avatar_url} 
+                  alt="Avatar" 
+                  className="rounded-circle object-fit-cover" 
+                  style={{ width: '100px', height: '100px', border: '2px solid var(--primary-color)' }}
+                />
+              ) : (
+                <div className="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" style={{ width: '100px', height: '100px', fontSize: '2.5rem' }}>
+                  {profile?.username?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
+                </div>
+              )}
             </div>
             {editing ? (
               <Form onSubmit={handleUpdateProfile}>
@@ -99,6 +109,14 @@ const Profile = () => {
                     placeholder="Full Name" 
                     value={formData.full_name} 
                     onChange={e => setFormData({...formData, full_name: e.target.value})}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-2">
+                  <Form.Control 
+                    size="sm" 
+                    placeholder="Avatar URL (Image Link)" 
+                    value={formData.avatar_url} 
+                    onChange={e => setFormData({...formData, avatar_url: e.target.value})}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
