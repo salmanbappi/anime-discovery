@@ -6,7 +6,7 @@ import { fetchAnimeDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 import { getProxiedImage } from '../utils/imageHelper';
 import { useAuth } from '../context/AuthContext';
-import { addBookmark, removeBookmark, isBookmarked, getBookmarkStatus } from '../services/bookmarkService';
+import { addBookmark, removeBookmark, getBookmarkStatus } from '../services/bookmarkService';
 import { toast } from 'react-toastify';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
 
@@ -26,7 +26,6 @@ const AnimeDetails = () => {
   const [anime, setAnime] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(null);
 
   useEffect(() => {
@@ -38,10 +37,8 @@ const AnimeDetails = () => {
       if (user && data) {
         const { data: bData } = await getBookmarkStatus(user.id, data.id);
         if (bData) {
-          setBookmarked(true);
           setCurrentStatus(bData.status);
         } else {
-          setBookmarked(false);
           setCurrentStatus(null);
         }
       }
@@ -62,10 +59,10 @@ const AnimeDetails = () => {
       const { error } = await addBookmark(user.id, anime, newStatus);
       if (error) throw error;
       
-      setBookmarked(true);
       setCurrentStatus(newStatus);
       toast.success(`Set to ${newStatus}`);
     } catch (err) {
+      console.error("Status update error:", err);
       toast.error("Failed to update status");
     }
   };
@@ -73,11 +70,13 @@ const AnimeDetails = () => {
   const handleRemoveBookmark = async () => {
     if (!user) return;
     try {
-      await removeBookmark(user.id, anime.id);
-      setBookmarked(false);
+      const { error } = await removeBookmark(user.id, anime.id);
+      if (error) throw error;
+      
       setCurrentStatus(null);
       toast.info("Removed from list");
     } catch (err) {
+      console.error("Remove bookmark error:", err);
       toast.error("Failed to remove");
     }
   };
@@ -150,51 +149,53 @@ const AnimeDetails = () => {
             />
         </Motion.div>
 
-        {/* 2. Title, Genres & Quick Stats */}
-        <div className="text-center mt-4 mb-5">
-            <h1 className="display-title-v2 mb-3">{anime.title.english || anime.title.romaji}</h1>
+            {/* 2. Title, Genres & Quick Stats */}
+        <div className="text-center mt-4 mb-5 details-header-section">
+            <h1 className="display-title-v2 mb-3 text-uppercase">{anime.title.english || anime.title.romaji}</h1>
             
-            {/* Genres */}
-            <div className="d-flex flex-wrap justify-content-center gap-2 mb-3">
-                {anime.genres.map(genre => (
-                    <span key={genre} className="genre-pill-v2">{genre}</span>
-                ))}
-            </div>
+            <div className="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-4">
+                {/* Genres */}
+                <div className="d-flex flex-wrap gap-2">
+                    {anime.genres.map(genre => (
+                        <span key={genre} className="genre-pill-v2">{genre}</span>
+                    ))}
+                </div>
 
-            {/* Quick Stats Badges */}
-            <div className="d-flex flex-wrap justify-content-center gap-3 mb-4 align-items-center">
-                <span className="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill">
-                    <i className="bi bi-star-fill me-1"></i> {anime.averageScore}%
-                </span>
-                <span className="badge bg-secondary fs-6 px-3 py-2 rounded-pill">
-                    {anime.format}
-                </span>
-                <span className="badge bg-success fs-6 px-3 py-2 rounded-pill text-uppercase">
-                    {anime.status?.replace('_', ' ')}
-                </span>
+                <div className="vr d-none d-md-block bg-secondary mx-2" style={{ height: '30px', opacity: 0.3 }}></div>
+
+                {/* Quick Stats Badges */}
+                <div className="d-flex gap-3 align-items-center">
+                    <span className="stat-item-v2">
+                        <i className="bi bi-star-fill text-warning me-1"></i> {anime.averageScore}%
+                    </span>
+                    <span className="stat-item-v2">
+                        {anime.format}
+                    </span>
+                    <span className="stat-item-v2 text-uppercase text-success">
+                        {anime.status?.replace('_', ' ')}
+                    </span>
+                </div>
             </div>
 
             {/* Action: Watch Now & Status */}
-            <div className="d-flex flex-wrap justify-content-center gap-3">
+            <div className="d-flex flex-wrap justify-content-center gap-3 action-buttons-v2">
                 <Button 
                     variant="primary" 
-                    size="lg" 
-                    className="rounded-pill px-5 py-2 fw-bold shadow-lg"
+                    className="action-btn-main rounded-pill px-5 fw-bold"
                     href={`https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <i className="bi bi-play-circle-fill me-2"></i>Watch Now
+                    <i className="bi bi-play-circle-fill me-2"></i>WATCH NOW
                 </Button>
                 
-                <Dropdown as={ButtonGroup} className="rounded-pill shadow-sm overflow-hidden">
+                <Dropdown as={ButtonGroup} className="status-dropdown-v2 rounded-pill shadow-sm overflow-hidden">
                     <Button 
                         variant={currentStatus ? statuses.find(s => s.label === currentStatus)?.color : "outline-light"} 
-                        size="lg" 
-                        className="px-4 py-2 fw-bold border-end-0"
+                        className="px-4 fw-bold border-end-0"
                     >
-                        <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'plus-lg'} me-2`}></i>
-                        {currentStatus || 'Add to List'}
+                        <i className={`bi bi-${currentStatus ? 'check-circle-fill' : 'bookmark-plus'} me-2`}></i>
+                        {currentStatus || 'BOOKMARK'}
                     </Button>
 
                     <Dropdown.Toggle 
@@ -203,22 +204,25 @@ const AnimeDetails = () => {
                         className="px-3"
                     />
 
-                    <Dropdown.Menu variant="dark" className="shadow-lg border-secondary">
-                        <Dropdown.Header className="text-muted small">SET STATUS</Dropdown.Header>
+                    <Dropdown.Menu variant="dark" className="shadow-lg border-secondary py-0 overflow-hidden">
+                        <div className="dropdown-header-custom">SET STATUS</div>
                         {statuses.map(s => (
                             <Dropdown.Item 
                                 key={s.label} 
                                 onClick={() => handleStatusChange(s.label)}
-                                className={`py-2 ${currentStatus === s.label ? 'bg-primary' : ''}`}
+                                className={`py-2 px-4 ${currentStatus === s.label ? 'bg-primary text-white' : ''}`}
                             >
-                                {s.label}
+                                <div className="d-flex align-items-center">
+                                    <div className={`status-dot bg-${s.color} me-3`}></div>
+                                    {s.label}
+                                </div>
                             </Dropdown.Item>
                         ))}
                         {currentStatus && (
                             <>
-                                <Dropdown.Divider className="bg-secondary" />
-                                <Dropdown.Item onClick={handleRemoveBookmark} className="text-danger py-2">
-                                    <i className="bi bi-trash3 me-2"></i>Remove from List
+                                <Dropdown.Divider className="m-0 bg-secondary" style={{ opacity: 0.1 }} />
+                                <Dropdown.Item onClick={handleRemoveBookmark} className="text-danger py-2 px-4 hover-danger">
+                                    <i className="bi bi-x-circle me-3"></i>REMOVE
                                 </Dropdown.Item>
                             </>
                         )}

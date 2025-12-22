@@ -3,7 +3,6 @@ import { Container, Row, Col, Spinner } from 'react-bootstrap'
 import { useAuth } from '../context/AuthContext'
 import { getBookmarks } from '../services/bookmarkService'
 import AnimeCard from '../components/AnimeCard'
-import { motion } from 'framer-motion'
 
 const Bookmarks = () => {
   const { user, loading: authLoading } = useAuth()
@@ -11,16 +10,18 @@ const Bookmarks = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let isMounted = true;
     if (user) {
       const fetchBookmarks = async () => {
         const { data, error } = await getBookmarks(user.id)
-        if (!error) setBookmarks(data)
-        setLoading(false)
+        if (!error && isMounted) setBookmarks(data)
+        if (isMounted) setLoading(false)
       }
       fetchBookmarks()
     } else if (!authLoading) {
       setLoading(false)
     }
+    return () => { isMounted = false };
   }, [user, authLoading])
 
   if (authLoading || loading) {
