@@ -4,12 +4,16 @@ import { Container, Row, Col, Spinner, Form, Button } from 'react-bootstrap';
 import { motion as Motion } from 'framer-motion';
 import { fetchStudioDetails } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
+import InfiniteScrollGrid from '../components/InfiniteScrollGrid';
 
 const StudioDetails = () => {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [studio, setStudio] = useState(null);
+  const [mediaList, setMediaList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   
   const sort = searchParams.get('sort') || 'POPULARITY_DESC';
 
@@ -28,14 +32,30 @@ const StudioDetails = () => {
     sessionStorage.setItem(`studioScrollPos_${id}`, window.scrollY.toString());
   };
 
+  const merge = (oldData, newData) => {
+      const ids = new Set(oldData.map(d => d.id));
+      return [...oldData, ...newData.filter(d => !ids.has(d.id))];
+  };
+
   useEffect(() => {
     const loadDetails = async () => {
       setLoading(true);
-      const data = await fetchStudioDetails({ id: parseInt(id), sort });
-      setStudio(data);
+      const data = await fetchStudioDetails({ id: parseInt(id), sort, page });
+      if (data) {
+          setStudio(prev => ({ ...prev, ...data, media: undefined })); // Keep studio info, media handled separately
+          setMediaList(prev => page === 1 ? data.media.nodes : merge(prev, data.media.nodes));
+          setHasNextPage(data.media.pageInfo.hasNextPage);
+      }
       setLoading(false);
     };
     loadDetails();
+  }, [id, sort, page]);
+
+  // Reset page and list when sort changes or id changes
+  useEffect(() => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (page !== 1) setPage(1);
+      setMediaList([]);
   }, [id, sort]);
 
   const handleSortChange = (e) => {
@@ -46,7 +66,7 @@ const StudioDetails = () => {
     setSearchParams({});
   };
 
-  if (loading) {
+  if (loading && page === 1) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
         <Spinner animation="border" variant="primary" />
@@ -54,7 +74,7 @@ const StudioDetails = () => {
     );
   }
 
-  if (!studio) {
+  if (!studio && !loading) {
     return (
       <Container className="text-center py-5 text-white">
         <h3>Studio not found</h3>
@@ -71,7 +91,7 @@ const StudioDetails = () => {
     >
       <Container className="py-5">
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-5 gap-3">
-             <h1 className="display-4 fw-bold text-white mb-0">{studio.name}</h1>
+             <h1 className="display-4 fw-bold text-white mb-0">{studio?.name || 'Studio'}</h1>
              <div className="d-flex gap-2 align-items-center">
                 {sort !== 'POPULARITY_DESC' && (
                     <Button variant="outline-danger" size="sm" className="rounded-pill px-3" onClick={clearFilters}>
@@ -92,17 +112,13 @@ const StudioDetails = () => {
              </div>
         </div>
 
-        {studio.media?.nodes?.length > 0 ? (
-            <Row className="g-3">
-                {studio.media.nodes.map(anime => (
-                    <Col xs={6} sm={4} md={3} lg={2} key={anime.id}>
-                        <AnimeCard anime={anime} onClick={saveScrollPos} />
-                    </Col>
-                ))}
-            </Row>
-        ) : (
-            <p className="text-white-50">No anime found for this studio.</p>
-        )}
+        <InfiniteScrollGrid
+            items={mediaList}
+            hasNext={hasNextPage}
+            loading={loading}
+            onLoadMore={() => setPage(prev => prev + 1)}
+            onCardClick={saveScrollPos}
+        />
       </Container>
     </Motion.div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Spinner, Carousel, Form, Dropdown, Button } from 'react-bootstrap';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,6 +7,7 @@ import { getBookmarks, removeBookmark } from '../services/bookmarkService';
 import { useAuth } from '../context/AuthContext';
 import AnimeCard from '../components/AnimeCard';
 import SkeletonCard from '../components/SkeletonCard';
+import InfiniteScrollGrid from '../components/InfiniteScrollGrid';
 import { getProxiedImage } from '../utils/imageHelper';
 import { toast } from 'react-toastify';
 
@@ -60,10 +61,12 @@ const Home = () => {
   const selectedYear = searchParams.get('year') || '';
   const selectedSeason = searchParams.get('season') || '';
   const selectedSort = searchParams.get('sort') || 'POPULARITY_DESC';
-  // Use internal state for pages instead of URL for infinite scroll logic
+  
+  // Internal Page State
   const [trendingPage, setTrendingPage] = useState(1);
   const [popularPage, setPopularPage] = useState(1);
   const [upcomingPage, setUpcomingPage] = useState(1);
+  const [searchPage, setSearchPage] = useState(1);
   const filterPage = parseInt(searchParams.get('fp')) || 1;
 
   const [showFilters, setShowFilters] = useState(false);
@@ -77,26 +80,7 @@ const Home = () => {
   const [popularHasNext, setPopularHasNext] = useState(false);
   const [upcomingHasNext, setUpcomingHasNext] = useState(false);
   const [filterHasNext, setFilterHasNext] = useState(false);
-
-  // Observer for infinite scroll
-  const observer = useRef();
-  const lastElementRef = useCallback(node => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        if (viewAll === 'trending' && trendingHasNext) {
-             setTrendingPage(prev => prev + 1);
-        } else if (viewAll === 'popular' && popularHasNext) {
-             setPopularPage(prev => prev + 1);
-        } else if (viewAll === 'upcoming' && upcomingHasNext) {
-             setUpcomingPage(prev => prev + 1);
-        }
-      }
-    }, { rootMargin: '200px' });
-    if (node) observer.current.observe(node);
-  }, [loading, viewAll, trendingHasNext, popularHasNext, upcomingHasNext]);
-
+  const [searchHasNext, setSearchHasNext] = useState(false);
 
   // Scroll Restoration
   useEffect(() => {
@@ -137,18 +121,10 @@ const Home = () => {
     }
   };
 
-  // Load Bookmarks
-  useEffect(() => {
-    if (user) {
-      const loadBookmarks = async () => {
-        const { data: bookmarkData } = await getBookmarks(user.id);
-        if (bookmarkData) setBookmarks(bookmarkData.slice(0, 6));
-      };
-      loadBookmarks();
-    } else {
-      setBookmarks([]);
-    }
-  }, [user]);
+  const merge = (oldData, newData) => {
+      const ids = new Set(oldData.map(d => d.id));
+      return [...oldData, ...newData.filter(d => !ids.has(d.id))];
+  };
 
   // Load Data (Trending/Popular/Upcoming)
   useEffect(() => {
@@ -159,11 +135,6 @@ const Home = () => {
       if (result) {
         setData(prev => {
             const newData = { ...prev };
-            
-            const merge = (oldData, newData) => {
-                const ids = new Set(oldData.map(d => d.id));
-                return [...oldData, ...newData.filter(d => !ids.has(d.id))];
-            }
 
             if (trendingPage === 1) newData.trending = result.trending.media;
             else newData.trending = merge(prev.trending, result.trending.media);
@@ -191,11 +162,19 @@ const Home = () => {
       const performSearch = async () => {
           if (!query) { setSearchResults([]); return; }
           setLoading(true);
-          const results = await searchAnime(query);
-          setSearchResults(results);
+          const result = await searchAnime(query, searchPage);
+          if (result) {
+              setSearchResults(prev => searchPage === 1 ? result.media : merge(prev, result.media));
+              setSearchHasNext(result.pageInfo.hasNextPage);
+          }
           setLoading(false);
       };
       performSearch();
+  }, [query, searchPage]);
+
+  // Reset search page when query changes
+  useEffect(() => {
+      setSearchPage(1);
   }, [query]);
 
   // Handle Filters
@@ -211,7 +190,7 @@ const Home = () => {
               sort: selectedSort
           });
           if (result) {
-              setFilteredData(result.media);
+              setFilteredData(prev => filterPage === 1 ? result.media : merge(prev, result.media));
               setFilterHasNext(result.pageInfo.hasNextPage);
           }
           setLoading(false);
@@ -246,7 +225,7 @@ const Home = () => {
     );
   }
 
-  const renderSection = (title, items, sectionKey, hasNext, page) => {
+  const renderSection = (title, items, sectionKey, hasNext, page, setPage) => {
       if (!items || items.length === 0) return null;
       
       // If View All is active, only show the active section
@@ -273,30 +252,25 @@ const Home = () => {
             </div>
             
             {loading && page === 1 ? <SkeletonGrid /> : (
-                <motion.div variants={containerVariants} initial="hidden" animate="show" key={`${sectionKey}-${page}`}>
-                    <Row className="g-3">
-                        {items.map((anime, index) => {
-                            if (items.length === index + 1 && isViewAllActive) {
-                                return (
-                                    <Col ref={lastElementRef} key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                        <AnimeCard anime={anime} onClick={saveScrollPos} />
-                                    </Col>
-                                );
-                            } else {
-                                return (
-                                    <Col key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                        <AnimeCard anime={anime} onClick={saveScrollPos} />
-                                    </Col>
-                                );
-                            }
-                        })}
-                    </Row>
-                    {loading && page > 1 && (
-                        <div className="text-center py-4">
-                            <Spinner animation="border" variant="primary" />
-                        </div>
-                    )}
-                </motion.div>
+                isViewAllActive ? (
+                    <InfiniteScrollGrid 
+                        items={items} 
+                        hasNext={hasNext} 
+                        loading={loading}
+                        onLoadMore={() => setPage(prev => prev + 1)}
+                        onCardClick={saveScrollPos}
+                    />
+                ) : (
+                    <motion.div variants={containerVariants} initial="hidden" animate="show" key={`${sectionKey}-${page}`}>
+                        <Row className="g-3">
+                            {items.map((anime) => (
+                                <Col key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
+                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
+                                </Col>
+                            ))}
+                        </Row>
+                    </motion.div>
+                )
             )}
         </div>
       );
@@ -516,22 +490,15 @@ const Home = () => {
             <div className="mb-5">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h3 className="section-title mb-0">Filtered Results</h3>
-                    <div className="d-flex align-items-center gap-3">
-                        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={() => updateParams({ fp: filterPage - 1 })} disabled={filterPage === 1}>&lt;</Button>
-                        <span className="small fw-bold" style={{ minWidth: '50px', textAlign: 'center', color: 'var(--text-color)' }}>Page {filterPage}</span>
-                        <Button variant="outline-light" size="sm" className="rounded-circle btn-pagination" onClick={() => updateParams({ fp: filterPage + 1 })} disabled={!filterHasNext}>&gt;</Button>
-                    </div>
                 </div>
-                {loading ? <SkeletonGrid /> : (
-                    <motion.div variants={containerVariants} initial="hidden" animate="show" key={`filter-${filterPage}`}>
-                        <Row className="g-4">
-                            {filteredData.map(anime => (
-                                <Col key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} onClick={saveScrollPos} />
-                                </Col>
-                            ))}
-                        </Row>
-                    </motion.div>
+                {loading && filterPage === 1 ? <SkeletonGrid /> : (
+                    <InfiniteScrollGrid
+                        items={filteredData}
+                        hasNext={filterHasNext}
+                        loading={loading}
+                        onLoadMore={() => updateParams({ fp: filterPage + 1 })}
+                        onCardClick={saveScrollPos}
+                    />
                 )}
             </div>
         ) : isSearching ? (
@@ -540,23 +507,21 @@ const Home = () => {
                 <h3 className="section-title mb-0">Search Results for "{query}"</h3>
                 <Button variant="outline-light" size="sm" className="rounded-pill px-3" onClick={clearSearch} style={{ color: 'var(--text-color)', borderColor: 'var(--border-color)' }}>Clear Search</Button>
              </div>
-             {loading ? <SkeletonGrid /> : (
-                <motion.div variants={containerVariants} initial="hidden" animate="show">
-                    <Row className="g-4">
-                        {searchResults.length > 0 ? searchResults.map(anime => (
-                        <Col key={anime.id} xs={12} sm={6} md={4} lg={4} as={motion.div} variants={itemVariants}>
-                            <AnimeCard anime={anime} onClick={saveScrollPos} />
-                        </Col>
-                        )) : <p className="text-center w-100" style={{ color: 'var(--text-muted)' }}>No results found.</p>}
-                    </Row>
-                </motion.div>
+             {loading && searchPage === 1 ? <SkeletonGrid /> : (
+                <InfiniteScrollGrid
+                    items={searchResults}
+                    hasNext={searchHasNext}
+                    loading={loading}
+                    onLoadMore={() => setSearchPage(prev => prev + 1)}
+                    onCardClick={saveScrollPos}
+                />
              )}
            </>
         ) : (
             <>
-                {renderSection("Trending Now", data.trending, 'trending', trendingHasNext, trendingPage)}
-                {renderSection("All Time Popular", data.popular, 'popular', popularHasNext, popularPage)}
-                {renderSection("Upcoming Next Season", data.upcoming, 'upcoming', upcomingHasNext, upcomingPage)}
+                {renderSection("Trending Now", data.trending, 'trending', trendingHasNext, trendingPage, setTrendingPage)}
+                {renderSection("All Time Popular", data.popular, 'popular', popularHasNext, popularPage, setPopularPage)}
+                {renderSection("Upcoming Next Season", data.upcoming, 'upcoming', upcomingHasNext, upcomingPage, setUpcomingPage)}
             </>
         )}
       </Container>

@@ -112,10 +112,13 @@ export const fetchHomeData = async (trendingPage = 1, popularPage = 1, upcomingP
   }
 };
 
-export const searchAnime = async (search) => {
+export const searchAnime = async (search, page = 1) => {
     const query = `
-    query ($search: String) {
-      Page(page: 1, perPage: 20) {
+    query ($search: String, $page: Int) {
+      Page(page: $page, perPage: 24) {
+        pageInfo {
+          hasNextPage
+        }
         media(search: $search, sort: POPULARITY_DESC, type: ANIME) {
            id
           title {
@@ -133,7 +136,7 @@ export const searchAnime = async (search) => {
       }
     }
     `;
-    const variables = { search };
+    const variables = { search, page };
     const options = {
         method: 'POST',
         headers: {
@@ -146,10 +149,10 @@ export const searchAnime = async (search) => {
       try {
         const response = await fetch(API_URL, options);
         const data = await response.json();
-        return data.data.Page.media;
+        return data.data.Page;
       } catch (error) {
         console.error("Error searching anime:", error);
-        return [];
+        return { media: [], pageInfo: { hasNextPage: false } };
       }
 }
 
