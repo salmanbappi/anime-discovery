@@ -115,8 +115,9 @@ const AnimeDetails = () => {
                 variant="primary" 
                 size="lg" 
                 className="rounded-pill px-5 py-2 fw-bold shadow-lg"
-                href={`https://hianime.to/search?keyword=${encodeURIComponent(anime.title.romaji || anime.title.english)}`}
+                href={`https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
                 target="_blank"
+                rel="noopener noreferrer"
             >
                 <i className="bi bi-play-circle-fill me-2"></i>Watch Now
             </Button>
