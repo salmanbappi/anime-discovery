@@ -312,17 +312,7 @@ const Home = () => {
 
       <Container className="py-4">
         {/* Filter Toggle Button */}
-        <div className="d-flex justify-content-end mb-3 gap-2">
-            {isFiltering && (
-                <Button 
-                    variant="outline-danger" 
-                    className="rounded-pill px-4 d-flex align-items-center gap-2"
-                    onClick={clearFilters}
-                >
-                    <i className="bi bi-x-circle"></i>
-                    Clear Filters
-                </Button>
-            )}
+        <div className="d-flex justify-content-end mb-3">
             <Button 
                 variant={showFilters || isFiltering ? "primary" : "outline-primary"} 
                 className="rounded-pill px-4 d-flex align-items-center gap-2"
