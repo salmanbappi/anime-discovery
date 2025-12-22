@@ -15,8 +15,7 @@ export const addBookmark = async (userId, anime, status = 'Plan to watch') => {
       updated_at: new Date().toISOString()
     }, { onConflict: 'user_id,anime_id' })
     .select()
-    .single()
-  return { data, error }
+  return { data: data ? data[0] : null, error }
 }
 
 export const getBookmarkStatus = async (userId, animeId) => {
@@ -24,24 +23,24 @@ export const getBookmarkStatus = async (userId, animeId) => {
     .from('bookmarks')
     .select('status')
     .match({ user_id: userId, anime_id: parseInt(animeId) })
-    .single()
+    .maybeSingle()
   return { data, error }
 }
 
 export const removeBookmark = async (userId, animeId) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('bookmarks')
     .delete()
     .match({ user_id: userId, anime_id: parseInt(animeId) })
-  return { data, error }
+  return { error }
 }
 
 export const isBookmarked = async (userId, animeId) => {
   const { data } = await supabase
     .from('bookmarks')
-    .select('*')
+    .select('id')
     .match({ user_id: userId, anime_id: parseInt(animeId) })
-    .single()
+    .maybeSingle()
   return !!data
 }
 

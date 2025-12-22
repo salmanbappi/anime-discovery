@@ -34,9 +34,11 @@ const AnimeDetails = () => {
       setLoading(true);
       
       try {
+        const animeId = parseInt(id);
+        // Parallelize fetchAnimeDetails and getBookmarkStatus
         const [animeData, bookmarkRes] = await Promise.all([
-          fetchAnimeDetails(id),
-          user ? getBookmarkStatus(user.id, id) : Promise.resolve({ data: null })
+          fetchAnimeDetails(animeId),
+          user ? getBookmarkStatus(user.id, animeId) : Promise.resolve({ data: null })
         ]);
 
         if (isMounted) {
