@@ -1,6 +1,7 @@
 export const getProxiedImage = (url) => {
   if (!url) return '';
-  // Proxy disabled due to loading issues
-  return url; 
-  // return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`;
+  // Use Statically as an image proxy
+  // Format: https://cdn.statically.io/img/:domain/:path
+  const cleanUrl = url.replace(/^https?:\/\//, '');
+  return `https://cdn.statically.io/img/${cleanUrl}`;
 };
