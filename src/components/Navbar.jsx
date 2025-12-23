@@ -16,10 +16,7 @@ const CustomNavbar = () => {
   useEffect(() => {
       if (!location.search.includes('q=')) {
           setIsSearchOpen(false);
-          // Only clear query if we really moved away from search
-          if (location.pathname !== '/') {
-              setSearchQuery('');
-          }
+          setSearchQuery('');
       }
   }, [location.pathname, location.search]);
 
@@ -71,7 +68,7 @@ const CustomNavbar = () => {
         {!isSearchOpen && (
             <Navbar.Brand as={Link} to="/" className="fw-bold d-flex align-items-center" style={{ color: 'var(--primary-color)', fontSize: '1.5rem' }}>
                 <i className="bi bi-moon-stars-fill me-2" style={{ color: 'var(--primary-color)' }}></i>
-                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.9.6</small>
+                SoraList <small className="ms-2" style={{ fontSize: '0.6rem', opacity: 0.5 }}>v2.9.7</small>
             </Navbar.Brand>
         )}
         
