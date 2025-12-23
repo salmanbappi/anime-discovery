@@ -29,7 +29,7 @@ const AnimeDetails = () => {
   const [currentStatus, setCurrentStatus] = useState(null);
   const [watchUrl, setWatchUrl] = useState(null);
 
-  // Dynamic AnimeKai Link Detection
+  // Dynamic HiAnime Link Detection
   useEffect(() => {
     const detectWatchLink = async () => {
       if (!anime) return;
@@ -37,7 +37,7 @@ const AnimeDetails = () => {
       const engTitle = anime.title.english?.toLowerCase() || "";
       const romTitle = anime.title.romaji?.toLowerCase() || "";
       const searchQuery = encodeURIComponent(engTitle || romTitle);
-      const searchUrl = `https://animekai.to/search?keyword=${searchQuery}`;
+      const searchUrl = `https://hianime.to/search?keyword=${searchQuery}`;
       
       try {
         const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(searchUrl)}`);
@@ -46,7 +46,9 @@ const AnimeDetails = () => {
         const data = await response.json();
         const html = data.contents;
         
-        const watchLinkRegex = /\/watch\/([a-z0-9-]+-[a-z0-9]+)/g;
+        // HiAnime specific regex for search results
+        // Example: /watch/gachiakuta-19342
+        const watchLinkRegex = /\/watch\/([a-z0-9-]+-[0-9]+)/g;
         const matches = [...html.matchAll(watchLinkRegex)];
         
         if (matches.length > 0) {
@@ -54,29 +56,29 @@ const AnimeDetails = () => {
           
           for (const match of matches) {
             const slug = match[1];
+            // Remove the ID part (last dash and numbers)
             const slugTitle = slug.substring(0, slug.lastIndexOf('-')).replace(/-/g, ' ');
             
-            // Match if slug title is similar to either English or Romaji title
             if (
               (engTitle && (engTitle.includes(slugTitle) || slugTitle.includes(engTitle))) ||
               (romTitle && (romTitle.includes(slugTitle) || slugTitle.includes(romTitle)))
             ) {
-              bestLink = `https://animekai.to/watch/${slug}#ep=1`;
+              bestLink = `https://hianime.to/watch/${slug}`;
               break;
             }
           }
           
           if (!bestLink && matches[0]) {
-            bestLink = `https://animekai.to/watch/${matches[0][1]}#ep=1`;
+            bestLink = `https://hianime.to/watch/${matches[0][1]}`;
           }
           
           if (bestLink) {
-            console.log("Detected AnimeKai URL:", bestLink);
+            console.log("Detected HiAnime URL:", bestLink);
             setWatchUrl(bestLink);
           }
         }
       } catch (err) {
-        console.error("AnimeKai link detection failed:", err);
+        console.error("HiAnime link detection failed:", err);
       }
     };
 
@@ -265,11 +267,21 @@ const AnimeDetails = () => {
                 <Button 
                     variant="primary" 
                     className="action-btn-main rounded-pill px-5 fw-bold"
-                    href={watchUrl || `https://animekai.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
+                    href={watchUrl || `https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <i className="bi bi-play-circle-fill me-2"></i>WATCH ON ANIMEKAI
+                    <i className="bi bi-play-circle-fill me-2"></i>WATCH NOW
+                </Button>
+
+                <Button 
+                    variant="outline-info" 
+                    className="action-btn-secondary rounded-pill px-4 fw-bold"
+                    href={`https://animepahe.ru/`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    ANIMEPAHE
                 </Button>
                 
                 <div className="d-flex gap-2">
