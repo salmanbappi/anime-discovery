@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import { getProxiedImage } from '../utils/imageHelper';
 
-const AnimeCard = ({ anime, onRemove, onClick }) => {
+const AnimeCard = React.memo(({ anime, onRemove, onClick }) => {
   const title = anime.title.english || anime.title.romaji;
   
   const handleRemove = (e) => {
@@ -70,6 +70,6 @@ const AnimeCard = ({ anime, onRemove, onClick }) => {
       </Motion.div>
     </Link>
   );
-};
+});
 
 export default AnimeCard;

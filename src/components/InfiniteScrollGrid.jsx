@@ -1,12 +1,12 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo } from 'react';
 import { Row, Col, Spinner } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import AnimeCard from './AnimeCard';
 import SkeletonCard from './SkeletonCard';
 
 const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9, y: 20 },
-    show: { opacity: 1, scale: 1, y: 0 }
+    hidden: { opacity: 0, scale: 0.95 },
+    show: { opacity: 1, scale: 1, transition: { duration: 0.3 } }
 };
 
 const SkeletonGrid = () => (
@@ -34,36 +34,34 @@ const InfiniteScrollGrid = ({ items, hasNext, onLoadMore, loading, onCardClick }
         if (node) observer.current.observe(node);
     }, [loading, hasNext, onLoadMore]);
 
-    // Ensure we don't have duplicate keys
-    const uniqueItems = Array.from(new Map(items.map(item => [item.id, item])).values());
+    // Ensure we don't have duplicate keys - Memoized
+    const uniqueItems = useMemo(() => {
+        return Array.from(new Map(items.map(item => [item.id, item])).values());
+    }, [items]);
 
     return (
         <>
-            <motion.div 
-                initial="hidden" 
-                animate="show" 
-                variants={{
-                    show: { transition: { staggerChildren: 0.05 } }
-                }}
-            >
-                <Row className="g-3">
-                    {uniqueItems.map((anime, index) => {
-                        if (uniqueItems.length === index + 1) {
-                            return (
-                                <Col ref={lastElementRef} key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} onClick={onCardClick} />
-                                </Col>
-                            );
-                        } else {
-                            return (
-                                <Col key={anime.id} xs={4} sm={4} md={3} lg={2} as={motion.div} variants={itemVariants}>
-                                    <AnimeCard anime={anime} onClick={onCardClick} />
-                                </Col>
-                            );
-                        }
-                    })}
-                </Row>
-            </motion.div>
+            <Row className="g-3">
+                {uniqueItems.map((anime, index) => {
+                    const isLast = uniqueItems.length === index + 1;
+                    return (
+                        <Col 
+                            ref={isLast ? lastElementRef : null} 
+                            key={anime.id} 
+                            xs={4} sm={4} md={3} lg={2}
+                        >
+                            <motion.div
+                                variants={itemVariants}
+                                initial="hidden"
+                                whileInView="show"
+                                viewport={{ once: true, amount: 0.1 }}
+                            >
+                                <AnimeCard anime={anime} onClick={onCardClick} />
+                            </motion.div>
+                        </Col>
+                    );
+                })}
+            </Row>
             
             {loading && (
                 <div className="mt-4">
