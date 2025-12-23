@@ -274,15 +274,7 @@ const AnimeDetails = () => {
                     <i className="bi bi-play-circle-fill me-2"></i>WATCH NOW
                 </Button>
 
-                <Button 
-                    variant="outline-info" 
-                    className="action-btn-secondary rounded-pill px-4 fw-bold"
-                    href={`https://animepahe.ru/`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    ANIMEPAHE
-                </Button>
+
                 
                 <div className="d-flex gap-2">
                     <Dropdown as={ButtonGroup} className="status-dropdown-v2 rounded-pill shadow-sm">
