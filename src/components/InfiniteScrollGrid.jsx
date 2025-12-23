@@ -1,13 +1,7 @@
 import React, { useRef, useCallback, useMemo } from 'react';
-import { Row, Col, Spinner } from 'react-bootstrap';
-import { motion } from 'framer-motion';
+import { Row, Col } from 'react-bootstrap';
 import AnimeCard from './AnimeCard';
 import SkeletonCard from './SkeletonCard';
-
-const itemVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    show: { opacity: 1, scale: 1, transition: { duration: 0.3 } }
-};
 
 const SkeletonGrid = () => (
     <Row className="g-3">
@@ -41,7 +35,7 @@ const InfiniteScrollGrid = ({ items, hasNext, onLoadMore, loading, onCardClick }
 
     return (
         <>
-            <Row className="g-3">
+            <Row className="g-3 optimize-grid">
                 {uniqueItems.map((anime, index) => {
                     const isLast = uniqueItems.length === index + 1;
                     return (
@@ -50,14 +44,9 @@ const InfiniteScrollGrid = ({ items, hasNext, onLoadMore, loading, onCardClick }
                             key={anime.id} 
                             xs={4} sm={4} md={3} lg={2}
                         >
-                            <motion.div
-                                variants={itemVariants}
-                                initial="hidden"
-                                whileInView="show"
-                                viewport={{ once: true, amount: 0.1 }}
-                            >
+                            <div className="fade-in-enter h-100">
                                 <AnimeCard anime={anime} onClick={onCardClick} />
-                            </motion.div>
+                            </div>
                         </Col>
                     );
                 })}
