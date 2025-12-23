@@ -28,6 +28,8 @@ const AnimeDetails = () => {
   const [showAllCharacters, setShowAllCharacters] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(null);
   const [watchUrl, setWatchUrl] = useState(null);
+  const [isReversed, setIsReversed] = useState(false);
+  const [viewMode, setViewMode] = useState('grid');
 
   // Dynamic HiAnime Link Detection
   useEffect(() => {
@@ -352,6 +354,81 @@ const AnimeDetails = () => {
                 onClick={handleDescriptionClick}
             />
         </div>
+
+        {/* Episodes Section */}
+        {anime.episodes > 0 && (
+            <div className="mb-5">
+                <div className="section-header-row">
+                    <h5 className="section-header-v2 mb-0">EPISODES</h5>
+                    <div className="view-controls-v2">
+                        <button 
+                            className={`control-btn-v2 ${isReversed ? 'active' : ''}`}
+                            onClick={() => setIsReversed(!isReversed)}
+                        >
+                            <i className={`bi bi-sort-${isReversed ? 'up' : 'down'} me-1`}></i>
+                            {isReversed ? 'REVERSED' : 'NORMAL'}
+                        </button>
+                        <button 
+                            className={`control-btn-v2 ${viewMode === 'list' ? 'active' : ''}`}
+                            onClick={() => setViewMode('list')}
+                        >
+                            <i className="bi bi-list-ul"></i>
+                        </button>
+                        <button 
+                            className={`control-btn-v2 ${viewMode === 'grid' ? 'active' : ''}`}
+                            onClick={() => setViewMode('grid')}
+                        >
+                            <i className="bi bi-grid-3x3-gap"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {viewMode === 'list' ? (
+                    <div className="chapter-list-v2">
+                        {(isReversed 
+                            ? Array.from({ length: anime.episodes }, (_, i) => anime.episodes - i)
+                            : Array.from({ length: anime.episodes }, (_, i) => i + 1)
+                        ).map(epNum => (
+                            <a 
+                                key={epNum}
+                                href={`https://animepahe.ru/search?q=${encodeURIComponent(anime.title.english || anime.title.romaji)} episode ${epNum}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="chapter-item-v2"
+                            >
+                                <div className="chapter-info-v2">
+                                    <div className="chapter-title-v2">Episode {epNum}</div>
+                                    <div className="chapter-sub-v2">Stream & Download</div>
+                                </div>
+                                <div className="chapter-actions-v2">
+                                    <button className="download-btn-icon" title="Download">
+                                        <i className="bi bi-download"></i>
+                                    </button>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="ep-grid-v2">
+                        {(isReversed 
+                            ? Array.from({ length: anime.episodes }, (_, i) => anime.episodes - i)
+                            : Array.from({ length: anime.episodes }, (_, i) => i + 1)
+                        ).map(epNum => (
+                            <a 
+                                key={epNum}
+                                href={`https://animepahe.ru/search?q=${encodeURIComponent(anime.title.english || anime.title.romaji)} episode ${epNum}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="ep-grid-item-v2"
+                            >
+                                <span className="ep-grid-num-v2">{epNum}</span>
+                                <i className="bi bi-download ep-grid-download-v2"></i>
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </div>
+        )}
 
         {/* Characters */}
         {anime.characters?.edges?.length > 0 && (

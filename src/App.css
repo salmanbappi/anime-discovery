@@ -64,3 +64,131 @@
 }
 
 .hero-overlay {
+    background: linear-gradient(0deg, #000 0%, rgba(0,0,0,0.4) 100%);
+}
+
+/* Chapter/Episode Styles */
+.chapter-list-v2 {
+    background: #111;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chapter-item-v2 {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s;
+    text-decoration: none !important;
+}
+
+.chapter-item-v2:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.chapter-item-v2:last-child {
+    border-bottom: none;
+}
+
+.chapter-title-v2 {
+    color: #fff;
+    font-weight: 500;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.chapter-sub-v2 {
+    color: #777;
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.download-btn-icon {
+    color: #555;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.chapter-item-v2:hover .download-btn-icon {
+    color: #00d2ff;
+    background: rgba(0, 210, 255, 0.1);
+}
+
+.ep-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+}
+
+.ep-grid-item-v2 {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.2s;
+    text-decoration: none !important;
+    color: #fff;
+}
+
+.ep-grid-item-v2:hover {
+    border-color: #00d2ff;
+    background: rgba(0, 210, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.ep-grid-num-v2 {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.ep-grid-download-v2 {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.ep-grid-item-v2:hover .ep-grid-download-v2 {
+    color: #00d2ff;
+}
+
+.section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.view-controls-v2 {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn-v2 {
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #aaa;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.control-btn-v2.active {
+    background: #00d2ff;
+    color: #000;
+    border-color: #00d2ff;
+    font-weight: 600;
+}
