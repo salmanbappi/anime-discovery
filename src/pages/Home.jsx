@@ -228,7 +228,7 @@ const Home = () => {
   const handleViewAll = (section) => {
       saveScrollPos();
       updateParams({ view: section }, { replace: false });
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleBackToHome = () => {
@@ -237,6 +237,13 @@ const Home = () => {
       setSearchParams(nextParams, { replace: false }); // or replace: true if you want to replace the history
       // Restore scroll is handled by useEffect when viewAll becomes null
   };
+
+  // Ensure we are at the top when entering View All
+  useEffect(() => {
+      if (viewAll) {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+  }, [viewAll]);
 
   if (authLoading) {
     return (
