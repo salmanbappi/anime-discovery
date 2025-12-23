@@ -29,19 +29,58 @@ const AnimeDetails = () => {
   const [currentStatus, setCurrentStatus] = useState(null);
   const [watchUrl, setWatchUrl] = useState(null);
 
-  // Generate AnimeKai Watch URL
+  // Dynamic AnimeKai Link Detection
   useEffect(() => {
-    if (anime) {
-      const title = anime.title.english || anime.title.romaji;
-      // Generate slug: lowercase, replace non-alphanumeric with hyphens, remove multiple hyphens
-      const slug = title.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
+    const detectWatchLink = async () => {
+      if (!anime) return;
       
-      // Try to construct a direct link to episode 1 on AnimeKai
-      // Most common pattern: https://animekai.to/watch/[slug]-episode-1
-      setWatchUrl(`https://animekai.to/watch/${slug}-episode-1`);
-    }
+      const engTitle = anime.title.english?.toLowerCase() || "";
+      const romTitle = anime.title.romaji?.toLowerCase() || "";
+      const searchQuery = encodeURIComponent(engTitle || romTitle);
+      const searchUrl = `https://animekai.to/search?keyword=${searchQuery}`;
+      
+      try {
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(searchUrl)}`);
+        if (!response.ok) throw new Error("Proxy failed");
+        
+        const data = await response.json();
+        const html = data.contents;
+        
+        const watchLinkRegex = /\/watch\/([a-z0-9-]+-[a-z0-9]+)/g;
+        const matches = [...html.matchAll(watchLinkRegex)];
+        
+        if (matches.length > 0) {
+          let bestLink = null;
+          
+          for (const match of matches) {
+            const slug = match[1];
+            const slugTitle = slug.substring(0, slug.lastIndexOf('-')).replace(/-/g, ' ');
+            
+            // Match if slug title is similar to either English or Romaji title
+            if (
+              (engTitle && (engTitle.includes(slugTitle) || slugTitle.includes(engTitle))) ||
+              (romTitle && (romTitle.includes(slugTitle) || slugTitle.includes(romTitle)))
+            ) {
+              bestLink = `https://animekai.to/watch/${slug}#ep=1`;
+              break;
+            }
+          }
+          
+          if (!bestLink && matches[0]) {
+            bestLink = `https://animekai.to/watch/${matches[0][1]}#ep=1`;
+          }
+          
+          if (bestLink) {
+            console.log("Detected AnimeKai URL:", bestLink);
+            setWatchUrl(bestLink);
+          }
+        }
+      } catch (err) {
+        console.error("AnimeKai link detection failed:", err);
+      }
+    };
+
+    detectWatchLink();
   }, [anime]);
 
   // Scroll Restoration
@@ -230,7 +269,7 @@ const AnimeDetails = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <i className="bi bi-play-circle-fill me-2"></i>WATCH NOW
+                    <i className="bi bi-play-circle-fill me-2"></i>WATCH ON ANIMEKAI
                 </Button>
                 
                 <div className="d-flex gap-2">
