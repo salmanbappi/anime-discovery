@@ -29,32 +29,20 @@ const AnimeDetails = () => {
   const [currentStatus, setCurrentStatus] = useState(null);
   const [watchUrl, setWatchUrl] = useState(null);
 
-  // Fetch Watch URL from MalSync
+  // Generate AnimeKai Watch URL
   useEffect(() => {
-    const getWatchLink = async () => {
-      try {
-        const response = await fetch(`https://api.malsync.moe/root/AniList/${id}`);
-        if (!response.ok) return;
-        const data = await response.json();
-        
-        // HiAnime/Zoro/AniWatch mappings
-        const zoro = data.Sites?.Zoro || data.Sites?.AniWatch;
-        if (zoro) {
-          const firstKey = Object.keys(zoro)[0];
-          const siteData = zoro[firstKey];
-          if (siteData && siteData.url) {
-            // HiAnime usually uses /watch/slug-id?ep=1
-            // MalSync might provide the base URL
-            const directUrl = siteData.url.replace('aniwatch.to', 'hianime.to').replace('zoro.to', 'hianime.to');
-            setWatchUrl(`${directUrl}${directUrl.includes('?') ? '&' : '?'}ep=1`);
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching direct watch link:", err);
-      }
-    };
-    if (id) getWatchLink();
-  }, [id]);
+    if (anime) {
+      const title = anime.title.english || anime.title.romaji;
+      // Generate slug: lowercase, replace non-alphanumeric with hyphens, remove multiple hyphens
+      const slug = title.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      
+      // Try to construct a direct link to episode 1 on AnimeKai
+      // Most common pattern: https://animekai.to/watch/[slug]-episode-1
+      setWatchUrl(`https://animekai.to/watch/${slug}-episode-1`);
+    }
+  }, [anime]);
 
   // Scroll Restoration
   useEffect(() => {
@@ -238,7 +226,7 @@ const AnimeDetails = () => {
                 <Button 
                     variant="primary" 
                     className="action-btn-main rounded-pill px-5 fw-bold"
-                    href={watchUrl || `https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
+                    href={watchUrl || `https://animekai.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
