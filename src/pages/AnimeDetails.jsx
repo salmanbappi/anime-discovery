@@ -27,6 +27,34 @@ const AnimeDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showAllCharacters, setShowAllCharacters] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(null);
+  const [watchUrl, setWatchUrl] = useState(null);
+
+  // Fetch Watch URL from MalSync
+  useEffect(() => {
+    const getWatchLink = async () => {
+      try {
+        const response = await fetch(`https://api.malsync.moe/root/AniList/${id}`);
+        if (!response.ok) return;
+        const data = await response.json();
+        
+        // HiAnime/Zoro/AniWatch mappings
+        const zoro = data.Sites?.Zoro || data.Sites?.AniWatch;
+        if (zoro) {
+          const firstKey = Object.keys(zoro)[0];
+          const siteData = zoro[firstKey];
+          if (siteData && siteData.url) {
+            // HiAnime usually uses /watch/slug-id?ep=1
+            // MalSync might provide the base URL
+            const directUrl = siteData.url.replace('aniwatch.to', 'hianime.to').replace('zoro.to', 'hianime.to');
+            setWatchUrl(`${directUrl}${directUrl.includes('?') ? '&' : '?'}ep=1`);
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching direct watch link:", err);
+      }
+    };
+    if (id) getWatchLink();
+  }, [id]);
 
   // Scroll Restoration
   useEffect(() => {
@@ -210,7 +238,7 @@ const AnimeDetails = () => {
                 <Button 
                     variant="primary" 
                     className="action-btn-main rounded-pill px-5 fw-bold"
-                    href={`https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
+                    href={watchUrl || `https://hianime.to/search?keyword=${encodeURIComponent((anime.title.english || anime.title.romaji).replace(/[^\w\s]/gi, ' '))}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
