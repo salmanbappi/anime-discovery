@@ -380,12 +380,6 @@ body {
     animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Optimization */
-.optimize-grid .col {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 300px; /* Approximate height of a card */
-}
-
 /* Utils */
 .rounded-xl { border-radius: 20px !important; }
 

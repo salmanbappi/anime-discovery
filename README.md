@@ -1,4 +1,4 @@
-# Anime Discovery (v3.0.2)
+# Anime Discovery (v3.0.3)
 
 A modern, responsive anime discovery application. Now featuring infinite scrolling, a dedicated upcoming section, and optimized mobile layouts.
 

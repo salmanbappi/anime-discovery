@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Row, Col, Spinner, Carousel, Form, Dropdown, Button } from 'react-bootstrap';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -93,9 +93,9 @@ const Home = () => {
     }
   }, [loading, viewAll]);
 
-  const saveScrollPos = () => {
+  const saveScrollPos = useCallback(() => {
     sessionStorage.setItem('homeScrollPos', window.scrollY.toString());
-  };
+  }, []);
 
   const updateParams = (newParams, options = { replace: true }) => {
     const nextParams = new URLSearchParams(searchParams);
@@ -109,17 +109,17 @@ const Home = () => {
     setSearchParams(nextParams, { replace: options.replace });
   };
 
-  const handleRemove = async (animeId) => {
+  const handleRemove = useCallback(async (animeId) => {
     try {
       const { error } = await removeBookmark(user.id, animeId);
       if (error) throw error;
-      setBookmarks(bookmarks.filter(b => b.anime_id !== animeId));
+      setBookmarks(prev => prev.filter(b => b.anime_id !== animeId));
       toast.info("Removed from bookmarks");
     } catch (err) {
       console.error("Error removing bookmark:", err);
       toast.error("Failed to remove bookmark");
     }
-  };
+  }, [user]);
 
   const merge = (oldData, newData) => {
       const ids = new Set(oldData.map(d => d.id));
