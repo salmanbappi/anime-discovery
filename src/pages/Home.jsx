@@ -85,13 +85,13 @@ const Home = () => {
   // Scroll Restoration
   useEffect(() => {
     const savedScrollPos = sessionStorage.getItem('homeScrollPos');
-    if (savedScrollPos && !loading) {
+    if (savedScrollPos && !loading && !viewAll) {
       setTimeout(() => {
         window.scrollTo(0, parseInt(savedScrollPos));
         sessionStorage.removeItem('homeScrollPos');
-      }, 100);
+      }, 50);
     }
-  }, [loading]);
+  }, [loading, viewAll]);
 
   const saveScrollPos = () => {
     sessionStorage.setItem('homeScrollPos', window.scrollY.toString());
@@ -138,8 +138,12 @@ const Home = () => {
 
   // Handle View All changes (User navigated back from View All via hardware button)
   useEffect(() => {
-      if (!viewAll && !loading) {
-          restoreScrollPos();
+      if (!viewAll) {
+          if (trendingPage > 1) setTrendingPage(1);
+          if (popularPage > 1) setPopularPage(1);
+          if (upcomingPage > 1) setUpcomingPage(1);
+          
+          if (!loading) restoreScrollPos();
       }
   }, [viewAll, loading]);
 
