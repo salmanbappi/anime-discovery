@@ -97,7 +97,7 @@ const Home = () => {
     sessionStorage.setItem('homeScrollPos', window.scrollY.toString());
   };
 
-  const updateParams = (newParams) => {
+  const updateParams = (newParams, options = { replace: true }) => {
     const nextParams = new URLSearchParams(searchParams);
     Object.entries(newParams).forEach(([key, value]) => {
       if (value === '' || value === undefined || value === null || (key === 'sort' && value === 'POPULARITY_DESC')) {
@@ -106,7 +106,7 @@ const Home = () => {
         nextParams.set(key, value.toString());
       }
     });
-    setSearchParams(nextParams, { replace: true });
+    setSearchParams(nextParams, { replace: options.replace });
   };
 
   const handleRemove = async (animeId) => {
@@ -125,6 +125,23 @@ const Home = () => {
       const ids = new Set(oldData.map(d => d.id));
       return [...oldData, ...newData.filter(d => !ids.has(d.id))];
   };
+
+  const restoreScrollPos = () => {
+    const savedScrollPos = sessionStorage.getItem('homeScrollPos');
+    if (savedScrollPos) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPos));
+        sessionStorage.removeItem('homeScrollPos');
+      }, 50);
+    }
+  };
+
+  // Handle View All changes (User navigated back from View All via hardware button)
+  useEffect(() => {
+      if (!viewAll && !loading) {
+          restoreScrollPos();
+      }
+  }, [viewAll, loading]);
 
   // Load Data (Trending/Popular/Upcoming)
   useEffect(() => {
@@ -205,19 +222,16 @@ const Home = () => {
   const clearSearch = () => setSearchParams({});
 
   const handleViewAll = (section) => {
-      updateParams({ view: section });
+      saveScrollPos();
+      updateParams({ view: section }, { replace: false });
       window.scrollTo(0, 0);
   };
 
   const handleBackToHome = () => {
       const nextParams = new URLSearchParams(searchParams);
       nextParams.delete('view');
-      setSearchParams(nextParams, { replace: true });
-      
-      setTrendingPage(1);
-      setPopularPage(1);
-      setUpcomingPage(1);
-      window.scrollTo(0, 0);
+      setSearchParams(nextParams, { replace: false }); // or replace: true if you want to replace the history
+      // Restore scroll is handled by useEffect when viewAll becomes null
   };
 
   if (authLoading) {
