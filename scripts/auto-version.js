@@ -14,9 +14,20 @@ const readmePath = path.join(rootDir, 'README.md');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 const oldVersion = packageJson.version;
 
-// 2. Bump Version (Patch)
+// 2. Bump Version (Rollover Style: 2.9.9 -> 3.0.0)
 const versionParts = oldVersion.split('.').map(Number);
 versionParts[2] += 1;
+
+if (versionParts[2] >= 10) {
+    versionParts[2] = 0;
+    versionParts[1] += 1;
+}
+
+if (versionParts[1] >= 10) {
+    versionParts[1] = 0;
+    versionParts[0] += 1;
+}
+
 const newVersion = versionParts.join('.');
 
 console.log(`🚀 Bumping version: ${oldVersion} -> ${newVersion}`);
