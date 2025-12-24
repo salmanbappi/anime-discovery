@@ -3,7 +3,7 @@
   "private": true,
   "version": "3.1.0",
   "type": "module",
-  "homepage": "https://solarlist.vercel.app/",
+  "homepage": "https://salmanbappi.github.io/anime-discovery/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build:gh",
     "deploy": "gh-pages -d dist",
-    "update": "node scripts/auto-version.js && git add . && git commit -m 'auto: version bump and update' && git push && npm run deploy"
+    "update": "node scripts/auto-version.js && git add . && git commit -m 'auto: version bump and update' && git push"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
