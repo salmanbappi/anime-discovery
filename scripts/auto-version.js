@@ -9,6 +9,7 @@ const rootDir = path.join(__dirname, '..');
 const packageJsonPath = path.join(rootDir, 'package.json');
 const navbarPath = path.join(rootDir, 'src', 'components', 'Navbar.jsx');
 const readmePath = path.join(rootDir, 'README.md');
+const indexPath = path.join(rootDir, 'index.html');
 
 // 1. Read package.json
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -49,14 +50,25 @@ if (navbarRegex.test(navbarContent)) {
 
 // 5. Update README.md
 let readmeContent = fs.readFileSync(readmePath, 'utf8');
-// Matches "# Anime Discovery (v2.9.2)"
-const readmeHeaderRegex = /# Anime Discovery \(v\d+\.\d+\.\d+\)/;
+// Matches "# SoraList (v2.9.2)"
+const readmeHeaderRegex = /# SoraList \(v\d+\.\d+\.\d+\)/;
 if (readmeHeaderRegex.test(readmeContent)) {
-    readmeContent = readmeContent.replace(readmeHeaderRegex, `# Anime Discovery (v${newVersion})`);
+    readmeContent = readmeContent.replace(readmeHeaderRegex, `# SoraList (v${newVersion})`);
     fs.writeFileSync(readmePath, readmeContent);
     console.log(`✅ Updated README.md`);
 } else {
     console.warn(`⚠️ Could not find version header in README.md`);
+}
+
+// 6. Update index.html
+let indexContent = fs.readFileSync(indexPath, 'utf8');
+const indexVersionRegex = /data-version="\d+\.\d+\.\d+"/;
+if (indexVersionRegex.test(indexContent)) {
+    indexContent = indexContent.replace(indexVersionRegex, `data-version="${newVersion}"`);
+    fs.writeFileSync(indexPath, indexContent);
+    console.log(`✅ Updated index.html`);
+} else {
+    console.warn(`⚠️ Could not find data-version in index.html`);
 }
 
 console.log(`✨ Version bump complete!`);
