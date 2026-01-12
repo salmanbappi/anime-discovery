@@ -1,4 +1,4 @@
-# SoraList (v3.1.1)
+# SoraList (v3.1.2)
 
 A modern, responsive anime discovery application. Now featuring infinite scrolling, a dedicated upcoming section, and optimized mobile layouts.
 
